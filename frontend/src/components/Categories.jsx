@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 
 export default function Categories() {
   return (
-    <div className="w-screen flex flex-col md:flex-row h-96 md:h-[32rem] mx-auto pb-12 mt-8 mb-16">
+    <div className="w-screen flex flex-col md:flex-row h-96 md:h-[32rem] mx-auto md:pb-12 mt-8 mb-16">
       <div className="flex-1 bg-villa bg-cover bg-center relative">
         <Link to="">
-          <div className="bg-black  h-full opacity-10"></div>
+          <div className="bg-gradient-to-t from-black h-full opacity-20"></div>
           <div className="w-full absolute bottom-0 flex justify-between items-center">
             <h4 className="flex items-center px-6 py-2 text-white text-2xl">
               Villas
@@ -19,7 +19,7 @@ export default function Categories() {
       </div>
       <div className="flex-1 bg-apartment bg-cover bg-center relative">
         <Link to="">
-          <div className="bg-black  h-full opacity-20"></div>
+          <div className="bg-gradient-to-t from-black h-full opacity-20"></div>
           <div className="w-full absolute bottom-0 flex justify-between items-center">
             <h4 className="flex items-center px-6 py-2 text-white text-2xl">
               Apartments
@@ -32,7 +32,7 @@ export default function Categories() {
       </div>
       <div className="flex-1 bg-house bg-cover bg-center relative">
         <Link to="">
-          <div className="bg-black  h-full opacity-10"></div>
+          <div className="bg-gradient-to-t from-black  h-full opacity-20"></div>
           <div className="w-full absolute bottom-0 flex justify-between items-center">
             <h4 className="flex items-center px-6 py-2 text-white text-2xl">
               Houses
@@ -45,7 +45,7 @@ export default function Categories() {
       </div>
       <div className="flex-1 bg-cottage bg-cover bg-center relative">
         <Link to="">
-          <div className="bg-black  h-full opacity-20"></div>
+          <div className="bg-gradient-to-t from-black  h-full opacity-20"></div>
           <div className="w-full absolute bottom-0 flex justify-between items-center">
             <h4 className="flex items-center px-6 py-2 text-white text-2xl cursor-pointer">
               Cottages

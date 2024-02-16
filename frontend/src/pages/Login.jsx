@@ -1,29 +1,25 @@
 import { useForm } from "react-hook-form";
 import { Toaster } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import logo from "../assets/icons/logo.png";
-import { useMutation } from "react-query";
 import * as apiClient from "../api-client";
-import {useDispatch} from "react-redux"
-import {setLogin} from "../redux/user/userSlice"
+import { useMutation } from "react-query";
 
 const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
+    reset,
   } = useForm();
 
-  // const navigate = useNavigate();
- const dispatch = useDispatch()
+  const navigate = useNavigate();
 
   const mutation = useMutation(apiClient.login, {
-    onSuccess: (data) => {
-     dispatch(setLogin({
-      user:data
-     }))
-    console.log(('User sign in successfully'));
+    onSuccess: () => {
+      navigate("/");
+      console.log("User sign in successfully");
     },
     onError: (error) => {
       console.log(error);
@@ -31,7 +27,8 @@ const Login = () => {
   });
 
   const onSubmit = handleSubmit((data) => {
-    mutation.mutate(data)
+    mutation.mutate(data);
+    reset();
   });
 
   return (

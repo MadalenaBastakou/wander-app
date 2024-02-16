@@ -18,8 +18,16 @@ const signup = async (req, res) => {
     const hashedPassword = bcryptjs.hashSync(req.body.password, 10);
     user = new User({ ...req.body, password: hashedPassword });
     await user.save();
-
-    return res.status(200).json({ message: "User registered successfully" });
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
+      expiresIn: "1d",
+    });
+    const { password: pass, ...rest } = user._doc;
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 86400000,
+    });
+    return res.status(200).json({message: "User registered successfully", user: rest})
   } catch (err) {
     console.log(err);
     res.status(500).send({ message: "Something went wrong" });
@@ -50,7 +58,7 @@ const login = async (req, res, next) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 86400000,
     });
-    return res.status(200).json(rest);
+    return res.status(200).json({token, user:rest});
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Something went wrong" });
@@ -102,4 +110,14 @@ const validateToken = (req, res) => {
   res.status(200).json({ userId: req.userId });
 };
 
-export default { signup, login, validateToken, google };
+const logout = (req, res) => {
+  res.cookie("auth_token", "", {
+    expires: new Date(0),
+  });
+  res.cookie("user", "", {
+    expires: new Date(0),
+  });
+  res.send();
+}
+
+export default { signup, login, validateToken, google, logout};

@@ -34,4 +34,6 @@ router.post(
 
 router.post("/google", userControllers.google);
 
+router.post("/logout", userControllers.logout);
+
 export default router;

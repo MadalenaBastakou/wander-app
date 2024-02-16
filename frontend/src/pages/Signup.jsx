@@ -19,7 +19,8 @@ const Signup = () => {
 
   const mutation = useMutation(apiClient.signup, {
     onSuccess: () => {
-      navigate("/login");
+      navigate("/");
+      console.log("User signed up successfully");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -38,7 +39,7 @@ const Signup = () => {
       <div className="w-screen h-screen grid grid-rows-4 lg:grid-cols-2">
         <div className="w-full h-full md:h-screen row-span-3 ">
           <Link to="/">
-            <img src={logo} alt="logo" className="px-2"/>
+            <img src={logo} alt="logo" className="px-2" />
           </Link>
           <div className="container w-full flex flex-col mt-10 md:w-3/4 mx-auto ">
             <form onSubmit={onSubmit} className="flex flex-col gap-5 p-4">

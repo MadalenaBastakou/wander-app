@@ -1,16 +1,18 @@
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { app } from "../firebase.js";
-
-// const API_BASE_URL = import.meta.env.VITE_API_URL;
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const OAuth = () => {
+  const navigate = useNavigate();
+
   const handleGoogleClick = async () => {
     try {
       const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
 
       const result = await signInWithPopup(auth, provider);
-     
+
       const res = await fetch("/api/user/google", {
         method: "POST",
         headers: {
@@ -24,9 +26,15 @@ const OAuth = () => {
       });
 
       const responseBody = await res.json();
-      console.log(responseBody);
+      Cookies.set("user", JSON.stringify(responseBody), {
+        secure: true,
+        sameSite: "strict",
+      });
+      if (res.ok) {
+        navigate("/");
+      }
     } catch (err) {
-      console.log("could not continue with google",err);
+      console.log("could not continue with google", err);
     }
   };
 
