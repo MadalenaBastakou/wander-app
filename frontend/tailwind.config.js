@@ -4,15 +4,15 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'signupImg': "url('./assets/img/signup-page.jpg')",
-        'loginImg': "url('./assets/img/login-page.jpg')",
-        "heroImg": "url('./assets/img/hero-page.jpg')",
-        "house": "url('./assets/img/houses.jpg')",
-        "apartment": "url('./assets/img/apartments.jpg')",
-        "villa": "url('./assets/img/villas.jpg')",
-        "cottage": "url('./assets/img/cottage.jpg')",
-        "footer" : "url('./assets/img/footer.jpg')"
-      }
+        signupImg: "url('./assets/img/signup-page.jpg')",
+        loginImg: "url('./assets/img/login-page.jpg')",
+        heroImg: "url('./assets/img/hero-page.jpg')",
+        Villas: "url('./assets/img/villas.jpg')",
+        Apartments: "url('./assets/img/apartments.jpg')",
+        Houses: "url('./assets/img/houses.jpg')",
+        Cottages: "url('./assets/img/cottage.jpg')",
+        footer: "url('./assets/img/footer.jpg')",
+      },
     },
   },
   plugins: [],

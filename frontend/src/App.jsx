@@ -4,6 +4,9 @@ import "./index.css";
 import Login from "./pages/Login";
 import Layout from "./layouts/Layout";
 import Home from "./pages/Home";
+import { CreateListing } from "./pages/CreateListing";
+import { PrivateRoute } from "./components/PrivateRoute";
+import { Profile } from "./pages/Profile";
 
 function App() {
   return (
@@ -16,6 +19,24 @@ function App() {
           element={
             <Layout>
               <Home />
+            </Layout>
+          }
+        />
+        <Route element={<PrivateRoute />}>
+          <Route
+            path="/profile"
+            element={
+              <Layout>
+                <Profile/>
+              </Layout>
+            }
+          />
+        </Route>
+        <Route
+          path="/create-listing"
+          element={
+            <Layout>
+              <CreateListing />
             </Layout>
           }
         />

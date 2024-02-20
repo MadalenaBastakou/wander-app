@@ -17,6 +17,6 @@ app.use(cookieParser());
 
 app.use("/api/user", userRoutes);
 
-app.listen(2180, () => {
+app.listen(process.env.PORT || 2180, () => {
   console.log("Server is running on localhost:2180");
 });
