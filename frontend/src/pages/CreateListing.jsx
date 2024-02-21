@@ -1,4 +1,5 @@
 import { FormProvider, useForm } from "react-hook-form";
+
 import { CategorySection } from "../components/CreateListingForm/CategorySection";
 import { TypeSection } from "../components/CreateListingForm/TypeSection";
 import { LocationSection } from "../components/CreateListingForm/LocationSection";
@@ -6,13 +7,11 @@ import { ListingBasicsSection } from "../components/CreateListingForm/ListingBas
 import { FacilitiesSection } from "../components/CreateListingForm/FacilitiesSection";
 import { PhotoUploadSection } from "../components/CreateListingForm/PhotoUploadSection";
 import { ListingInfoSection } from "../components/CreateListingForm/ListingInfoSection";
-import { useState } from "react";
 import * as apiClient from "../api-client";
+import { useState } from "react";
 
 export const CreateListing = () => {
   const [photos, setPhotos] = useState([]);
-
-console.log(photos.length);
 
   const handleUploadPhotos = (e) => {
     const newPhotos = e.target.files;
@@ -36,8 +35,10 @@ console.log(photos.length);
   const formMethods = useForm();
   const { handleSubmit } = formMethods;
 
+
   const onSubmit = handleSubmit((formDataJson) => {
     const formData = new FormData();
+   
     formData.append("category", formDataJson.category);
     formData.append("type", formDataJson.type);
     formData.append("street", formDataJson.street);
@@ -58,12 +59,16 @@ console.log(photos.length);
     photos.forEach((photo) => {
       formData.append(`photos`, photo);
     });
+
     apiClient.addListing(formData);
+  
   });
 
   return (
     <div className="bg-neutral-50 w-screen flex-col gap-5 ">
-      <h1 className="text-xl md:text-3xl font-bold py-8">Publish your property</h1>
+      <h1 className="text-xl md:text-3xl font-bold py-8">
+        Publish your property
+      </h1>
       <div className="bg-white  max-w-screen-xl px-8 py-4 mb-8 rounded-xl self-center mx-auto">
         <FormProvider {...formMethods}>
           <form onSubmit={onSubmit}>

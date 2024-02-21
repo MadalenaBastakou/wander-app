@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const listingSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true },
+    creator: { type: mongoose.Schema.Types.ObjectId, ref:'User', required: true },
     category: { type: String, required: true },
     type: { type: String, required: true },
     street: { type: String, required: true },

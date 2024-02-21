@@ -60,4 +60,8 @@ router.post(
   listingControllers.addListing
 );
 
+router.get("/", verifyToken, listingControllers.getListings)
+
+router.get("/:listingId", listingControllers.getListing)
+
 export default router;

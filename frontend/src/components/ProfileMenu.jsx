@@ -11,16 +11,16 @@ export const ProfileMenu = ({ user }) => {
     <div className="relative">
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="text-gray-400 flex justify-around items-center text-xl  rounded-full border py-2 shadow-sm hover:shadow-md"
+        className="text-gray-400 flex justify-around items-center text-xl  rounded-full border py-2 px-2 shadow-sm hover:shadow-md"
       >
-        {user.profileImagePath ? (
+        {user.profileImagePath[0] ? (
           <img
-            className="object-fit rounded-full w-1/3"
+            className="object-fit rounded-full w-1/2"
             alt="profile-photo"
             src={user.profileImagePath}
           ></img>
         ) : (
-          <div className="text-gray-400 border border-gray-400  rounded-full">
+          <div className="text-gray-400 border border-gray-400 rounded-full">
             {" "}
             <BsPersonFill className="text-2xl" />
           </div>
@@ -31,6 +31,9 @@ export const ProfileMenu = ({ user }) => {
         <div className="flex flex-col gap-2 w-48 bg-white border-gray-400 rounded absolute top-14 right-0 ps-3 pe-12 py-3 text-base shadow-md z-10">
           <Link className="hover:text-gray-700" to="/profile">
             My profile
+          </Link>
+          <Link className="hover:text-gray-700" to="/my-listings">
+            My Listings
           </Link>
           <Link className="hover:text-gray-700" to="">
             Trip List

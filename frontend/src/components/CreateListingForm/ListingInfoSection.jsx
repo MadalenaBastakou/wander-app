@@ -44,7 +44,7 @@ export const ListingInfoSection = () => {
    
         <label htmlFor="price">Price per night</label>
         <div className="flex gap-3 items-center">
-          <span>E</span>
+          <span>€</span>
           <input
             className="border rounded py-2 px-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-200"
             id="price"

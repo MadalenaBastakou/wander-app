@@ -13,6 +13,9 @@ export default {
         Cottages: "url('./assets/img/cottage.jpg')",
         footer: "url('./assets/img/footer.jpg')",
       },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite',
+      }
     },
   },
   plugins: [],

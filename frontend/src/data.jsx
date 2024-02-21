@@ -6,7 +6,7 @@ import {
   BiWifi,
   BiSolidFridge,
 } from "react-icons/bi";
-import { BsPersonWorkspace, BsSnow } from "react-icons/bs";
+import { BsPersonWorkspace, BsSnow, BsHouse } from "react-icons/bs";
 import { TbBeach } from "react-icons/tb";
 import {
   GiPaperWindmill,
@@ -31,7 +31,7 @@ import {
   FaKey,
 
 } from "react-icons/fa";
-import { FaHouse, FaPeopleRoof,   FaKitchenSet, } from "react-icons/fa6";
+import { FaHouse, FaPeopleRoof,   FaKitchenSet} from "react-icons/fa6";
 import {
   PiMountainsFill,
   PiBathtubFill,
@@ -45,6 +45,8 @@ import {
   MdBalcony,
   MdYard,
   MdPets,
+  MdApartment,
+  MdOutlineHolidayVillage
 } from "react-icons/md";
 import { IoSnow, IoDiamondOutline } from "react-icons/io5";
 import { RiCactusFill } from "react-icons/ri";
@@ -60,6 +62,11 @@ export const categories = [
     label: "Beachfront",
     icon: <TbBeach />,
     description: "This property is close to the beach!",
+  },
+  {
+    label: "Apartment",
+    icon: <MdApartment />,
+    description: "This property is in a building!",
   },
   {
     label: "Windmills",
@@ -117,14 +124,24 @@ export const categories = [
     description: "This property is in the desert!",
   },
   {
-    label: "Barns",
+    label: "Cottage",
     icon: <GiBarn />,
     description: "This property is in a barn!",
+  },
+  {
+    label: "Villa",
+    icon: <MdOutlineHolidayVillage />,
+    description: "This property is big and luxurious!",
   },
   {
     label: "Luxury",
     icon: <IoDiamondOutline />,
     description: "This property is brand new and luxurious!",
+  },
+  {
+    label: "House",
+    icon: <BsHouse  />,
+    description: "This property is a traditional house!",
   },
 ];
 

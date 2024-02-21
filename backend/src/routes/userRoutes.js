@@ -36,4 +36,6 @@ router.post("/google", userControllers.google);
 
 router.post("/logout", userControllers.logout);
 
+router.get("/:userId", userControllers.getUser);
+
 export default router;

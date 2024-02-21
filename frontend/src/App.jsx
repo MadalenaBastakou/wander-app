@@ -7,6 +7,8 @@ import Home from "./pages/Home";
 import { CreateListing } from "./pages/CreateListing";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { Profile } from "./pages/Profile";
+import { MyListings } from "./pages/MyListings";
+import { ListingDetails } from "./pages/ListingDetails";
 // import { AppContextProvider } from "./contexts/AppContext";
 
 
@@ -37,6 +39,16 @@ function App() {
         </Route>
         <Route element={<PrivateRoute />}>
           <Route
+            path="/my-listings"
+            element={
+              <Layout>
+                <MyListings />
+              </Layout>
+            }
+          />
+        </Route>
+        <Route element={<PrivateRoute />}>
+          <Route
             path="/create-listing"
             element={
               <Layout>
@@ -45,6 +57,14 @@ function App() {
             }
           />
         </Route>
+        <Route
+            path="/my-listings/:listingId"
+            element={
+              <Layout>
+                <ListingDetails />
+              </Layout>
+            }
+          />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       {/* </AppContextProvider> */}

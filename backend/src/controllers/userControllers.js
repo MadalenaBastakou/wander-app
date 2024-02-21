@@ -120,4 +120,16 @@ const logout = (req, res) => {
   res.send();
 }
 
-export default { signup, login, validateToken, google, logout};
+const getUser = async(req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById({ _id: userId });
+    const { password: pass, ...rest } = user._doc;
+    res.status(202).json(rest);
+  } catch (error) {
+    console.log("Error fetching creator:" + error);
+    res.status(500).json("Something went wrong");
+  }
+}
+
+export default { signup, login, validateToken, google, logout, getUser};
