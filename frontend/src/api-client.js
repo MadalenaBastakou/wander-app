@@ -34,6 +34,18 @@ const login = async (formData) => {
   return responseBody
 };
 
+const validateToken = async () => {
+  const response = await fetch(`api/user/validate-token`, {
+    credentials: "include",
+  })
+
+  if (!response.ok) {
+    throw new Error("Token invalid");
+  }
+
+  return response.json();
+};
+
 const logout = async () => {
   const response = await fetch('api/user/logout', {
     method: "POST",
@@ -44,5 +56,22 @@ const logout = async () => {
     }
 }
 
+const addListing = async(formData)=>{
+  console.log(formData);
+const response = await fetch('/api/my-listings', {
+  method: "POST",
+  credentials: "include",
+  body: formData
+})
+console.log(response);
+if(!response.ok) {
+  throw new Error("Failed to add listing")
+}
 
-export { signup, login, logout};
+const responseBody = await response.json()
+
+return responseBody
+}
+
+
+export { signup, login, logout, validateToken, addListing};

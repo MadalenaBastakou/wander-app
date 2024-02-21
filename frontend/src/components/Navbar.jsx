@@ -22,7 +22,7 @@ export const Navbar = () => {
   }}, []);
 
   return (
-    <div className="w-full px-2 lg:px-8 mx-auto flex justify-between items-center transparent text-lg">
+    <div className="w-full px-2 lg:px-8 mx-auto flex justify-between items-center text-lg shadow-sm">
       <div className="container ">
         <span>
           <Link to="/">

@@ -7,10 +7,13 @@ import Home from "./pages/Home";
 import { CreateListing } from "./pages/CreateListing";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { Profile } from "./pages/Profile";
+// import { AppContextProvider } from "./contexts/AppContext";
+
 
 function App() {
   return (
     <BrowserRouter>
+    {/* <AppContextProvider value={{ isLoggedIn: true }}>  */}
       <Routes>
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
@@ -27,21 +30,24 @@ function App() {
             path="/profile"
             element={
               <Layout>
-                <Profile/>
+                <Profile />
               </Layout>
             }
           />
         </Route>
-        <Route
-          path="/create-listing"
-          element={
-            <Layout>
-              <CreateListing />
-            </Layout>
-          }
-        />
+        <Route element={<PrivateRoute />}>
+          <Route
+            path="/create-listing"
+            element={
+              <Layout>
+                <CreateListing />
+              </Layout>
+            }
+          />
+        </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+      {/* </AppContextProvider> */}
     </BrowserRouter>
   );
 }
