@@ -9,55 +9,34 @@ import { PrivateRoute } from "./components/PrivateRoute";
 import { Profile } from "./pages/Profile";
 import { MyListings } from "./pages/MyListings";
 import { ListingDetails } from "./pages/ListingDetails";
-// import { AppContextProvider } from "./contexts/AppContext";
+import { CategoriesPage } from "./pages/CategoriesPage";
+import { TripList } from "./pages/TripList";
+import { Wishlist } from "./pages/Wishlist";
 
 
 function App() {
   return (
     <BrowserRouter>
-    {/* <AppContextProvider value={{ isLoggedIn: true }}>  */}
-      <Routes>
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <Home />
-            </Layout>
-          }
-        />
-        <Route element={<PrivateRoute />}>
+        <Routes>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
           <Route
-            path="/profile"
+            path="/"
             element={
               <Layout>
-                <Profile />
+                <Home />
               </Layout>
             }
           />
-        </Route>
-        <Route element={<PrivateRoute />}>
           <Route
-            path="/my-listings"
+            path="/categories"
             element={
               <Layout>
-                <MyListings />
+                <CategoriesPage />
               </Layout>
             }
           />
-        </Route>
-        <Route element={<PrivateRoute />}>
           <Route
-            path="/create-listing"
-            element={
-              <Layout>
-                <CreateListing />
-              </Layout>
-            }
-          />
-        </Route>
-        <Route
             path="/my-listings/:listingId"
             element={
               <Layout>
@@ -65,9 +44,51 @@ function App() {
               </Layout>
             }
           />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-      {/* </AppContextProvider> */}
+          <Route element={<PrivateRoute />}>
+            <Route
+              path="/profile"
+              element={
+                <Layout>
+                  <Profile />
+                </Layout>
+              }
+            />
+            <Route
+              path="/my-listings"
+              element={
+                <Layout>
+                  <MyListings />
+                </Layout>
+              }
+            />
+            <Route
+              path="/:userId/trips"
+              element={
+                <Layout>
+                  <TripList />
+                </Layout>
+              }
+            />
+             <Route
+              path="/:userId/wishList"
+              element={
+                <Layout>
+                  <Wishlist />
+                </Layout>
+              }
+            />
+            <Route
+              path="/create-listing"
+              element={
+                <Layout>
+                  <CreateListing />
+                </Layout>
+              }
+            />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
     </BrowserRouter>
   );
 }

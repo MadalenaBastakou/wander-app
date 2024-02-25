@@ -18,7 +18,7 @@ const upload = multer({
 router.post(
   "/",
   verifyToken,
-  upload.array("photos", 6),
+  upload.array("photos"),
   [
     body("userId").notEmpty().withMessage("UserId is required"),
     body("category").notEmpty().withMessage("Category is required"),
@@ -60,8 +60,10 @@ router.post(
   listingControllers.addListing
 );
 
-router.get("/", verifyToken, listingControllers.getListings)
+router.get("/", verifyToken, listingControllers.getUserListings)
 
+router.get("/properties", listingControllers.getListings)
 router.get("/:listingId", listingControllers.getListing)
+
 
 export default router;

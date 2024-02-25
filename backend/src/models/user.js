@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
     username: { type: String, required: true, unique: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    profileImagePath: { type: Array, default: "" },
+    profileImagePath: { type: Array, default: [] },
     tripList: { type: Array, default: [] },
     wishList: { type: Array, default: [] },
     propertyList: { type: Array, default: [] },

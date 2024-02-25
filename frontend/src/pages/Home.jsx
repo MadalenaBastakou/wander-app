@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import Categories from "../components/Categories";
 import Hero from "../components/Hero";
+import { LatestListings } from "../components/LatestListings";
+
 
 export default function Home() {
+
+ 
   return (
     <div>
       <Hero />
@@ -19,6 +23,7 @@ export default function Home() {
         </div>
       </div>
       <Categories />
+      <LatestListings/>
       <div className="w-screen flex items-center justify-center  md:flex-row h-40 md:h-[24rem] mx-auto bg-footer bg-[center_-36rem] bg-no-repeat md:bg-center">
         <div className="absolute z-10 align-center flex flex-col gap-4">
           <p className="text-white text-2xl md:text-5xl text-center font-bold ">

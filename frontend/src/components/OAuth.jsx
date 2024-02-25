@@ -1,10 +1,12 @@
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { app } from "../firebase.js";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext.jsx";
 
 const OAuth = () => {
   const navigate = useNavigate();
+  const {setUser} = useContext(UserContext)
 
   const handleGoogleClick = async () => {
     try {
@@ -26,11 +28,10 @@ const OAuth = () => {
       });
 
       const responseBody = await res.json();
-      Cookies.set("user", JSON.stringify(responseBody), {
-        secure: true,
-        sameSite: "strict",
-      });
+      console.log(responseBody.user);
       if (res.ok) {
+       localStorage.setItem("user", JSON.stringify(responseBody.user));
+       setUser(responseBody.user)
         navigate("/");
       }
     } catch (err) {

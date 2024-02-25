@@ -1,9 +1,8 @@
 import Cookies from "js-cookie";
 
-// const API_URL = import.meta.env.VITE_API_URL;
-
+/**USER SIGNUP*/
 export const signup = async (formData) => {
-  const response = await fetch("api/user/signup", {
+  const response = await fetch("/api/user/signup", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
@@ -14,14 +13,17 @@ export const signup = async (formData) => {
   if (!response.ok) {
     throw new Error(responseBody.message);
   }
+  console.log(responseBody);
+  localStorage.setItem("user", JSON.stringify(responseBody.user));
   Cookies.set("user", JSON.stringify(responseBody.user), {
     secure: true,
     sameSite: "strict",
   });
 };
 
+/**USER LOGIN */
 export const login = async (formData) => {
-  const response = await fetch("api/user/login", {
+  const response = await fetch("/api/user/login", {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
@@ -32,44 +34,63 @@ export const login = async (formData) => {
     throw new Error(responseBody.message);
   }
   const responseBody = await response.json();
+  console.log(responseBody);
+  localStorage.setItem("user", JSON.stringify(responseBody.user));
   Cookies.set("user", JSON.stringify(responseBody.user), {
     secure: true,
     sameSite: "strict",
   });
-  return responseBody;
+  return responseBody.user;
 };
 
+
+
+/**TOKEN VALIDATION */
 export const validateToken = async () => {
-  const response = await fetch(`api/user/validate-token`, {
+  const response = await fetch(`/api/user/validate-token`, {
     credentials: "include",
   });
-
+  
   if (!response.ok) {
     throw new Error("Token invalid");
   }
-
-  return response.json();
+  
+  const responseBody = await response.json();
+  return responseBody;
 };
 
+/**USER LOGOUT */
 export const logout = async () => {
-  const response = await fetch("api/user/logout", {
+  localStorage.remove("user")
+  const response = await fetch("/api/user/logout", {
     method: "POST",
     credentials: "include",
   });
-
+  
   if (!response.ok) {
     throw new Error("Error during logout");
   }
 };
 
+
+/**GET USER */
+export const fetchUser = async (userId) => {
+  const response = await fetch(`/api/user/${userId}`);
+  if (!response.ok) {
+    throw new Error("Error creating booking");
+  }
+  const responseBody = await response.json();
+
+  return responseBody;
+};
+
+/**CREATE LISTING */
 export const addListing = async (formData) => {
-  console.log(formData);
   const response = await fetch("/api/my-listings", {
     method: "POST",
     credentials: "include",
     body: formData,
   });
-  console.log(response);
   if (!response.ok) {
     throw new Error("Failed to add listing");
   }
@@ -79,7 +100,8 @@ export const addListing = async (formData) => {
   return responseBody;
 };
 
-export const fetchListings = async () => {
+/**GET USER LISTINGS */
+export const fetchUserListings = async () => {
   const response = await fetch("/api/my-listings", {
     credentials: "include",
   });
@@ -91,20 +113,74 @@ export const fetchListings = async () => {
   return responseBody;
 };
 
-export const fetchCreator = async(userId) => {
-  const response = await fetch(`/api/user/${userId}`)
+/**GET SPECIFIC LISTINGS */
+export const fetchListing = async (listingId) => {
+  const response = await fetch(`/api/my-listings/${listingId}`);
   if (!response.ok) {
     throw new Error("Error fetching listings");
   }
   const responseBody = await response.json();
-  return responseBody
+  return responseBody;
+};
+
+/**GET ALL LISTINGS */
+export const fetchListings = async (selectedCategory) => {
+  const response = await fetch(
+    selectedCategory !== "All"
+      ? `/api/my-listings/properties?category=${selectedCategory}`
+      : "/api/my-listings/properties"
+  );
+  if (!response.ok) {
+    throw new Error("Error fetching listings");
   }
 
-export const fetchListing = async(listingId) => {
-const response = await fetch(`/api/my-listings/${listingId}`)
-if (!response.ok) {
-  throw new Error("Error fetching listings");
-}
-const responseBody = await response.json();
-return responseBody
-}
+  const responseBody = await response.json();
+  return responseBody;
+};
+
+/**CREATE BOOKING */
+export const createBooking = async (newBooking) => {
+  const response = await fetch("/api/my-bookings/create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newBooking),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error creating booking");
+  }
+  
+  if (response.ok) {
+    return true;
+  }
+};
+
+/**GET TRIPS LIST */
+export const fetchTripList = async (userId) => {
+  const response = await fetch(`/api/user/${userId}/trips`);
+  if (!response.ok) {
+    throw new Error("Error creating booking");
+  }
+  const responseBody = await response.json();
+
+  return responseBody;
+};
+
+/**ADD TO WISHLIST */
+export const patchWishList = async (userId, listingId) => {
+  const response = await fetch(`/api/user/${userId}/${listingId}`, {
+    method: "PATCH",
+    header: {
+      "Content-Type": "application/json"
+    }
+  });
+  if (!response.ok) {
+    throw new Error("Error updating wishlist");
+  }
+  const responseBody = await response.json();
+  localStorage.setItem("user", JSON.stringify(responseBody.user));
+  return responseBody;
+};
+

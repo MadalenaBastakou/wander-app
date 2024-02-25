@@ -4,6 +4,7 @@ import cors from "cors";
 import connectToDb from "./config/connectToDb.js";
 import userRoutes from "./routes/userRoutes.js";
 import listingRoutes from "./routes/listingRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { v2 as cloudinary } from "cloudinary";
@@ -25,6 +26,7 @@ app.use(cookieParser());
 
 app.use("/api/user", userRoutes);
 app.use("/api/my-listings", listingRoutes);
+app.use("/api/my-bookings", bookingRoutes);
 
 app.listen(process.env.PORT || 2180, () => {
   console.log("Server is running on localhost:2180");

@@ -5,14 +5,13 @@ import { ListingCard } from "../components/ListingCard";
 
 export const MyListings = () => {
   const [listings, setListings] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
     const fetchListings = async () => {
       setLoading(true);
-      const res = await apiClient.fetchListings();
-      console.log(res);
+      const res = await apiClient.fetchUserListings();
       setListings(res);
       setLoading(false);
     };
@@ -31,6 +30,7 @@ export const MyListings = () => {
         <div className="max-w-screen-xl mx-auto">
         <h1 className="text-xl md:text-3xl font-bold py-8">My Listings</h1>
         <div className="mt-8 grid md:grid-cols-2 gap-12 lg:grid-cols-3 xl:grid-cols-4 ">
+        {listings.length === 0 && <span className="text-lg mt-10">No matches found.</span>}
           {listings.map((listing) => (
             <ListingCard key={listing._id} listing={listing} />
           ))}

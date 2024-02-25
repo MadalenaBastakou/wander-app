@@ -1,26 +1,37 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import * as apiClient from "../api-client";
 import { facilities } from "../data.jsx";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRange } from "react-date-range";
 import { Loader } from "../components/Loader.jsx";
+import { BsPersonFill } from "react-icons/bs";
+import Cookies from "js-cookie";
+import { UserContext } from "../contexts/UserContext.jsx";
+
 
 export const ListingDetails = () => {
   const [loading, setLoading] = useState(true);
+  const [listing, setListing] = useState(null);
+  // const [user, setUser] = useState({});
+  const {user} = useContext(UserContext)
+console.log(user);
+  // useEffect(() => {
+  //   const cookieValue = Cookies.get("user");
+  //   if (cookieValue) {
+  //     const decodedCookieValue = JSON.parse(decodeURIComponent(cookieValue));
+ 
+  //     setUser(decodedCookieValue);
+  // }}, []);
 
   const { listingId } = useParams();
-  const [listing, setListing] = useState(null);
-  const [creator, setCreator] = useState(null);
 
   useEffect(() => {
     const fetchListing = async () => {
       const res = await apiClient.fetchListing(listingId);
       setLoading(false);
       setListing(res);
-      const creator = await apiClient.fetchCreator(res.creator);
-      setCreator(creator);
     };
     fetchListing();
   }, []);
@@ -42,6 +53,30 @@ export const ListingDetails = () => {
     setDateRange([ranges.selection]);
   };
 
+  /**SUBMIT BOOKING */
+const customerId = user._id
+
+const navigate = useNavigate()
+
+const handleSubmit = async() => {
+  const newBooking ={
+    customerId,
+    listingId,
+   hostId:  listing.creator._id,
+    startDate: dateRange[0].startDate.toDateString(),
+    endDate: dateRange[0].endDate.toDateString(),
+    totalPrice: listing.price * dayCount
+  }
+    try {
+      const res = await apiClient.createBooking(newBooking);
+      if(res) {
+        navigate
+      }
+    } catch (error) {
+      console.error("Error creating booking:", error);
+    }
+}
+
   return loading ? (
     <Loader />
   ) : (
@@ -60,21 +95,29 @@ export const ListingDetails = () => {
       <h2 className="text-lg md:text-xl font-semibold py-8">
         {listing.type} in {listing.city}, {listing.province}, {listing.country}
       </h2>
-      <p className="text-md font-light py-8">guests - bedroom - bed - bath</p>
+      <p className="text-md font-light py-8">
+        {listing.guestCount} guests - {listing.bedroomCount} bedroom -{" "}
+        {listing.bedCount} bed - {listing.bathroomCount} bath
+      </p>
       <hr />
       <div>
-        {creator && (
-          <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
+          {listing.creator.profileImagePath[0] === "" ? (
             <img
               className="rounded-full w-12"
-              src={creator.profileImagePath[0]}
+              src={listing.creator.profileImagePath[0]}
               alt="profile picture"
             />
-            <h3 className="text-md md:text-lg font-medium py-8">
-              Hosted by {creator.firstName} {creator.lastName}
-            </h3>
-          </div>
-        )}
+          ) : (
+            <div className="text-gray-400 border border-gray-400 rounded-full">
+              {" "}
+              <BsPersonFill className="text-2xl" />
+            </div>
+          )}
+          <h3 className="text-md md:text-lg font-medium py-8">
+            Hosted by {listing.creator.firstName} {listing.creator.lastName}
+          </h3>
+        </div>
       </div>
       <hr />
       <h3 className="text-md md:text-lg font-medium py-4">Description</h3>
@@ -87,7 +130,10 @@ export const ListingDetails = () => {
           </h2>
           <div className="pb-12">
             {listing.facilities.map((item, index) => (
-              <div key={index} className="flex items-center gap-4 py-2">
+              <div
+                key={index}
+                className="flex flex-wrap items-center gap-4 py-2"
+              >
                 <div className="text-3xl">
                   {facilities.find((facility) => facility.name === item)?.icon}
                 </div>
@@ -126,14 +172,14 @@ export const ListingDetails = () => {
             </p>
           </div>
           <button
-        className="bg-orange-400 text-white text-xl font-medium px-12 py-3 mb-12 rounded-md hover:bg-orange-500"
-        type="submit"
-      >
-        BOOKING
-      </button>
+            className="bg-orange-400 text-white text-xl font-medium px-12 py-3 mb-12 rounded-md hover:bg-orange-500"
+            type="submit"
+            onClick={handleSubmit}
+          >
+            BOOK
+          </button>
         </div>
       </div>
-    
     </div>
   );
 };

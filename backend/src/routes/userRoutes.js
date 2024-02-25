@@ -32,10 +32,13 @@ router.post(
   userControllers.login
 );
 
+
+router.patch("/:userId/:listingId", userControllers.handleFavorite)
+router.get("/:userId", userControllers.getUser)
+router.get("/:userId/trips", userControllers.getTripList)
 router.post("/google", userControllers.google);
 
 router.post("/logout", userControllers.logout);
 
-router.get("/:userId", userControllers.getUser);
 
 export default router;

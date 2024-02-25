@@ -1,5 +1,5 @@
 import { FormProvider, useForm } from "react-hook-form";
-
+import { toast, Toaster } from "react-hot-toast";
 import { CategorySection } from "../components/CreateListingForm/CategorySection";
 import { TypeSection } from "../components/CreateListingForm/TypeSection";
 import { LocationSection } from "../components/CreateListingForm/LocationSection";
@@ -9,8 +9,12 @@ import { PhotoUploadSection } from "../components/CreateListingForm/PhotoUploadS
 import { ListingInfoSection } from "../components/CreateListingForm/ListingInfoSection";
 import * as apiClient from "../api-client";
 import { useState } from "react";
+import {useNavigate} from "react-router-dom"
 
 export const CreateListing = () => {
+const navigate = useNavigate()
+
+  /**UPLOAD LISTING PHOTOS */
   const [photos, setPhotos] = useState([]);
 
   const handleUploadPhotos = (e) => {
@@ -32,13 +36,64 @@ export const CreateListing = () => {
       prevPhotos.filter((_, index) => index !== indexToRemove)
     );
   };
+
+  /**LISTING BASICS */
+  const [guests, setGuests] = useState(1);
+  const [bedrooms, setBedrooms] = useState(1);
+  const [beds, setBeds] = useState(1);
+  const [bathrooms, setBathrooms] = useState(1);
+
+  const handleMinusCount = (type) => {
+    switch (type) {
+      case "Guests": {
+        guests > 1 && setGuests(guests - 1);
+        break;
+      }
+      case "Bedrooms": {
+        bedrooms > 1 && setBedrooms(bedrooms - 1);
+        break;
+      }
+      case "Beds": {
+        beds > 1 && setBeds(beds - 1);
+        break;
+      }
+      case "Bathrooms": {
+        bathrooms > 1 && setBathrooms(bathrooms - 1);
+        break;
+      }
+    }
+  };
+
+  const handlePlusCount = (type) => {
+    switch (type) {
+      case "Guests": {
+        setGuests(guests + 1);
+        break;
+      }
+      case "Bedrooms": {
+        setBedrooms(bedrooms + 1);
+        break;
+      }
+      case "Beds": {
+        setBeds(beds + 1);
+        break;
+      }
+      case "Bathrooms": {
+        setBathrooms(bathrooms + 1);
+        break;
+      }
+    }
+  };
+
+  /**POST LISTING */
+
   const formMethods = useForm();
-  const { handleSubmit } = formMethods;
+  const { handleSubmit, reset} = formMethods;
+const [submitting, setSubmitting] = useState(false)
 
-
-  const onSubmit = handleSubmit((formDataJson) => {
+  const onSubmit = handleSubmit(async (formDataJson) => {
     const formData = new FormData();
-   
+
     formData.append("category", formDataJson.category);
     formData.append("type", formDataJson.type);
     formData.append("street", formDataJson.street);
@@ -46,6 +101,10 @@ export const CreateListing = () => {
     formData.append("city", formDataJson.city);
     formData.append("province", formDataJson.province);
     formData.append("country", formDataJson.country);
+    formData.append("guestCount", guests);
+    formData.append("bedroomCount", bedrooms);
+    formData.append("bedCount", beds);
+    formData.append("bathroomCount", bathrooms);
     formData.append("title", formDataJson.title);
     formData.append("description", formDataJson.description);
     formData.append("price", formDataJson.price.toString());
@@ -60,12 +119,27 @@ export const CreateListing = () => {
       formData.append(`photos`, photo);
     });
 
-    apiClient.addListing(formData);
-  
+    setSubmitting(true)
+    const res = await apiClient.addListing(formData);
+    if(res) {
+      setSubmitting(false)
+    }
+   
+    toast.success("Listing created successfully!");
+    reset();
+    setGuests(1);
+    setBedrooms(1);
+    setBeds(1);
+    setBathrooms(1);
+    setPhotos([]);
+    setTimeout(() => {
+      navigate('/my-listings')
+    }, 2000);
   });
 
   return (
     <div className="bg-neutral-50 w-screen flex-col gap-5 ">
+      <Toaster />
       <h1 className="text-xl md:text-3xl font-bold py-8">
         Publish your property
       </h1>
@@ -79,7 +153,14 @@ export const CreateListing = () => {
             <CategorySection />
             <TypeSection />
             <LocationSection />
-            <ListingBasicsSection />
+            <ListingBasicsSection
+              handleMinusCount={handleMinusCount}
+              handlePlusCount={handlePlusCount}
+              guests={guests}
+              bedrooms={bedrooms}
+              beds={beds}
+              bathrooms={bathrooms}
+            />
             <h2 className="font-semibold text-xl py-3">
               Step 2: Make your place stand out
             </h2>
@@ -96,8 +177,9 @@ export const CreateListing = () => {
               <button
                 className="bg-orange-400 text-white text-xl font-medium px-3 py-3 mt-4 rounded-md hover:bg-orange-500"
                 type="submit"
+                disabled={submitting ? true : false}
               >
-                Create your listing
+               {submitting ? "Saving..." : "Create your listing"}
               </button>
             </span>
           </form>

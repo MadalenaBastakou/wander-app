@@ -1,4 +1,6 @@
 import User from "../models/User.js";
+import Booking from "../models/Booking.js";
+import Listing from "../models/Listing.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
@@ -27,7 +29,9 @@ const signup = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 86400000,
     });
-    return res.status(200).json({message: "User registered successfully", user: rest})
+    return res
+      .status(200)
+      .json({ message: "User registered successfully", user: rest });
   } catch (err) {
     console.log(err);
     res.status(500).send({ message: "Something went wrong" });
@@ -58,7 +62,7 @@ const login = async (req, res, next) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 86400000,
     });
-    return res.status(200).json({token, user:rest});
+    return res.status(200).json({message: "User logged in successfully", user: rest});
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Something went wrong" });
@@ -78,13 +82,14 @@ const google = async (req, res, next) => {
         secure: process.env.NODE_ENV === "production",
         maxAge: 86400000,
       });
-      return res.status(200).json(rest);
+
+      return res.status(200).json({message: "User logged in successfully with Google", user: rest});
     } else {
       const generatedNumber =
         Math.random().toString(36).slice(-8) +
         Math.random().toString(36).slice(-8);
       const hashedPassword = bcryptjs.hashSync(generatedNumber, 10);
-      const user = new User({
+      const newUser = new User({
         firstName: req.body.name.split(" ")[0],
         lastName: req.body.name.split(" ")[1],
         username:
@@ -94,10 +99,17 @@ const google = async (req, res, next) => {
         password: hashedPassword,
         profileImagePath: req.body.photo,
       });
-      await user.save();
-      return res
-        .status(200)
-        .json({ message: "User registered successfully with Google" });
+      await newUser.save();
+      const token = jwt.sign({ userId: newUser._id }, process.env.SECRET_KEY, {
+        expiresIn: "1d",
+      });
+      const { password: pass, ...rest } = newUser._doc;
+      res.cookie("auth_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 86400000,
+      });
+      return res.status(200).json({message: "User logged in successfully with Google", user: rest});
     }
   } catch (err) {
     console.log(err);
@@ -118,18 +130,75 @@ const logout = (req, res) => {
     expires: new Date(0),
   });
   res.send();
-}
+};
 
-const getUser = async(req, res) => {
+const getUser = async (req, res) => {
   try {
     const { userId } = req.params;
-    const user = await User.findById({ _id: userId });
-    const { password: pass, ...rest } = user._doc;
-    res.status(202).json(rest);
+    const user = await User.find({ _id: userId });
+    res.status(200).json(user);
   } catch (error) {
-    console.log("Error fetching creator:" + error);
-    res.status(500).json("Something went wrong");
+    console.log(error);
+    res.status(500).json({ message: "Cannot find trips" });
   }
-}
+};
 
-export default { signup, login, validateToken, google, logout, getUser};
+const getTripList = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const trips = await Booking.find({ customerId: userId }).populate(
+      "customerId hostId listingId"
+    );
+    res.status(200).json(trips);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Cannot find trips" });
+  }
+};
+
+const handleFavorite = async (req, res) => {
+  try {
+    const { userId, listingId } = req.params;
+    const user = await User.findById(userId);
+    const listing = await Listing.findById(listingId);
+
+    const favoriteListing = user.wishList.find(
+      (item) => item._id.toString() === listingId
+    );
+
+    if (favoriteListing) {
+      user.wishList = user.wishList.filter(
+        (item) => item._id.toString() !== listingId
+      );
+      await user.save();
+      res.status(200).json({
+        message: "Listing is removed from wish list",
+        user,
+        liked: false,
+      });
+    } else {
+      user.wishList.push(listing);
+      await user.save();
+      res.status(200).json({
+        message: "Listing is added from wish list",
+        user,
+        liked: true,
+      });
+    }
+  } catch (error) {
+    res.status(404).json({
+      error: error.message,
+    });
+  }
+};
+
+export default {
+  signup,
+  login,
+  validateToken,
+  google,
+  logout,
+  getUser,
+  getTripList,
+  handleFavorite,
+};

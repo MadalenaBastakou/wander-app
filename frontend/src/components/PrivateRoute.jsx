@@ -1,10 +1,12 @@
-import { useCookies } from "react-cookie";
+
+import { useContext } from "react"
 import {Outlet, Navigate} from "react-router-dom"
+import { UserContext } from "../contexts/UserContext"
 
 export const PrivateRoute = () => {
-    const [cookies] = useCookies()
+const {user} = useContext(UserContext)
     
   return (
-    cookies.user ? <Outlet/> : <Navigate to="/login"/>
+    user ? <Outlet/> : <Navigate to="/login"/>
   )
 }

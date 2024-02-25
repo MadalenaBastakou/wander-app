@@ -2,6 +2,7 @@ import cloudinary from "cloudinary";
 import Listing from "../models/Listing.js";
 import User from "../models/User.js";
 
+/*CREATE LISTING*/
 const addListing = async (req, res) => {
   try {
     const imageFiles = req.files;
@@ -26,28 +27,33 @@ const addListing = async (req, res) => {
     //save the listing in the database
     const listing = new Listing(newListing);
     await listing.save();
+    user.propertyList.push(listing)
+    await user.save()
     //return
-    res.status(201).send(listing);
+    res.status(201).json({listing, user});
   } catch (error) {
     console.log("Error creating listing:" + error);
     res.status(500).json("Something went wrong");
   }
 };
 
-const getListings = async (req, res) => {
+
+/*USERS PERSONAL LISTINGS*/
+const getUserListings = async (req, res) => {
   try {
-    const listings = await Listing.find({ creator: { _id: req.userId } });
-    res.json(listings);
+    const listings = await Listing.find({ creator: { _id: req.userId } }).populate("creator")
+    res.status(200).json(listings);
   } catch (error) {
     console.log("Error fetching listings:" + error);
     res.status(500).json("Something went wrong");
   }
 };
 
+/*LISTING DETAILS*/
 const getListing = async (req, res) => {
   try {
     const { listingId } = req.params;
-    const listing = await Listing.findById({ _id: listingId });
+    const listing = await Listing.findById({ _id: listingId }).populate("creator");
     res.status(202).json(listing);
   } catch (error) {
     console.log("Error fetching listing:" + error);
@@ -55,4 +61,24 @@ const getListing = async (req, res) => {
   }
 };
 
-export default { addListing, getListings, getListing };
+
+/*GET ALL LISTINGS*/
+const getListings= async (req, res) => {
+  const qCategory = req.query.category
+  try {
+    let listings
+    if(qCategory) {
+      listings = await Listing.find({category: qCategory}).populate("creator")
+    }else {
+      listings = await Listing.find().populate("creator")
+    }
+    res.status(200).json(listings)
+  } catch (error) {
+    console.log("Error fetching listings:" + error);
+    res.status(500).json("Something went wrong");
+  }
+};
+
+
+
+export default { addListing, getUserListings, getListing, getListings };

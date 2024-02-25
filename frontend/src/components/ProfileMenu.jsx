@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { BsPersonFill } from "react-icons/bs";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { Link } from "react-router-dom";
-import * as apiClient from "../api-client";
+// import * as apiClient from "../api-client";
+import { UserContext } from "../contexts/UserContext";
+
 
 export const ProfileMenu = ({ user }) => {
   const [open, setOpen] = useState(false);
+const {logout} = useContext(UserContext)
 
   return (
     <div className="relative">
@@ -13,7 +16,7 @@ export const ProfileMenu = ({ user }) => {
         onClick={() => setOpen((prev) => !prev)}
         className="text-gray-400 flex justify-around items-center text-xl  rounded-full border py-2 px-2 shadow-sm hover:shadow-md"
       >
-        {user.profileImagePath[0] ? (
+        {user?.profileImagePath[0] ? (
           <img
             className="object-fit rounded-full w-1/2"
             alt="profile-photo"
@@ -29,16 +32,16 @@ export const ProfileMenu = ({ user }) => {
       </button>
       {open && user.username && (
         <div className="flex flex-col gap-2 w-48 bg-white border-gray-400 rounded absolute top-14 right-0 ps-3 pe-12 py-3 text-base shadow-md z-10">
-          <Link className="hover:text-gray-700" to="/profile">
+          <Link className="hover:text-gray-700" to="/profile" state={ {user: user }}>
             My profile
           </Link>
           <Link className="hover:text-gray-700" to="/my-listings">
             My Listings
           </Link>
-          <Link className="hover:text-gray-700" to="">
+          <Link className="hover:text-gray-700" to={`/${user._id}/trips`}>
             Trip List
           </Link>
-          <Link className="hover:text-gray-700" to="">
+          <Link className="hover:text-gray-700" to={`/${user._id}/wishList`}>
             Wish List
           </Link>
           <Link className="hover:text-gray-700" to="">
@@ -52,9 +55,9 @@ export const ProfileMenu = ({ user }) => {
           </Link>
           <Link
             className="hover:text-gray-700"
-            to=""
+            to="/login"
             onClick={() => {
-              apiClient.logout();
+              logout();
             }}
           >
             Logout
