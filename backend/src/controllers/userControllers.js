@@ -4,6 +4,7 @@ import Listing from "../models/Listing.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
+import cloudinary from "cloudinary";
 
 const signup = async (req, res) => {
   const errors = validationResult(req);
@@ -62,7 +63,9 @@ const login = async (req, res, next) => {
       secure: process.env.NODE_ENV === "production",
       maxAge: 86400000,
     });
-    return res.status(200).json({message: "User logged in successfully", user: rest});
+    return res
+      .status(200)
+      .json({ message: "User logged in successfully", user: rest });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Something went wrong" });
@@ -83,7 +86,12 @@ const google = async (req, res, next) => {
         maxAge: 86400000,
       });
 
-      return res.status(200).json({message: "User logged in successfully with Google", user: rest});
+      return res
+        .status(200)
+        .json({
+          message: "User logged in successfully with Google",
+          user: rest,
+        });
     } else {
       const generatedNumber =
         Math.random().toString(36).slice(-8) +
@@ -109,7 +117,12 @@ const google = async (req, res, next) => {
         secure: process.env.NODE_ENV === "production",
         maxAge: 86400000,
       });
-      return res.status(200).json({message: "User logged in successfully with Google", user: rest});
+      return res
+        .status(200)
+        .json({
+          message: "User logged in successfully with Google",
+          user: rest,
+        });
     }
   } catch (err) {
     console.log(err);
@@ -192,6 +205,41 @@ const handleFavorite = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const imageFiles = req.files;
+    const updatedUser = req.body;
+    console.log(updatedUser);
+if(updatedUser.password) {
+  updatedUser.password = bcryptjs.hashSync(updatedUser.password, 10);
+}
+
+    //upload the images to cloudinary
+    const uploadPromises = imageFiles.map(async (image) => {
+      const b64 = Buffer.from(image.buffer).toString("base64");
+      let dataURI = "data:" + image.mimetype + ";base64," + b64;
+      const res = await cloudinary.v2.uploader.upload(dataURI);
+      return res.url;
+    });
+
+    const imageUrls = await Promise.all(uploadPromises);
+    //if upload was successful, add the URLs to the new listing
+    updatedUser.profileImagePath = imageUrls;
+    const user = await User.findByIdAndUpdate(userId, updatedUser, { new: true });
+    const { password, ...rest } = user._doc;
+    res.status(200).json({
+      message: "User updated successfully",
+      rest,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({
+      message: "Error updating user"
+    });
+  }
+};
+
 export default {
   signup,
   login,
@@ -201,4 +249,5 @@ export default {
   getUser,
   getTripList,
   handleFavorite,
+  updateUser,
 };

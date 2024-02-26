@@ -1,12 +1,12 @@
 import { FaArrowRightLong } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link,} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const coverInfo = [
-  { name: "Villas", url: "bg-Villas", link: "" },
-  { name: "Apartments", url: "bg-Apartments", link: "" },
-  { name: "Houses", url: "bg-Houses", link: "" },
-  { name: "Cottages", url: "bg-Cottages", link: "" },
+  { name: "Villas", url: "bg-Villas", link: "/categories" },
+  { name: "Apartments", url: "bg-Apartments", link: "/categories" },
+  { name: "Houses", url: "bg-Houses", link: "/categories" },
+  { name: "Cottages", url: "bg-Cottages", link: "/categories" },
 ];
 
 export default function CategoriesCover() {

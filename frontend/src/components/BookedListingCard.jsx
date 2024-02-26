@@ -6,11 +6,11 @@ import * as apiClient from "../api-client";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { UserContext } from "../contexts/UserContext";
 
-export const ListingCard = ({ listing }) => {
+export const BookedListingCard = ({listing, startDate, endDate, totalPrice}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { user, setUser } = useContext(UserContext);
 
-  const isLiked = user?.wishList?.find((item) => item._id === listing?._id);
+  const isLiked = user?.wishList?.find((item) => item?._id === listing?._id);
 
   const navigate = useNavigate();
 
@@ -18,12 +18,12 @@ export const ListingCard = ({ listing }) => {
   const goToPrevSlide = () => {
     setCurrentIndex(
       (prevIndex) =>
-        (prevIndex - 1 + listing.photos.length) % listing.photos.length
+        (prevIndex - 1 + listing?.photos?.length) % listing?.photos?.length
     );
   };
 
   const goToNextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % listing.photos.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % listing?.photos.length);
   };
 
   const goToSlide = (slideIndex) => {
@@ -124,11 +124,12 @@ export const ListingCard = ({ listing }) => {
         </h3>
       </div>
       <p className="text-sm text-neutral-500 font-light">{listing.category}</p>
-      <p className="text-sm text-neutral-500 font-light">{listing.type}</p>
-      <p className="text-sm font-bold">
+      <p className="text-md text-neutral-500 ">{startDate} - {endDate}</p>
+      <p className="text-md font-bold">
         <span>€</span>
-        {listing.price} <span className="font-normal">per night</span>
+        {totalPrice} <span className="font-normal">total</span>
       </p>
     </div>
-  );
-};
+  )
+}
+

@@ -1,91 +1,102 @@
-import { useCookies } from "react-cookie";
 import * as apiClient from "../api-client";
-import { useContext, useEffect, useRef, useState } from "react";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { app } from "../firebase";
+import { useContext, useEffect, useState } from "react";
 import { BsPersonFill } from "react-icons/bs";
 import { UserContext } from "../contexts/UserContext";
 
 export const Profile = () => {
-  const [cookies] = useCookies();
-  const { user } = useContext(UserContext);
-  const fileRef = useRef(null);
-  const [file, setFile] = useState(undefined);
-  const [filePerc, setFilePerc] = useState(0);
-  const [fileUploadErr, setFileUploadErr] = useState(false);
-  const [formData, setFormData] = useState({});
-
-  console.log(formData);
+  const { user, setUser } = useContext(UserContext);
+  const [file, setFile] = useState(null);
+  const [userInfo, setUserInfo] = useState({
+    username: user?.username,
+    email: user?.email,
+    password: "",
+  });
 
   useEffect(() => {
-    if (file) {
-      handleFileUpload(file);
-    }
-  }, [file]);
-
-  const handleFileUpload = (file) => {
-    const storage = getStorage(app);
-    const fileName = new Date().getTime() + file.name;
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    console.log(file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setFilePerc(Math.round(progress));
-      },
-      (error) => {
-        setFileUploadErr(true);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
-          setFormData({ ...formData, profileImagePath: downloadURL });
-        });
+    const getUser = async () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        await setUser(JSON.parse(storedUser));
       }
-    );
+    };
+    getUser();
+  }, [setUser]);
+
+  // // Save user data to localStorage whenever it changes
+  // useEffect(() => {
+  //   localStorage.setItem("user", JSON.stringify(user));
+  // }, [user]);
+
+  const handleUploadPhotos = (e) => {
+    setFile(e.target.files[0]);
   };
 
-  console.log(user);
+  const handleChange = (e) => {
+    setUserInfo({ ...userInfo, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e,userId) => {
+    try {
+      e.preventDefault()
+      const formData = new FormData();
+      formData.append("profileImagePath", file);
+      formData.append("username", userInfo.username);
+      formData.append("email", userInfo.email);
+      formData.append("password", userInfo.password);
+      console.log(userId, formData.username);
+      const res = await apiClient.updateUser(userId, formData);
+      console.log(res);
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
 
   return (
     <div className="p-3 max-w-xl mx-auto">
       <h1 className="text-3xl font-bold text-center my-7">Profile</h1>
       <form className="flex flex-col gap-4">
         <input
-          onChange={(e) => setFile(e.target.files[0])}
+          id="image"
           type="file"
-          ref={fileRef}
+          name="photos"
+          style={{ display: "none" }}
           accept="image/*"
-          hidden
+          onChange={handleUploadPhotos}
         />
-        {user.profileImagePath ? (
-          <img
-            onClick={() => fileRef.current.click()}
-            className="rounded-full self-center mt-2 mb-4 cursor-pointer"
-            src={user.profileImagePath}
-            alt="profile-image"
-          />
+        {user.profileImagePath === "" ? (
+          <label htmlFor="image">
+            {!file && (
+              <img
+                onClick={handleUploadPhotos}
+                className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2 p-1"
+                src={user.profileImagePath}
+                alt="profile-image"
+              />
+            )}
+            {file && (
+              <img
+                onClick={handleUploadPhotos}
+                className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2 p-1"
+                src={URL.createObjectURL(file)}
+                alt="profile-image"
+              />
+            )}
+          </label>
         ) : (
-          <div className="flex justify-center">
-          <div className="text-gray-400 border border-gray-400 text-3xl rounded-full">
-            {" "}
-            <BsPersonFill className="text-2xl" />
-          </div>
-          </div>
+          <label htmlFor="image">
+            <div className="flex justify-center text-3xl">
+              <div>
+                {" "}
+                <BsPersonFill className="text-gray-400 border border-gray-400  rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2 p-1" />
+              </div>
+            </div>
+          </label>
         )}
         <input
           className="border p-3 rounded"
           type="text"
+          defaultValue={user.username}
+          onChange={handleChange}
           placeholder="username"
           id="username"
         />
@@ -93,15 +104,21 @@ export const Profile = () => {
           className="border p-3 rounded"
           type="email"
           placeholder="email"
+          defaultValue={user.email}
+          onChange={handleChange}
           id="email"
         />
         <input
           className="border p-3 rounded"
           type="text"
           placeholder="password"
+          onChange={handleChange}
           id="password"
         />
-        <button className="bg-orange-400 text-white text-md font-medium p-3 rounded-md hover:bg-orange-500">
+        <button
+          onClick={() => handleSubmit(user._id)}
+          className="bg-orange-400 text-white text-md font-medium p-3 rounded-md hover:bg-orange-500"
+        >
           Update
         </button>
       </form>

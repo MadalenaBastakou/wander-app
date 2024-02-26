@@ -36,6 +36,14 @@ function App() {
               </Layout>
             }
           />
+           <Route
+            path="/categories/:category"
+            element={
+              <Layout>
+                <CategoriesPage />
+              </Layout>
+            }
+          />
           <Route
             path="/my-listings/:listingId"
             element={

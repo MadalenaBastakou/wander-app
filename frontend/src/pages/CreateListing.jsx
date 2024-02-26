@@ -8,10 +8,12 @@ import { FacilitiesSection } from "../components/CreateListingForm/FacilitiesSec
 import { PhotoUploadSection } from "../components/CreateListingForm/PhotoUploadSection";
 import { ListingInfoSection } from "../components/CreateListingForm/ListingInfoSection";
 import * as apiClient from "../api-client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {useNavigate} from "react-router-dom"
+import { UserContext } from "../contexts/UserContext";
 
 export const CreateListing = () => {
+  const {setUser} = useContext(UserContext)
 const navigate = useNavigate()
 
   /**UPLOAD LISTING PHOTOS */
@@ -124,6 +126,9 @@ const [submitting, setSubmitting] = useState(false)
     if(res) {
       setSubmitting(false)
     }
+
+    console.log(res);
+  
    
     toast.success("Listing created successfully!");
     reset();
@@ -140,6 +145,7 @@ const [submitting, setSubmitting] = useState(false)
   return (
     <div className="bg-neutral-50 w-screen flex-col gap-5 ">
       <Toaster />
+      <div className="max-w-screen-xl mx-auto">
       <h1 className="text-xl md:text-3xl font-bold py-8">
         Publish your property
       </h1>
@@ -184,6 +190,7 @@ const [submitting, setSubmitting] = useState(false)
             </span>
           </form>
         </FormProvider>
+      </div>
       </div>
     </div>
   );

@@ -97,6 +97,7 @@ export const addListing = async (formData) => {
 
   const responseBody = await response.json();
 
+  localStorage.setItem("user", JSON.stringify(responseBody.user))
   return responseBody;
 };
 
@@ -123,7 +124,7 @@ export const fetchListing = async (listingId) => {
   return responseBody;
 };
 
-/**GET ALL LISTINGS */
+/**GET ALL LISTINGS BY CATEGORY*/
 export const fetchListings = async (selectedCategory) => {
   const response = await fetch(
     selectedCategory !== "All"
@@ -151,10 +152,9 @@ export const createBooking = async (newBooking) => {
   if (!response.ok) {
     throw new Error("Error creating booking");
   }
-  
-  if (response.ok) {
-    return true;
-  }
+
+  const responseBody = await response.json()
+  localStorage.setItem("user", JSON.stringify(responseBody.user))
 };
 
 /**GET TRIPS LIST */
@@ -164,7 +164,6 @@ export const fetchTripList = async (userId) => {
     throw new Error("Error creating booking");
   }
   const responseBody = await response.json();
-
   return responseBody;
 };
 
@@ -182,5 +181,23 @@ export const patchWishList = async (userId, listingId) => {
   const responseBody = await response.json();
   localStorage.setItem("user", JSON.stringify(responseBody.user));
   return responseBody;
+};
+
+/**UPDATE USER */
+export const updateUser = async (userId, formData) => {
+  const response = await fetch(`/api/user/${userId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: formData
+  });
+  if (!response.ok) {
+    throw new Error("Error updating wishlist");
+  }
+  const responseBody = await response.json();
+  console.log(responseBody);
+  localStorage.setItem("user", JSON.stringify(responseBody.user));
+  return responseBody.user;
 };
 

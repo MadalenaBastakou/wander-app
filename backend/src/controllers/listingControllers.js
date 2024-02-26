@@ -25,7 +25,7 @@ const addListing = async (req, res) => {
     newListing.creator = rest;
 
     //save the listing in the database
-    const listing = new Listing(newListing);
+    const listing = new Listing(newListing)
     await listing.save();
     user.propertyList.push(listing)
     await user.save()
@@ -61,7 +61,6 @@ const getListing = async (req, res) => {
   }
 };
 
-
 /*GET ALL LISTINGS*/
 const getListings= async (req, res) => {
   const qCategory = req.query.category
@@ -78,7 +77,5 @@ const getListings= async (req, res) => {
     res.status(500).json("Something went wrong");
   }
 };
-
-
 
 export default { addListing, getUserListings, getListing, getListings };

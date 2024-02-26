@@ -31,6 +31,7 @@ export const ListingInfoSection = () => {
           className="border rounded py-2 px-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-200"
           id="description"
           type="text"
+          rows={5}
           placeholder="Description"
           {...register("description", {
             required: "This field is required",

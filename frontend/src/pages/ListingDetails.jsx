@@ -7,23 +7,13 @@ import "react-date-range/dist/theme/default.css";
 import { DateRange } from "react-date-range";
 import { Loader } from "../components/Loader.jsx";
 import { BsPersonFill } from "react-icons/bs";
-import Cookies from "js-cookie";
 import { UserContext } from "../contexts/UserContext.jsx";
-
 
 export const ListingDetails = () => {
   const [loading, setLoading] = useState(true);
   const [listing, setListing] = useState(null);
-  // const [user, setUser] = useState({});
-  const {user} = useContext(UserContext)
-console.log(user);
-  // useEffect(() => {
-  //   const cookieValue = Cookies.get("user");
-  //   if (cookieValue) {
-  //     const decodedCookieValue = JSON.parse(decodeURIComponent(cookieValue));
- 
-  //     setUser(decodedCookieValue);
-  // }}, []);
+
+  const { user } = useContext(UserContext);
 
   const { listingId } = useParams();
 
@@ -54,28 +44,26 @@ console.log(user);
   };
 
   /**SUBMIT BOOKING */
-const customerId = user._id
+  const customerId = user._id;
 
-const navigate = useNavigate()
+  const navigate = useNavigate();
 
-const handleSubmit = async() => {
-  const newBooking ={
-    customerId,
-    listingId,
-   hostId:  listing.creator._id,
-    startDate: dateRange[0].startDate.toDateString(),
-    endDate: dateRange[0].endDate.toDateString(),
-    totalPrice: listing.price * dayCount
-  }
+  const handleSubmit = async () => {
+    const newBooking = {
+      customerId,
+      listingId,
+      hostId: listing.creator._id,
+      startDate: dateRange[0].startDate.toDateString(),
+      endDate: dateRange[0].endDate.toDateString(),
+      totalPrice: listing.price * dayCount,
+    };
     try {
-      const res = await apiClient.createBooking(newBooking);
-      if(res) {
-        navigate
-      }
+      await apiClient.createBooking(newBooking);
+      navigate(`/${user._id}/trips`);
     } catch (error) {
       console.error("Error creating booking:", error);
     }
-}
+  };
 
   return loading ? (
     <Loader />
@@ -102,7 +90,7 @@ const handleSubmit = async() => {
       <hr />
       <div>
         <div className="flex items-center gap-4">
-          {listing.creator.profileImagePath[0] === "" ? (
+          {listing.creator && listing.creator.profileImagePath[0] === "" ? (
             <img
               className="rounded-full w-12"
               src={listing.creator.profileImagePath[0]}
@@ -121,7 +109,7 @@ const handleSubmit = async() => {
       </div>
       <hr />
       <h3 className="text-md md:text-lg font-medium py-4">Description</h3>
-      <p>{listing.description}</p>
+      <p className="mb-12">{listing.description}</p>
       <hr />
       <div className="flex justify-between">
         <div>
@@ -142,43 +130,45 @@ const handleSubmit = async() => {
             ))}
           </div>
         </div>
-        <div>
-          <h2 className="text-lg md:text-xl font-semibold py-8">
-            How long do you want to stay?
-          </h2>
+        {listing.creator._id !== user._id && (
           <div>
-            <DateRange
-              className="pb-8"
-              ranges={dateRange}
-              onChange={handleSelect}
-            />
-            {dayCount > 1 ? (
-              <h2 className="text-lg md:text-xl font-semibold ">
-                €{listing.price} x {dayCount} nights
-              </h2>
-            ) : (
-              <h2 className="text-lg md:text-xl font-semibold ">
-                €{listing.price} x {dayCount} night
-              </h2>
-            )}
             <h2 className="text-lg md:text-xl font-semibold py-8">
-              Total price: €{listing.price * dayCount}
+              How long do you want to stay?
             </h2>
-            <p className="text-md font-light pb-2">
-              Start Date: {dateRange[0].startDate.toDateString()}
-            </p>
-            <p className="text-md font-light pb-8">
-              End Date: {dateRange[0].endDate.toDateString()}
-            </p>
+            <div>
+              <DateRange
+                className="pb-8"
+                ranges={dateRange}
+                onChange={handleSelect}
+              />
+              {dayCount > 1 ? (
+                <h2 className="text-lg md:text-xl font-semibold ">
+                  €{listing.price} x {dayCount} nights
+                </h2>
+              ) : (
+                <h2 className="text-lg md:text-xl font-semibold ">
+                  €{listing.price} x {dayCount} night
+                </h2>
+              )}
+              <h2 className="text-lg md:text-xl font-semibold py-8">
+                Total price: €{listing.price * dayCount}
+              </h2>
+              <p className="text-md font-light pb-2">
+                Start Date: {dateRange[0].startDate.toDateString()}
+              </p>
+              <p className="text-md font-light pb-8">
+                End Date: {dateRange[0].endDate.toDateString()}
+              </p>
+            </div>
+            <button
+              className="bg-orange-400 text-white text-xl font-medium px-12 py-3 mb-12 rounded-md hover:bg-orange-500"
+              type="submit"
+              onClick={handleSubmit}
+            >
+              BOOK
+            </button>
           </div>
-          <button
-            className="bg-orange-400 text-white text-xl font-medium px-12 py-3 mb-12 rounded-md hover:bg-orange-500"
-            type="submit"
-            onClick={handleSubmit}
-          >
-            BOOK
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );

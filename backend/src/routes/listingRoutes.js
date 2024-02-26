@@ -24,9 +24,7 @@ router.post(
     body("category").notEmpty().withMessage("Category is required"),
     body("type").notEmpty().withMessage("Type is required"),
     body("street").notEmpty().withMessage("Street address is required"),
-    body("aptSuite").notEmpty().withMessage("AptSuite is required"),
     body("city").notEmpty().withMessage("City is required"),
-    body("province").notEmpty().withMessage("Province is required"),
     body("country").notEmpty().withMessage("Country is required"),
     body("guestCount")
       .notEmpty()
