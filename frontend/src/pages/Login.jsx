@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Toaster } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import logo from "../assets/icons/logo.png";
@@ -24,7 +24,7 @@ const Login = () => {
       console.log("User sign in successfully");
     },
     onError: (error) => {
-      console.log(error);
+      toast.error(error.message);
     },
   });
 

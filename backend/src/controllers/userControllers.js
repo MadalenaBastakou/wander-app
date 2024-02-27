@@ -86,12 +86,10 @@ const google = async (req, res, next) => {
         maxAge: 86400000,
       });
 
-      return res
-        .status(200)
-        .json({
-          message: "User logged in successfully with Google",
-          user: rest,
-        });
+      return res.status(200).json({
+        message: "User logged in successfully with Google",
+        user: rest,
+      });
     } else {
       const generatedNumber =
         Math.random().toString(36).slice(-8) +
@@ -117,12 +115,10 @@ const google = async (req, res, next) => {
         secure: process.env.NODE_ENV === "production",
         maxAge: 86400000,
       });
-      return res
-        .status(200)
-        .json({
-          message: "User logged in successfully with Google",
-          user: rest,
-        });
+      return res.status(200).json({
+        message: "User logged in successfully with Google",
+        user: rest,
+      });
     }
   } catch (err) {
     console.log(err);
@@ -149,7 +145,8 @@ const getUser = async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await User.find({ _id: userId });
-    res.status(200).json(user);
+    const { password: pass, ...rest } = user._doc;
+    res.status(200).json(rest);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Cannot find trips" });
@@ -179,6 +176,7 @@ const handleFavorite = async (req, res) => {
       (item) => item._id.toString() === listingId
     );
 
+    const { password: pass, ...rest } = user._doc;
     if (favoriteListing) {
       user.wishList = user.wishList.filter(
         (item) => item._id.toString() !== listingId
@@ -186,7 +184,7 @@ const handleFavorite = async (req, res) => {
       await user.save();
       res.status(200).json({
         message: "Listing is removed from wish list",
-        user,
+        rest,
         liked: false,
       });
     } else {
@@ -194,7 +192,7 @@ const handleFavorite = async (req, res) => {
       await user.save();
       res.status(200).json({
         message: "Listing is added from wish list",
-        user,
+        rest,
         liked: true,
       });
     }
@@ -206,28 +204,57 @@ const handleFavorite = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  try {
-    const { _id, ...updatedUser } = req.body; 
 
+  try {
+    const { _id, ...updatedUser } = req.body;
+  
     updatedUser.updatedAt = new Date();
 
-    const user = await User.findOneAndUpdate({_id: req.params.userId}, updatedUser, {new:true})
-
-    if(!user) {
-      return res.status(404).json({message: "User not found"})
+    if (
+      updatedUser.password &&
+      updatedUser.password !== "" &&
+      updatedUser.password !== "undefined"
+    ) {
+      updatedUser.password = bcryptjs.hashSync(req.body.password, 10);
+    } else {
+      delete updatedUser.password;
     }
 
-    // const files = req.files
-    // const updatedPhotos = await uploadImages(files)
+    if (req.files.length !== 0 ) {
+      const files = req.files;
+      const updatedPhotos = await uploadImages(files);
+      updatedUser.profileImagePath = updatedPhotos;
+    } 
+    
+    const user = await User.findOneAndUpdate(
+      { _id: req.params.userId },
+      updatedUser,
+      { new: true }
+      );
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
 
-    // user.profileImagePath = updatedPhotos;
-await user.save()
-res.status(201).json(user)
+    await user.save();
+    const { password: pass, ...rest } = user._doc;
+    res.status(201).json({ message: "User updated successfully", user: rest });
   } catch (error) {
     console.log("Error updating user:" + error);
     res.status(500).json("Something went wrong");
   }
 };
+
+const deleteUser = async(req,res) => {
+  const {userId} = req.params
+  try {
+await User.deleteOne({_id: userId})
+res.status(200).json({ message: "User deleted successfully"});
+  }catch(error) {
+    console.log("Error deleting user:" + error);
+    res.status(500).json("Something went wrong");
+  }
+}
 
 async function uploadImages(imageFiles) {
   const uploadPromises = imageFiles.map(async (image) => {
@@ -236,7 +263,7 @@ async function uploadImages(imageFiles) {
     const res = await cloudinary.v2.uploader.upload(dataURI);
     return res.url;
   });
-  
+
   const imageUrls = await Promise.all(uploadPromises);
   return imageUrls;
 }
@@ -251,4 +278,5 @@ export default {
   getTripList,
   handleFavorite,
   updateUser,
+  deleteUser
 };

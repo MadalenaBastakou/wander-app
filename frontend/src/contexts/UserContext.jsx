@@ -7,7 +7,7 @@ const initialUserState = {
   username: "",
   email: "",
   password: "",
-  profileImagePath: "",
+  profileImagePath: null,
 };
 
 

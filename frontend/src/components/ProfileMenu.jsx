@@ -14,7 +14,7 @@ export const ProfileMenu = () => {
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-  }, [setUser]);
+  }, [ setUser]);
 
 
 
@@ -22,22 +22,22 @@ export const ProfileMenu = () => {
     <div className="relative">
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="text-gray-400 flex justify-around items-center text-xl  rounded-full border py-1 px-2 shadow-sm hover:shadow-md"
+        className="text-gray-400 flex justify-around items-center text-xl  rounded-full border px-2 shadow-sm hover:shadow-md"
       >
-        {user?.profileImagePath[0] ? (
-          <div className="w-12 h-12">
-            <img
-              className="object-cover rounded-full w-12 h-12"
-              alt="profile-photo"
-              src={user.profileImagePath}
-            ></img>
-          </div>
-        ) : (
-          <div className="text-gray-400 border border-gray-400 rounded-full">
+        
+         {user?.profileImagePath?.length === 0  ? ( <div className="text-gray-400 border border-gray-400 rounded-full">
             {" "}
             <BsPersonFill className="text-2xl" />
+          </div> ) : 
+        (
+          <div className="w-12 h-12 flex justify-around items-center">
+            <img
+              className="object-cover rounded-full w-10 h-10"
+              alt="profile-photo"
+              src={user?.profileImagePath[0]}
+            />
           </div>
-        )}
+        )} 
         <IoMdArrowDropdown />
       </button>
       {open && user.username && (

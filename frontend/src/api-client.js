@@ -1,4 +1,4 @@
-import Cookies from "js-cookie";
+
 
 /**USER SIGNUP*/
 export const signup = async (formData) => {
@@ -15,10 +15,10 @@ export const signup = async (formData) => {
   }
   console.log(responseBody);
   localStorage.setItem("user", JSON.stringify(responseBody.user));
-  Cookies.set("user", JSON.stringify(responseBody.user), {
-    secure: true,
-    sameSite: "strict",
-  });
+  // Cookies.set("user", JSON.stringify(responseBody.user), {
+  //   secure: true,
+  //   sameSite: "strict",
+  // });
 };
 
 /**USER LOGIN */
@@ -30,16 +30,19 @@ export const login = async (formData) => {
     body: JSON.stringify(formData),
   });
 
-  if (!response.ok) {
+//  if(response.status === 400) {
+// }
+if (!response.ok) {
+    const responseBody = await response.json()
     throw new Error(responseBody.message);
   }
   const responseBody = await response.json();
   console.log(responseBody);
   localStorage.setItem("user", JSON.stringify(responseBody.user));
-  Cookies.set("user", JSON.stringify(responseBody.user), {
-    secure: true,
-    sameSite: "strict",
-  });
+  // Cookies.set("user", JSON.stringify(responseBody.user), {
+  //   secure: true,
+  //   sameSite: "strict",
+  // });
   return responseBody.user;
 };
 
@@ -218,19 +221,33 @@ export const patchWishList = async (userId, listingId) => {
 /**UPDATE USER */
 export const updateUser = async (userId, formData) => {
   const response = await fetch(`/api/user/${userId}`, {
-    method: "PATCH",
+    method: "PUT",
+    // headers: {
+    //   "Content-Type": "application/json"
+    // },
+    body: formData
+  });
+  if (!response.ok) {
+    throw new Error("Error updating user");
+  }
+  const responseBody = await response.json();
+  localStorage.setItem("user", JSON.stringify(responseBody.user));
+  return responseBody.user;
+};
+
+/**DELETE USER */
+export const deleteUser = async (userId) => {
+  const response = await fetch(`/api/user/${userId}`, {
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json"
     },
-    body: formData
   });
-  console.log(response);
   if (!response.ok) {
-    throw new Error("Error updating wishlist");
+    throw new Error("Error deleting user");
   }
   const responseBody = await response.json();
-  console.log(responseBody);
-  localStorage.setItem("user", JSON.stringify(responseBody.user));
-  return responseBody.user;
+  localStorage.removeItem("user");
+  return responseBody
 };
 

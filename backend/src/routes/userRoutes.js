@@ -46,6 +46,7 @@ router.patch("/:userId/:listingId", userControllers.handleFavorite)
 router.put("/:userId/",verifyToken, upload.array("profileImagePath") , userControllers.updateUser)
 router.get("/:userId", userControllers.getUser)
 router.get("/:userId/trips", userControllers.getTripList)
+router.delete("/:userId", userControllers.deleteUser)
 router.post("/google", userControllers.google);
 
 router.post("/logout", userControllers.logout);
