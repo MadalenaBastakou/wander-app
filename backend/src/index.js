@@ -15,6 +15,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const __dirname = path.resolve()
+
 const app = express();
 
 connectToDb();
@@ -27,6 +29,12 @@ app.use(cookieParser());
 app.use("/api/user", userRoutes);
 app.use("/api/my-listings", listingRoutes);
 app.use("/api/my-bookings", bookingRoutes);
+
+app.use(express.static(path.join(__dirname, '/frontend/dist')))
+
+app.length("*", (req,res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'))
+})
 
 app.listen(process.env.PORT || 2180, () => {
   console.log("Server is running on localhost:2180");
