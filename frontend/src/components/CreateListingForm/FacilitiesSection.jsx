@@ -1,24 +1,23 @@
-import { useState } from "react";
 import { facilities } from "../../data";
 import { useFormContext } from "react-hook-form";
 
-export const FacilitiesSection = () => {
+export const FacilitiesSection = ({selectedAmenities, handleCheckboxChange}) => {
   const {
     register,
     formState: { errors },
   } = useFormContext();
-  const [selectedAmenities, setSelectedAmenities] = useState([]);
+  // const [selectedAmenities, setSelectedAmenities] = useState([]);
 
-  const handleCheckboxChange = (e) => {
-    const amenity = e.target.value;
-    if (e.target.checked) {
-      setSelectedAmenities([...selectedAmenities, amenity]);
-    } else {
-      setSelectedAmenities(
-        selectedAmenities.filter((item) => item !== amenity)
-      );
-    }
-  };
+  // const handleCheckboxChange = (e) => {
+  //   const amenity = e.target.value;
+  //   if (e.target.checked) {
+  //     setSelectedAmenities([...selectedAmenities, amenity]);
+  //   } else {
+  //     setSelectedAmenities(
+  //       selectedAmenities.filter((item) => item !== amenity)
+  //     );
+  //   }
+  // };
 
   return (
     <>

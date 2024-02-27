@@ -207,38 +207,39 @@ const handleFavorite = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const imageFiles = req.files;
-    const updatedUser = req.body;
-    console.log(updatedUser);
-if(updatedUser.password) {
-  updatedUser.password = bcryptjs.hashSync(updatedUser.password, 10);
-}
+    const { _id, ...updatedUser } = req.body; 
 
-    //upload the images to cloudinary
-    const uploadPromises = imageFiles.map(async (image) => {
-      const b64 = Buffer.from(image.buffer).toString("base64");
-      let dataURI = "data:" + image.mimetype + ";base64," + b64;
-      const res = await cloudinary.v2.uploader.upload(dataURI);
-      return res.url;
-    });
+    updatedUser.updatedAt = new Date();
 
-    const imageUrls = await Promise.all(uploadPromises);
-    //if upload was successful, add the URLs to the new listing
-    updatedUser.profileImagePath = imageUrls;
-    const user = await User.findByIdAndUpdate(userId, updatedUser, { new: true });
-    const { password, ...rest } = user._doc;
-    res.status(200).json({
-      message: "User updated successfully",
-      rest,
-    });
+    const user = await User.findOneAndUpdate({_id: req.params.userId}, updatedUser, {new:true})
+
+    if(!user) {
+      return res.status(404).json({message: "User not found"})
+    }
+
+    // const files = req.files
+    // const updatedPhotos = await uploadImages(files)
+
+    // user.profileImagePath = updatedPhotos;
+await user.save()
+res.status(201).json(user)
   } catch (error) {
-    console.log(error);
-    res.status(404).json({
-      message: "Error updating user"
-    });
+    console.log("Error updating user:" + error);
+    res.status(500).json("Something went wrong");
   }
 };
+
+async function uploadImages(imageFiles) {
+  const uploadPromises = imageFiles.map(async (image) => {
+    const b64 = Buffer.from(image.buffer).toString("base64");
+    let dataURI = "data:" + image.mimetype + ";base64," + b64;
+    const res = await cloudinary.v2.uploader.upload(dataURI);
+    return res.url;
+  });
+  
+  const imageUrls = await Promise.all(uploadPromises);
+  return imageUrls;
+}
 
 export default {
   signup,

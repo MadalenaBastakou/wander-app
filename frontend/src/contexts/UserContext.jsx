@@ -1,10 +1,20 @@
 import { createContext, useEffect, useState } from "react";
 // import Cookies from "js-cookie";
 
+const initialUserState = {
+  firstName: "",
+  lastName: "",
+  username: "",
+  email: "",
+  password: "",
+  profileImagePath: "",
+};
+
+
 const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(initialUserState);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 

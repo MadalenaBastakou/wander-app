@@ -12,6 +12,7 @@ import { ListingDetails } from "./pages/ListingDetails";
 import { CategoriesPage } from "./pages/CategoriesPage";
 import { TripList } from "./pages/TripList";
 import { Wishlist } from "./pages/Wishlist";
+import { EditListing } from "./components/EditListing";
 
 
 function App() {
@@ -58,6 +59,14 @@ function App() {
               element={
                 <Layout>
                   <Profile />
+                </Layout>
+              }
+            />
+            <Route
+              path="/my-listings/edit-listing/:listingId"
+              element={
+                <Layout>
+                  <EditListing />
                 </Layout>
               }
             />

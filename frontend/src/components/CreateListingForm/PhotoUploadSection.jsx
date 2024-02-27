@@ -59,7 +59,7 @@ export const PhotoUploadSection = ({
                           >
                             <img
                               className=""
-                              src={URL.createObjectURL(photo)}
+                              src={typeof photo === 'string' ? photo : URL.createObjectURL(photo) }
                               alt="place"
                             />
                             <button

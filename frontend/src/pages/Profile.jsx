@@ -3,24 +3,32 @@ import { useContext, useEffect, useState } from "react";
 import { BsPersonFill } from "react-icons/bs";
 import { UserContext } from "../contexts/UserContext";
 
+
 export const Profile = () => {
   const { user, setUser } = useContext(UserContext);
   const [file, setFile] = useState(null);
-  const [userInfo, setUserInfo] = useState({
-    username: user?.username,
-    email: user?.email,
-    password: "",
-  });
+  // const [userInfo, setUserInfo] = useState({
+  //   username: user?.username,
+  //   email: user?.email,
+  //   password: "",
+  // });
 
-  useEffect(() => {
-    const getUser = async () => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        await setUser(JSON.parse(storedUser));
-      }
-    };
-    getUser();
-  }, [setUser]);
+
+
+  // useEffect(() => {
+  //   const getUser = async () => {
+  //     if(user) {
+  //       setUpdatedUser(user)
+  //     }
+  //     // const res = await apiClient.fetchUser(user._id)
+  //     // console.log(res);
+  //     // const storedUser = localStorage.getItem("user");
+  //     // if (storedUser) {
+  //     //   await setUser(JSON.parse(storedUser));
+  //     // }
+  //   };
+  //   getUser();
+  // }, []);
 
   // // Save user data to localStorage whenever it changes
   // useEffect(() => {
@@ -32,20 +40,28 @@ export const Profile = () => {
   };
 
   const handleChange = (e) => {
-    setUserInfo({ ...userInfo, [e.target.id]: e.target.value });
+    const {name, value} = e.target
+    setUser({...user, [name]: value})
   };
 
-  const handleSubmit = async (e,userId) => {
+  const handleSubmit = async (e) => {
     try {
       e.preventDefault()
       const formData = new FormData();
-      formData.append("profileImagePath", file);
-      formData.append("username", userInfo.username);
-      formData.append("email", userInfo.email);
-      formData.append("password", userInfo.password);
-      console.log(userId, formData.username);
-      const res = await apiClient.updateUser(userId, formData);
-      console.log(res);
+      // formData.append("profileImagePath", file);
+      formData.append("firstName", user.firstName);
+      formData.append("lastName", user.lastName);
+      formData.append("username", user.username);
+      formData.append("email", user.email);
+      formData.append("password", user.password);
+
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + " - " + pair[1]);
+      }
+      // const res = await apiClient.updateUser(userId, formData);
+      // console.log(res);
+      // const res = apiClient.updateUser(user._id, formData)
+      // console.log(res);
     } catch (error) {
       console.error("Error updating user:", error);
     }
@@ -92,28 +108,46 @@ export const Profile = () => {
             </div>
           </label>
         )}
+        <div className="flex gap-6 mt-6">
+        <input
+          className="border p-3 rounded flex-1"
+          type="text"
+          onChange={handleChange}
+          value={user.firstName}
+          placeholder="First Name"
+          name="firstName"
+        />
+        <input
+          className="border p-3 rounded flex-1"
+          type="text"
+          onChange={handleChange}
+          value={user.lastName}
+          placeholder="Last Name"
+          name="lastName"
+        />
+        </div>
         <input
           className="border p-3 rounded"
           type="text"
-          defaultValue={user.username}
           onChange={handleChange}
-          placeholder="username"
-          id="username"
+          value={user.username}
+          placeholder="Username"
+          name="username"
         />
         <input
           className="border p-3 rounded"
           type="email"
-          placeholder="email"
-          defaultValue={user.email}
+          placeholder="Email"
           onChange={handleChange}
-          id="email"
+          value={user.email}
+          name="email"
         />
         <input
           className="border p-3 rounded"
           type="text"
-          placeholder="password"
+          placeholder="Password"
           onChange={handleChange}
-          id="password"
+          name="password"
         />
         <button
           onClick={() => handleSubmit(user._id)}

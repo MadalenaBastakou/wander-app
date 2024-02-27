@@ -62,6 +62,8 @@ router.get("/", verifyToken, listingControllers.getUserListings)
 
 router.get("/properties", listingControllers.getListings)
 router.get("/:listingId", listingControllers.getListing)
+router.put("/:listingId", verifyToken, upload.array("photos"),listingControllers.updateListing)
+router.delete("/:listingId", listingControllers.deleteListing)
 
 
 export default router;

@@ -119,9 +119,11 @@ export const ListingCard = ({ listing }) => {
       </div>
 
       <div className="flex justify-between mt-2">
-        <h3 className="text-sm font-medium">
+        {listing.province ? <h3 className="text-sm font-medium">
           {listing.city}, {listing.province}, {listing.country}
-        </h3>
+        </h3> : <h3 className="text-sm font-medium">
+          {listing.city}, {listing.country}
+        </h3>}
       </div>
       <p className="text-sm text-neutral-500 font-light">{listing.category}</p>
       <p className="text-sm text-neutral-500 font-light">{listing.type}</p>

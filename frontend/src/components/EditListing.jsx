@@ -8,11 +8,48 @@ import { FacilitiesSection } from "../components/CreateListingForm/FacilitiesSec
 import { PhotoUploadSection } from "../components/CreateListingForm/PhotoUploadSection";
 import { ListingInfoSection } from "../components/CreateListingForm/ListingInfoSection";
 import * as apiClient from "../api-client";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-export const CreateListing = () => {
+export const EditListing = () => {
+  const [listing, setListing] = useState(null);
+  const formMethods = useForm();
+  const { handleSubmit, reset } = formMethods;
+  const [submitting, setSubmitting] = useState(false);
+  const [guests, setGuests] = useState(1);
+  const [bedrooms, setBedrooms] = useState(1);
+  const [beds, setBeds] = useState(1);
+  const [bathrooms, setBathrooms] = useState(1);
+  const [selectedAmenities, setSelectedAmenities] = useState([]);
+
+  const { listingId } = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const getListing = async () => {
+      const res = await apiClient.fetchListing(listingId);
+      setListing(res);
+      setGuests(res.guestCount);
+      setBedrooms(res.bedroomCount);
+      setBeds(res.bedCount);
+      setBathrooms(res.bathroomCount);
+      setSelectedAmenities(res.facilities);
+      setPhotos(res.photos);
+      reset(res);
+    };
+    getListing();
+  }, [listingId, reset]);
+
+  const handleCheckboxChange = (e) => {
+    const amenity = e.target.value;
+    if (e.target.checked) {
+      setSelectedAmenities([...selectedAmenities, amenity]);
+    } else {
+      setSelectedAmenities(
+        selectedAmenities.filter((item) => item !== amenity)
+      );
+    }
+  };
 
   /**UPLOAD LISTING PHOTOS */
   const [photos, setPhotos] = useState([]);
@@ -36,13 +73,6 @@ export const CreateListing = () => {
       prevPhotos.filter((_, index) => index !== indexToRemove)
     );
   };
-
-  /**LISTING BASICS */
-  const [guests, setGuests] = useState(1);
-  const [bedrooms, setBedrooms] = useState(1);
-  const [beds, setBeds] = useState(1);
-  const [bathrooms, setBathrooms] = useState(1);
-  const [selectedAmenities, setSelectedAmenities] = useState([]);
 
   const handleMinusCount = (type) => {
     switch (type) {
@@ -86,26 +116,11 @@ export const CreateListing = () => {
     }
   };
 
-  const handleCheckboxChange = (e) => {
-    const amenity = e.target.value;
-    if (e.target.checked) {
-      setSelectedAmenities([...selectedAmenities, amenity]);
-    } else {
-      setSelectedAmenities(
-        selectedAmenities.filter((item) => item !== amenity)
-      );
-    }
-  };
-
-  /**POST LISTING */
-
-  const formMethods = useForm();
-  const { handleSubmit, reset } = formMethods;
-  const [submitting, setSubmitting] = useState(false);
-
   const onSubmit = handleSubmit(async (formDataJson) => {
     const formData = new FormData();
-
+    if (listing) {
+      formData.append("listingId", listing._id);
+    }
     formData.append("category", formDataJson.category);
     formData.append("type", formDataJson.type);
     formData.append("street", formDataJson.street);
@@ -126,20 +141,17 @@ export const CreateListing = () => {
         formData.append(`facilities[${index}]`, facility);
       });
     }
-
     photos.forEach((photo) => {
       formData.append(`photos`, photo);
     });
 
     setSubmitting(true);
-    const res = await apiClient.addListing(formData);
+    const res = await apiClient.updateListing(formData);
     if (res) {
       setSubmitting(false);
     }
 
-    console.log(res);
-
-    toast.success("Listing created successfully!");
+    toast.success("Listing updated successfully!");
     reset();
     setGuests(1);
     setBedrooms(1);
@@ -193,11 +205,11 @@ export const CreateListing = () => {
               <ListingInfoSection />
               <span className="flex justify-end">
                 <button
-                  className="bg-orange-400 text-white text-xl font-medium px-3 py-3 mt-4 rounded-md hover:bg-orange-500"
+                  className="bg-orange-400 text-white text-xl font-medium px-4 py-3 mt-4 rounded-md hover:bg-orange-500"
                   type="submit"
                   disabled={submitting ? true : false}
                 >
-                  {submitting ? "Saving..." : "Create your listing"}
+                  {submitting ? "Saving..." : "Save"}
                 </button>
               </span>
             </form>

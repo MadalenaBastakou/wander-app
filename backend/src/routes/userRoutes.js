@@ -43,7 +43,7 @@ router.post(
 
 
 router.patch("/:userId/:listingId", userControllers.handleFavorite)
-router.patch("/:userId/",verifyToken, upload.array("profileImagePath") , userControllers.updateUser)
+router.put("/:userId/",verifyToken, upload.array("profileImagePath") , userControllers.updateUser)
 router.get("/:userId", userControllers.getUser)
 router.get("/:userId/trips", userControllers.getTripList)
 router.post("/google", userControllers.google);

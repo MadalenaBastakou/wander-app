@@ -8,14 +8,23 @@ import { DateRange } from "react-date-range";
 import { Loader } from "../components/Loader.jsx";
 import { BsPersonFill } from "react-icons/bs";
 import { UserContext } from "../contexts/UserContext.jsx";
+import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 
 export const ListingDetails = () => {
   const [loading, setLoading] = useState(true);
   const [listing, setListing] = useState(null);
 
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const { listingId } = useParams();
+
+  /**ADD TO WISHLIST */
+  const patchWishlist = async (userId, listingId) => {
+    if (user?._id !== listing.creator?._id) {
+      const res = await apiClient.patchWishList(userId, listingId);
+      setUser(res.user);
+    } else return;
+  };
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -25,6 +34,8 @@ export const ListingDetails = () => {
     };
     fetchListing();
   }, []);
+
+  const isLiked = user?.wishList?.find((item) => item._id === listingId);
 
   /*BOOKING CALENDAR*/
   const [dateRange, setDateRange] = useState([
@@ -65,13 +76,49 @@ export const ListingDetails = () => {
     }
   };
 
+  const handleDelete = async (listingId) => {
+    apiClient.deleteListing(listingId);
+    navigate("/my-listings");
+  };
+
+  const handleEdit = async (listingId) => {
+    navigate(`/my-listings/edit-listing/${listingId}`);
+  };
+
   return loading ? (
     <Loader />
   ) : (
-    <div className="max-w-screen-lg mx-auto">
-      <div>
+    <div
+      className={`max-w-screen-lg mx-auto ${user._id === listing.creator._id ? "border-2 border-dashed rounded-xl p-4 m-4" : ""}`}
+    >
+      <div className="flex justify-between items-center ">
         <h1 className="text-xl md:text-3xl font-bold py-8">{listing.title}</h1>
-        <div></div>
+        <div className="text-xl font-medium">
+          {" "}
+          {isLiked ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                patchWishlist(user._id, listingId);
+              }}
+              className={`flex items-center gap-3 p-3 text-2xl ${user?._id === listing.creator?._id ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              disabled={user?._id === listing.creator?._id}
+            >
+              <MdFavorite />
+            </button>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                patchWishlist(user._id, listingId);
+              }}
+              className={`flex items-center gap-3 p-3 text-2xl  ${user?._id === listing.creator?._id ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              disabled={user?._id === listing.creator?._id}
+            >
+              <MdFavoriteBorder />
+            </button>
+          )}
+        </div>
       </div>
       <div className="flex flex-wrap gap-10 mt-10">
         {listing.photos.map((photo, index) => (
@@ -170,6 +217,22 @@ export const ListingDetails = () => {
           </div>
         )}
       </div>
+      {listing.creator._id === user._id && (
+        <div className="flex justify-between items-center">
+          <button
+            onClick={() => handleEdit(listing._id)}
+            className="bg-orange-400 text-white text-lg font-medium px-3 py-1 rounded-md hover:bg-orange-500"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDelete(listing._id)}
+            className="bg-red-600 text-white text-lg font-medium px-3 py-1 rounded-md hover:bg-orange-500"
+          >
+            Delete
+          </button>
+        </div>
+      )}
     </div>
   );
 };

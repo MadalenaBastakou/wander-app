@@ -101,6 +101,38 @@ export const addListing = async (formData) => {
   return responseBody;
 };
 
+/**UPDATE LISTING*/
+export const updateListing = async (formData) => {
+  const response = await fetch(`/api/my-listings/${formData.get("listingId")}`, {
+    method: "PUT",
+    body:formData,
+    credentials: "include",
+  });
+  console.log(response);
+  if (!response.ok) {
+    throw new Error("Failed to update listing");
+  }
+
+  const responseBody = await response.json()
+  console.log(responseBody);
+  return responseBody
+};
+
+/**DELETE LISTING*/
+export const deleteListing = async (listingId) => {
+  const response = await fetch(`/api/my-listings/${listingId}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  
+  if (!response.ok) {
+    throw new Error("Error during logout");
+  }
+
+  const responseBody = await response.json()
+  console.log(responseBody);
+};
+
 /**GET USER LISTINGS */
 export const fetchUserListings = async () => {
   const response = await fetch("/api/my-listings", {
@@ -192,6 +224,7 @@ export const updateUser = async (userId, formData) => {
     },
     body: formData
   });
+  console.log(response);
   if (!response.ok) {
     throw new Error("Error updating wishlist");
   }
