@@ -36,7 +36,7 @@ export const ProfileMenu = () => {
             <img
               className="object-cover rounded-full w-10 h-10"
               alt="profile-photo"
-              src={user?.profileImagePath[0]}
+              src={user?.profileImagePath}
             />
           </div>
         )}

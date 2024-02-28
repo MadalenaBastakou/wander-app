@@ -89,7 +89,7 @@ export const fetchUser = async (userId) => {
 
 /**CREATE LISTING */
 export const addListing = async (formData) => {
-  const response = await fetch("/api/my-listings", {
+  const response = await fetch("/api/listings", {
     method: "POST",
     credentials: "include",
     body: formData,
@@ -106,7 +106,7 @@ export const addListing = async (formData) => {
 
 /**UPDATE LISTING*/
 export const updateListing = async (formData) => {
-  const response = await fetch(`/api/my-listings/${formData.get("listingId")}`, {
+  const response = await fetch(`/api/listings/${formData.get("listingId")}`, {
     method: "PUT",
     body:formData,
     credentials: "include",
@@ -123,7 +123,7 @@ export const updateListing = async (formData) => {
 
 /**DELETE LISTING*/
 export const deleteListing = async (listingId) => {
-  const response = await fetch(`/api/my-listings/${listingId}`, {
+  const response = await fetch(`/api/listings/${listingId}`, {
     method: "DELETE",
     credentials: "include",
   });
@@ -138,7 +138,7 @@ export const deleteListing = async (listingId) => {
 
 /**GET USER LISTINGS */
 export const fetchUserListings = async () => {
-  const response = await fetch("/api/my-listings", {
+  const response = await fetch("/api/listings", {
     credentials: "include",
   });
   if (!response.ok) {
@@ -151,7 +151,7 @@ export const fetchUserListings = async () => {
 
 /**GET SPECIFIC LISTINGS */
 export const fetchListing = async (listingId) => {
-  const response = await fetch(`/api/my-listings/${listingId}`);
+  const response = await fetch(`/api/listings/${listingId}`);
   if (!response.ok) {
     throw new Error("Error fetching listings");
   }
@@ -163,8 +163,8 @@ export const fetchListing = async (listingId) => {
 export const fetchListings = async (selectedCategory) => {
   const response = await fetch(
     selectedCategory !== "All"
-      ? `/api/my-listings/properties?category=${selectedCategory}`
-      : "/api/my-listings/properties"
+      ? `/api/listings/properties?category=${selectedCategory}`
+      : "/api/listings/properties"
   );
   if (!response.ok) {
     throw new Error("Error fetching listings");
@@ -204,19 +204,16 @@ export const fetchTripList = async (userId) => {
 
 /**ADD TO WISHLIST */
 export const patchWishList = async (userId, listingId) => {
-  console.log(userId, listingId);
   const response = await fetch(`/api/user/favorites/${userId}/${listingId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json"
     }
   });
-  console.log(response);
   if (!response.ok) {
     throw new Error("Error updating wishlist");
   }
   const responseBody = await response.json();
-  console.log(responseBody);
   localStorage.setItem("user", JSON.stringify(responseBody.rest));
   return responseBody;
 };

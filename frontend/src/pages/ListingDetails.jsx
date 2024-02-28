@@ -14,7 +14,7 @@ export const ListingDetails = () => {
   const [loading, setLoading] = useState(true);
   const [listing, setListing] = useState(null);
 
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, isLoggedIn } = useContext(UserContext);
 
   const { listingId } = useParams();
 
@@ -101,8 +101,8 @@ export const ListingDetails = () => {
                 e.stopPropagation();
                 patchWishlist(user._id, listingId);
               }}
-              className={`flex items-center gap-3 p-3 text-2xl ${user?._id === listing.creator?._id ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-              disabled={user?._id === listing.creator?._id}
+              className={`flex items-center gap-3 p-3 text-2xl ${user?._id === listing.creator?._id || !isLoggedIn ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              disabled={user?._id === listing.creator?._id || !isLoggedIn}
             >
               <MdFavorite />
             </button>
@@ -112,8 +112,8 @@ export const ListingDetails = () => {
                 e.stopPropagation();
                 patchWishlist(user._id, listingId);
               }}
-              className={`flex items-center gap-3 p-3 text-2xl  ${user?._id === listing.creator?._id ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-              disabled={user?._id === listing.creator?._id}
+              className={`flex items-center gap-3 p-3 text-2xl  ${user?._id === listing.creator?._id || !isLoggedIn ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              disabled={user?._id === listing.creator?._id || !isLoggedIn}
             >
               <MdFavoriteBorder />
             </button>

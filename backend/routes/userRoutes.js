@@ -42,7 +42,7 @@ router.post(
 );
 
 
-router.patch("/favorites/:userId/:listingId", userControllers.handleFavorite)
+router.patch("/favorites/:userId/:listingId", verifyToken, userControllers.handleFavorite)
 router.put("/:userId/",verifyToken, upload.array("profileImagePath") , userControllers.updateUser)
 router.get("/:userId", userControllers.getUser)
 router.get("/:userId/trips", userControllers.getTripList)

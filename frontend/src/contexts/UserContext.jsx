@@ -18,6 +18,7 @@ export const UserProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+
   useEffect(() => {
     const res = localStorage.getItem("user");
     if (res) {
@@ -27,10 +28,10 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
-console.log(user);
 
   const logout = () => {
     localStorage.removeItem("user");
+    setIsLoggedIn(false);
   };
 
   return (

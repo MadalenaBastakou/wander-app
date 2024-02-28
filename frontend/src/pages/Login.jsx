@@ -5,6 +5,8 @@ import OAuth from "../components/OAuth";
 import logo from "../assets/icons/logo.png";
 import * as apiClient from "../api-client";
 import { useMutation } from "react-query";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 
 const Login = () => {
@@ -14,12 +16,13 @@ const Login = () => {
     formState: { isSubmitting, errors },
     reset,
   } = useForm();
-
+const {setIsLoggedIn} = useContext(UserContext)
 
   const navigate = useNavigate();
 
   const mutation = useMutation(apiClient.login, {
     onSuccess: () => {
+      setIsLoggedIn(true)
       navigate("/");
       console.log("User sign in successfully");
     },
