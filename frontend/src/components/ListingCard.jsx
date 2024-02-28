@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GrPrevious, GrNext } from "react-icons/gr";
 import { RxDotFilled } from "react-icons/rx";
@@ -9,8 +9,18 @@ import { UserContext } from "../contexts/UserContext";
 export const ListingCard = ({ listing }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { user, setUser } = useContext(UserContext);
+  const [isLiked, setIsLiked] = useState(
+    user?.wishList?.find((item) => item?._id === listing?._id)
+  );
 
-  const isLiked = user?.wishList?.find((item) => item._id === listing?._id);
+  useEffect(() => {
+    const res = localStorage.getItem("user");
+    if (res) {
+      setUser(JSON.parse(res));
+    }
+  }, [setUser]);
+
+  // const isLiked = user?.wishList?.find((item) => item?._id === listing?._id);
 
   const navigate = useNavigate();
 
@@ -30,12 +40,20 @@ export const ListingCard = ({ listing }) => {
     setCurrentIndex(slideIndex);
   };
 
+console.log(user);
+
   /**ADD TO WISHLIST */
   const patchWishlist = async (userId, listingId) => {
-    if (user?._id !== listing.creator?._id) {
-      const res = await apiClient.patchWishList(userId, listingId);
-      setUser(res.user);
-    } else return;
+    if (user?._id !== listing?.creator?._id) {
+      try {
+        const res = await apiClient.patchWishList(userId, listingId);
+        console.log(res);
+        setUser(res.rest);
+        setIsLiked(res.liked);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (
@@ -56,10 +74,10 @@ export const ListingCard = ({ listing }) => {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              patchWishlist(user._id, listing._id);
+              patchWishlist(user?._id, listing?._id);
             }}
             className={`absolute top-0 right-0 p-3 text-2xl text-white ${user?._id === listing.creator?._id ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-            disabled={user?._id === listing.creator?._id}
+            disabled={user?._id === listing?.creator?._id}
           >
             <MdFavorite />
           </button>
@@ -67,10 +85,10 @@ export const ListingCard = ({ listing }) => {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              patchWishlist(user._id, listing._id);
+              patchWishlist(user?._id, listing?._id);
             }}
             className={`absolute top-0 right-0 p-3 text-2xl text-white ${user?._id === listing.creator?._id ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-            disabled={user?._id === listing.creator?._id}
+            disabled={user?._id === listing?.creator?._id}
           >
             <MdFavoriteBorder />
           </button>
@@ -119,11 +137,15 @@ export const ListingCard = ({ listing }) => {
       </div>
 
       <div className="flex justify-between mt-2">
-        {listing.province ? <h3 className="text-sm font-medium">
-          {listing.city}, {listing.province}, {listing.country}
-        </h3> : <h3 className="text-sm font-medium">
-          {listing.city}, {listing.country}
-        </h3>}
+        {listing.province ? (
+          <h3 className="text-sm font-medium">
+            {listing.city}, {listing.province}, {listing.country}
+          </h3>
+        ) : (
+          <h3 className="text-sm font-medium">
+            {listing.city}, {listing.country}
+          </h3>
+        )}
       </div>
       <p className="text-sm text-neutral-500 font-light">{listing.category}</p>
       <p className="text-sm text-neutral-500 font-light">{listing.type}</p>

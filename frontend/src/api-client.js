@@ -204,17 +204,20 @@ export const fetchTripList = async (userId) => {
 
 /**ADD TO WISHLIST */
 export const patchWishList = async (userId, listingId) => {
-  const response = await fetch(`/api/user/${userId}/${listingId}`, {
+  console.log(userId, listingId);
+  const response = await fetch(`/api/user/favorites/${userId}/${listingId}`, {
     method: "PATCH",
-    header: {
+    headers: {
       "Content-Type": "application/json"
     }
   });
+  console.log(response);
   if (!response.ok) {
     throw new Error("Error updating wishlist");
   }
   const responseBody = await response.json();
-  localStorage.setItem("user", JSON.stringify(responseBody.user));
+  console.log(responseBody);
+  localStorage.setItem("user", JSON.stringify(responseBody.rest));
   return responseBody;
 };
 

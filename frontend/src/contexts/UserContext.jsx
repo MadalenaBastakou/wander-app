@@ -8,8 +8,8 @@ const initialUserState = {
   email: "",
   password: "",
   profileImagePath: null,
+  wishList:[]
 };
-
 
 const UserContext = createContext(null);
 
@@ -18,20 +18,25 @@ export const UserProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-
   useEffect(() => {
     const res = localStorage.getItem("user");
-    setUser(JSON.parse(res));
-    setIsLoggedIn(true)
-    setIsLoading(false);
+    if (res) {
+      setUser(JSON.parse(res));
+      setIsLoggedIn(true);
+      setIsLoading(false);
+    }
   }, []);
 
-const logout = () => {
-  localStorage.removeItem("user");
-}
+console.log(user);
+
+  const logout = () => {
+    localStorage.removeItem("user");
+  };
 
   return (
-    <UserContext.Provider value={{ user, setUser, isLoggedIn, setIsLoggedIn, logout }}>
+    <UserContext.Provider
+      value={{ user, setUser, isLoggedIn, setIsLoggedIn, logout }}
+    >
       {children}
     </UserContext.Provider>
   );

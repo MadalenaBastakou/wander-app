@@ -8,7 +8,9 @@ export const Navbar = () => {
 
   useEffect(() => {
     const res = localStorage.getItem("user");
-    setUser(JSON.parse(res));
+    if (res) {
+      setUser(JSON.parse(res));
+    }
   }, []);
 
   return (

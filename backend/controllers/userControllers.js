@@ -146,6 +146,7 @@ const getUser = async (req, res) => {
     const { userId } = req.params;
     const user = await User.find({ _id: userId });
     const { password: pass, ...rest } = user._doc;
+    console.log(rest);
     res.status(200).json(rest);
   } catch (error) {
     console.log(error);
@@ -176,12 +177,12 @@ const handleFavorite = async (req, res) => {
       (item) => item._id.toString() === listingId
     );
 
-    const { password: pass, ...rest } = user._doc;
     if (favoriteListing) {
       user.wishList = user.wishList.filter(
         (item) => item._id.toString() !== listingId
-      );
-      await user.save();
+        );
+        await user.save();
+        const { password: pass, ...rest } = user._doc;
       res.status(200).json({
         message: "Listing is removed from wish list",
         rest,
@@ -190,6 +191,7 @@ const handleFavorite = async (req, res) => {
     } else {
       user.wishList.push(listing);
       await user.save();
+      const { password: pass, ...rest } = user._doc;
       res.status(200).json({
         message: "Listing is added from wish list",
         rest,
