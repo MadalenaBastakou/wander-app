@@ -22,7 +22,6 @@ export const ListingCard = ({ listing }) => {
     }
   }, [setUser]);
 
-  // const isLiked = user?.wishList?.find((item) => item?._id === listing?._id);
 
   const navigate = useNavigate();
 

@@ -5,11 +5,13 @@ import { BsPersonFill } from "react-icons/bs";
 import { UserContext } from "../contexts/UserContext";
 import { toast, Toaster } from "react-hot-toast";
 import { BarLoader } from "react-spinners";
+import DeleteModal from "../components/DeleteModal"
 
 export const Profile = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, logout } = useContext(UserContext);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -182,19 +184,12 @@ export const Profile = () => {
       <div className="flex justify-between mt-6">
 <button className="btn text-rose-600 text-md font-medium cursor-pointer hover:text-rose-800" onClick={()=>document.getElementById('my_modal_3').showModal()}>Delete Account</button>
 <dialog id="my_modal_3" className="modal modal-bottom sm:modal-middle p-12 rounded-lg">
-  <div className="modal-box ">
-    <form method="dialog mx-auto">
-      {/* if there is a button in form, it will close the modal */}
-      <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 px-4 py-2">✕</button>
-    </form>
-    <p className="py-4 mb-8">Are you sure you want to close your account?</p>
-    <div className="w-full flex justify-end">
-    <button className="btn bg-rose-600 text-white text-lg font-medium py-1 px-4 rounded cursor-pointer hover:bg-rose-700" onClick={handleDelete}>Yes</button>
-    </div>
-  </div>
+<DeleteModal handleDelete={handleDelete}>Are you sure you want to close your account?</DeleteModal>
 </dialog>
         <button
-          onClick={() => apiClient.logout()}
+          onClick={() => {
+            logout()
+          navigate("/")}}
           className=" text-blue-600 text-md font-medium cursor-pointer hover:text-blue-800  "
         >
           Log Out

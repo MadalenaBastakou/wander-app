@@ -100,7 +100,7 @@ export const addListing = async (formData) => {
 
   const responseBody = await response.json();
 
-  localStorage.setItem("user", JSON.stringify(responseBody.user))
+  localStorage.setItem("user", JSON.stringify(responseBody.rest))
   return responseBody;
 };
 

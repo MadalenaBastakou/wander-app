@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { BsPersonFill } from "react-icons/bs";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { Link } from "react-router-dom";
-import * as apiClient from "../api-client";
 import { UserContext } from "../contexts/UserContext";
 
 export const ProfileMenu = () => {
@@ -71,7 +70,7 @@ export const ProfileMenu = () => {
           </Link>
           <Link
             className="hover:text-gray-700"
-            to="/login"
+            to="/"
             onClick={() => {
               logout();
             }}

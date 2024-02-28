@@ -5,6 +5,7 @@ import { Loader } from "../components/Loader";
 import { ListingCard } from "../components/ListingCard";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { MdOutlineModeEdit } from "react-icons/md";
+import DeleteModal from "../components/DeleteModal";
 
 export const MyListings = () => {
   const [listings, setListings] = useState([]);
@@ -61,12 +62,16 @@ const navigate = useNavigate()
                   >
                  < MdOutlineModeEdit />
                  </button>
-                  <button
-                    onClick={() => handleDelete(listing._id)}
+                 <button
+                    onClick={()=>document.getElementById('my_modal_3').showModal()}
                     className="text-2xl text-neutral-400 cursor-pointer"
                   >
                     <RiDeleteBinLine />
                   </button>
+                 
+                 <dialog id="my_modal_3" className="modal modal-bottom sm:modal-middle p-12 rounded-lg">
+ <DeleteModal handleDelete={handleDelete}>Are you sure you want to delete this listing?</DeleteModal>
+</dialog>
                 </div>
                 </div>
               ))}

@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Signup from "./pages/Signup";
 import "./index.css";
 import 'react-tooltip/dist/react-tooltip.css'
@@ -16,6 +16,7 @@ import { Wishlist } from "./pages/Wishlist";
 import { EditListing } from "./components/EditListing";
 import { useContext } from "react";
 import { UserContext } from "./contexts/UserContext";
+import Error404Page from "./pages/Error404Page";
 
 function App() {
   const { isLoggedIn } = useContext(UserContext);
@@ -109,7 +110,7 @@ function App() {
           </Route>
         )}
 
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Layout><Error404Page/></Layout>} />
       </Routes>
     </BrowserRouter>
   );

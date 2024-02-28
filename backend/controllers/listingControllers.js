@@ -16,14 +16,14 @@ const addListing = async (req, res) => {
     const user = await User.findById({ _id: req.userId });
     const { password: pass, ...rest } = user._doc;
     newListing.creator = rest;
-
+    
     //save the listing in the database
     const listing = new Listing(newListing);
     await listing.save();
     user.propertyList.push(listing);
     await user.save();
     //return
-    res.status(201).json({ listing, user });
+    res.status(201).json({ listing, rest });
   } catch (error) {
     console.log("Error creating listing:" + error);
     res.status(500).json("Something went wrong");

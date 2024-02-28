@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-// import Cookies from "js-cookie";
+
 
 const initialUserState = {
   firstName: "",
@@ -16,7 +16,6 @@ const UserContext = createContext(null);
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(initialUserState);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
 
   useEffect(() => {
@@ -24,7 +23,6 @@ export const UserProvider = ({ children }) => {
     if (res) {
       setUser(JSON.parse(res));
       setIsLoggedIn(true);
-      setIsLoading(false);
     }
   }, []);
 
