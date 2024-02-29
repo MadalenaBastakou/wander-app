@@ -16,7 +16,6 @@ const searchListings = async (req, res) => {
           break;
         }
         
-        console.log(sortOptions);
     const pageSize = 6;
     const pageNumber = parseInt(
       req.query.page ? req.query.page.toString() : "1"
@@ -89,6 +88,21 @@ const constructedSearchQuery = (queryParams) => {
   return constructedQuery;
 };
 
+// /*LISTING DETAILS*/
+// const getListing = async (req, res) => {
+//   try {
+//     const { listingId } = req.params;
+//     const listing = await Listing.findById({ _id: listingId }).populate(
+//       "creator"
+//     );
+//     res.status(202).json(listing);
+//   } catch (error) {
+//     console.log("Error fetching listing:" + error);
+//     res.status(500).json("Something went wrong");
+//   }
+// };
+
 export default {
   searchListings,
+  // getListing
 };

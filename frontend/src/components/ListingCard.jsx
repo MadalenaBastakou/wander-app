@@ -95,7 +95,7 @@ export const ListingCard = ({ listing }) => {
                 e.stopPropagation();
                 patchWishlist(user?._id, listing?._id);
               }}
-              className={`buttonClassName absolute top-0 right-0 p-3 text-2xl text-white ${user?._id === listing.creator?._id || !isLoggedIn ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              className={`buttonClassName absolute top-0 right-0 p-3 text-2xl text-white ${(user?._id === listing.creator?._id )|| (!isLoggedIn )? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
               disabled={user?._id === listing?.creator?._id || !isLoggedIn}
             >
               <MdFavorite />
@@ -106,7 +106,7 @@ export const ListingCard = ({ listing }) => {
                 e.stopPropagation();
                 patchWishlist(user?._id, listing?._id);
               }}
-              className={`absolute top-0 right-0 p-3 text-2xl text-white ${user?._id === listing.creator?._id || !isLoggedIn ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              className={`absolute top-0 right-0 p-3 text-2xl text-white ${(user?._id === listing.creator?._id) || (!isLoggedIn )? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
               disabled={user?._id === listing?.creator?._id}
             >
               <MdFavoriteBorder />

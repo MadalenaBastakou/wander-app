@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import logo from "../assets/icons/logo.png";
 import * as apiClient from "../api-client";
@@ -19,11 +19,12 @@ const Login = () => {
 const {setIsLoggedIn} = useContext(UserContext)
 
   const navigate = useNavigate();
+  const location = useLocation()
 
   const mutation = useMutation(apiClient.login, {
     onSuccess: () => {
       setIsLoggedIn(true)
-      navigate("/");
+      navigate(location.state?.from?.pathname || "/");
       console.log("User sign in successfully");
     },
     onError: (error) => {

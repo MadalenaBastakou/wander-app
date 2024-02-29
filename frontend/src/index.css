@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
+.my-custom-calendar .rdrMonth {
+    width: 400px; 
+  }

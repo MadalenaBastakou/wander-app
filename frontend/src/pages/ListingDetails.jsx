@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import * as apiClient from "../api-client";
 import { facilities } from "../data.jsx";
 import "react-date-range/dist/styles.css";
@@ -11,7 +11,9 @@ import { UserContext } from "../contexts/UserContext.jsx";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { MdOutlineModeEdit } from "react-icons/md";
-import DeleteModal from "../components/DeleteModal"
+import DeleteModal from "../components/DeleteModal";
+import { SearchContext } from "../contexts/SearchContext.jsx";
+import { useForm } from "react-hook-form";
 
 export const ListingDetails = () => {
   const [loading, setLoading] = useState(true);
@@ -32,7 +34,6 @@ export const ListingDetails = () => {
 
   const isLiked = user?.wishList?.find((item) => item?._id === listing?._id);
 
-
   /**ADD TO WISHLIST */
   const patchWishlist = async (userId, listingId) => {
     if (user?._id !== listing.creator?._id) {
@@ -49,10 +50,11 @@ export const ListingDetails = () => {
   };
 
   /*BOOKING CALENDAR*/
+  const search = useContext(SearchContext);
   const [dateRange, setDateRange] = useState([
     {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: search?.checkIn || new Date(),
+      endDate: search?.checkOut || new Date(),
       key: "selection",
     },
   ]);
@@ -65,29 +67,33 @@ export const ListingDetails = () => {
     setDateRange([ranges.selection]);
   };
 
+
   /**SUBMIT BOOKING */
-  const customerId = user._id;
+  // const customerId = user._id;
 
   const navigate = useNavigate();
+  const location = useLocation()
 
   const handleSubmit = async () => {
-    const newBooking = {
-      customerId,
-      listingId,
-      hostId: listing.creator._id,
-      startDate: dateRange[0].startDate.toDateString(),
-      endDate: dateRange[0].endDate.toDateString(),
-      totalPrice: listing.price * dayCount,
-    };
-    try {
-      await apiClient.createBooking(newBooking);
-      navigate(`/${user._id}/trips`);
-    } catch (error) {
-      console.error("Error creating booking:", error);
-    }
+    search.setSearchValues( "", dateRange[0].startDate, dateRange[0].endDate, "")
+    navigate(`/listings/${listingId}/booking`)
+    // const newBooking = {
+    //   customerId,
+    //   listingId,
+    //   hostId: listing.creator._id,
+    //   startDate: dateRange[0].startDate.toDateString(),
+    //   endDate: dateRange[0].endDate.toDateString(),
+    //   totalPrice: listing.price * dayCount,
+    // };
+    // try {
+    //   await apiClient.createBooking(newBooking);
+    //   navigate(`/${user._id}/trips`);
+    // } catch (error) {
+    //   console.error("Error creating booking:", error);
+    // }
   };
 
-  const handleDelete = async (listing) => {
+  const handleDelete = async (e, listing) => {
     apiClient.deleteListing(listing._id);
     navigate("/my-listings");
   };
@@ -98,10 +104,10 @@ export const ListingDetails = () => {
 
   return loading ? (
     <div className="w-screen h-screen flex justify-center items-center">
-          <span className="animate-spin-slow text-8xl">
-            <Loader />
-          </span>
-        </div>
+      <span className="animate-spin-slow text-8xl">
+        <Loader />
+      </span>
+    </div>
   ) : (
     <div
       className={`max-w-screen-lg mx-auto ${user._id === listing.creator._id ? "border-2 border-dashed rounded-xl p-8 mt-6 mb-12" : ""}`}
@@ -109,26 +115,32 @@ export const ListingDetails = () => {
       <div className="flex justify-between items-center ">
         <h1 className="text-xl md:text-3xl font-bold py-4">{listing.title}</h1>
         <div className="text-xl font-medium">
-       {listing.creator._id === user._id ? (
-        <div className="flex justify-between items-center gap-4 px-4">
-         <button
-                    onClick={handleEdit}
-                    className="text-2xl text-neutral-400 cursor-pointer"
-                  >
-                 < MdOutlineModeEdit />
-                 </button>
-          <button
-                    onClick={()=>document.getElementById('my_modal_3').showModal()}
-                    className="text-2xl text-neutral-400 cursor-pointer"
-                  >
-                    <RiDeleteBinLine />
-                  </button>
-                 <dialog id="my_modal_3" className="modal modal-bottom sm:modal-middle p-12 rounded-lg">
- <DeleteModal handleDelete={handleDelete} >Are you sure you want to delete this listing?</DeleteModal>
-</dialog>
-        </div>
-      ) : 
-        isLiked ? (
+          {listing.creator._id === user._id ? (
+            <div className="flex justify-between items-center gap-4 px-4">
+              <button
+                onClick={handleEdit}
+                className="text-2xl text-neutral-400 cursor-pointer"
+              >
+                <MdOutlineModeEdit />
+              </button>
+              <button
+                onClick={() =>
+                  document.getElementById("my_modal_3").showModal()
+                }
+                className="text-2xl text-neutral-400 cursor-pointer"
+              >
+                <RiDeleteBinLine />
+              </button>
+              <dialog
+                id="my_modal_3"
+                className="modal modal-bottom sm:modal-middle p-12 rounded-lg"
+              >
+                <DeleteModal handleDelete={(e) => handleDelete(e, listing)}>
+                  Are you sure you want to delete this listing?
+                </DeleteModal>
+              </dialog>
+            </div>
+          ) : isLiked ? (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -153,26 +165,47 @@ export const ListingDetails = () => {
           )}
         </div>
       </div>
-      <div className="flex flex-wrap gap-10 mt-10">
-        {listing.photos.map((photo, index) => (
-          <div key={index}>
-            <img className="max-w-72" src={photo} alt="listing-photos" />
-          </div>
-        ))}
+      <div className="flex justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-10">
+          {listing.photos.map((photo, index) => (
+            <div key={index}>
+              <img className="max-w-72" src={photo} alt="listing-photos" />
+            </div>
+          ))}
+        </div>
       </div>
-      <h2 className="text-lg md:text-xl font-semibold py-8">
-        {listing.type} in {listing.city}, {listing.province}, {listing.country}
+      <h2 className="text-lg md:text-xl font-semibold pt-12">
+        {listing.type} in {listing.city}
+        {listing.province && `,${listing.province}`}, {listing.country}
       </h2>
-      <p className="text-md font-light py-8">
-        {listing.guestCount} guests - {listing.bedroomCount} bedroom -{" "}
-        {listing.bedCount} bed - {listing.bathroomCount} bath
+      <p className="flex gap-3 text-md font-light py-8">
+        <span className="bg-neutral-200 p-2 rounded-full">
+          {listing.guestCount > 1
+            ? `${listing.guestCount} guests`
+            : `${listing.guestCount} guest`}
+        </span>{" "}
+        <span className="bg-neutral-200 p-2 rounded-full">
+          {listing.bedroomCount > 1
+            ? `${listing.bedroomCount} bedrooms`
+            : `${listing.bedroomCount} bedroom`}
+        </span>{" "}
+        <span className="bg-neutral-200 p-2 rounded-full">
+          {listing.bedCount > 1
+            ? `${listing.bedCount} beds`
+            : `${listing.bedCount} bed`}
+        </span>{" "}
+        <span className="bg-neutral-200 p-2 rounded-full">
+          {listing.bathroomCount > 1
+            ? `${listing.bathroomCount} beds`
+            : `${listing.bathroomCount} bed`}
+        </span>
       </p>
       <hr />
       <div>
         <div className="flex items-center gap-4">
-          {listing?.creator && listing?.creator.profileImagePath[0] === "" ? (
+          {listing?.creator && listing?.creator.profileImagePath[0] !== "" ? (
             <img
-              className="rounded-full w-12"
+              className="rounded-full w-12 h-12"
               src={listing.creator.profileImagePath[0]}
               alt="profile picture"
             />
@@ -188,15 +221,17 @@ export const ListingDetails = () => {
         </div>
       </div>
       <hr />
-      <h3 className="text-md md:text-lg font-medium py-4">Description</h3>
+      <h3 className="text-md md:text-lg font-semibold pt-8 pb-4">
+        Description
+      </h3>
       <p className="mb-12">{listing.description}</p>
       <hr />
-      <div className="flex justify-between">
+      <div className="flex flex-col md:flex-row md: gap-24 justify-between">
         <div>
           <h2 className="text-lg md:text-xl font-semibold py-8">
             What this place offers?
           </h2>
-          <div className="pb-12">
+          <div className="pb-12 grid md:grid-cols-2 gap-y-6 gap-x-26">
             {listing.facilities.map((item, index) => (
               <div
                 key={index}
@@ -215,42 +250,59 @@ export const ListingDetails = () => {
             <h2 className="text-lg md:text-xl font-semibold py-8">
               How long do you want to stay?
             </h2>
-            <div>
-              <DateRange
-                className="pb-8"
-                ranges={dateRange}
-                onChange={handleSelect}
-              />
-              {dayCount > 1 ? (
-                <h2 className="text-lg md:text-xl font-semibold ">
-                  €{listing.price} x {dayCount} nights
-                </h2>
-              ) : (
-                <h2 className="text-lg md:text-xl font-semibold ">
-                  €{listing.price} x {dayCount} night
-                </h2>
-              )}
-              <h2 className="text-lg md:text-xl font-semibold py-8">
-                Total price: €{listing.price * dayCount}
-              </h2>
-              <p className="text-md font-light pb-2">
-                Start Date: {dateRange[0].startDate.toDateString()}
-              </p>
-              <p className="text-md font-light pb-8">
-                End Date: {dateRange[0].endDate.toDateString()}
-              </p>
-            </div>
-            <button
-              className="bg-orange-400 text-white text-xl font-medium px-12 py-3 mb-12 rounded-md hover:bg-orange-500"
-              type="submit"
-              onClick={handleSubmit}
-            >
-              BOOK
-            </button>
+              <div className="flex flex-col justify-center bg-neutral-100 p-4 rounded-xl mb-8">
+                <div className="my-custom-calendar rdrMonth">
+                  <DateRange
+                    minDate={new Date()}
+                    ranges={dateRange}
+                    onChange={handleSelect}
+                  />
+                </div>
+                <div className="ps-4">
+                  {dayCount > 1 ? (
+                    <h2 className="text-lg md:text-lg font-medium ">
+                      €{listing.price} x {dayCount} nights
+                    </h2>
+                  ) : (
+                    <h2 className="text-lg md:text-lg font-medium ">
+                      €{listing.price} x {dayCount} night
+                    </h2>
+                  )}
+                  <h2 className="text-lg md:text-xl font-semibold pt-4 pb-5">
+                    Total price: €{listing.price * dayCount}
+                  </h2>
+                  <p className="text-md font-light pb-2">
+                    <span className="text-neutral-500">Start Date:</span>{" "}
+                    {dateRange[0].startDate.toDateString()}
+                  </p>
+                  <p className="text-md font-light pb-8">
+                    <span className="text-neutral-500">End Date:</span>{" "}
+                    {dateRange[0].endDate.toDateString()}
+                  </p>
+                  <div className="flex justify-end pe-6">
+                  {isLoggedIn ?(<button
+                      className="bg-orange-400 text-white text-xl font-medium px-12 p-3 mb-2 rounded-md hover:bg-orange-500"
+                      type="submit"
+                      onClick={handleSubmit}
+                    >
+                       BOOK
+                    </button>) : (<button
+                      className="bg-orange-400 text-white text-xl font-medium px-12 p-3 mb-2 rounded-md hover:bg-orange-500"
+                      type="submit"
+                      onClick={() => {
+                        search.saveSearchValues("", dateRange[0].startDate,dateRange[0].endDate,0)
+                        navigate("/login", {state: {from: location}})
+                    }
+                      }
+                    >
+                       Sign in to book
+                    </button>)}
+                  </div>
+                </div>
+              </div>
           </div>
         )}
       </div>
-     
     </div>
   );
 };

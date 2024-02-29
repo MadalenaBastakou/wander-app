@@ -1,4 +1,4 @@
-/**------------------------------USER REQUESTS---------------------------------------------- */
+/**------------------------------USER ROUTES---------------------------------------------- */
 
 /**USER SIGNUP*/
 export const signup = async (formData) => {
@@ -132,7 +132,7 @@ export const deleteUser = async (userId) => {
 };
 
 
-/**------------------------------MY-LISTINGS REQUESTS---------------------------------------------- */
+/**------------------------------MY-LISTINGS ROUTES---------------------------------------------- */
 
 /**CREATE LISTING */
 export const addListing = async (formData) => {
@@ -170,6 +170,7 @@ export const updateListing = async (formData) => {
 
 /**DELETE LISTING*/
 export const deleteListing = async (listingId) => {
+  console.log(listingId);
   const response = await fetch(`/api/my-listings/${listingId}`, {
     method: "DELETE",
     credentials: "include",

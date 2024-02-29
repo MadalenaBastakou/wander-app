@@ -60,6 +60,7 @@ router.post(
 
 router.get("/", verifyToken, myListingControllers.getUserListings)
 router.get("/properties", myListingControllers.getListings)
+// router.get("/search", myListingControllers.searchListings)
 router.get("/:listingId", myListingControllers.getListing)
 router.put("/:listingId", verifyToken, upload.array("photos"),myListingControllers.updateListing)
 router.delete("/:listingId", myListingControllers.deleteListing)

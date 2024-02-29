@@ -24,7 +24,8 @@ const navigate = useNavigate()
     fetchListings();
   }, []);
 
-  const handleDelete = async (listingId) => {
+  const handleDelete = async (e,listingId) => {
+    console.log(listingId);
    apiClient.deleteListing(listingId);
     fetchListings();
   };
@@ -70,7 +71,7 @@ const navigate = useNavigate()
                   </button>
                  
                  <dialog id="my_modal_3" className="modal modal-bottom sm:modal-middle p-12 rounded-lg">
- <DeleteModal handleDelete={handleDelete}>Are you sure you want to delete this listing?</DeleteModal>
+ <DeleteModal handleDelete={(e) => handleDelete(e,listing._id)}>Are you sure you want to delete this listing?</DeleteModal>
 </dialog>
                 </div>
                 </div>

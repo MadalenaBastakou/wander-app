@@ -130,10 +130,38 @@ async function uploadImages(imageFiles) {
   return imageUrls;
 }
 
+// const searchListings = async (req, res) => {
+//   try {
+//     const pageSize = 5;
+//     const pageNumber = parseInt(
+//       req.query.page ? req.query.page.toString() : "1"
+//     );
+//     const skip = (pageNumber - 1) * pageSize;
+
+//     const listings = await Listing.find().skip(skip).limit(pageSize);
+
+//     const total = await Listing.countDocuments();
+
+//     const response = {
+//       data: listings,
+//       pagination: {
+//         total,
+//         page: pageNumber,
+//         pages: Math.ceil(total / pageSize),
+//       },
+//     };
+
+//     res.status(200).json(response)
+//   } catch (error) {
+//     console.log("error", error);
+//     res.status(500).json({ message: "Something went wrong" });
+//   }
+// };
 
 export default {
   addListing,
   getUserListings,
+  // searchListings,
   getListing,
   getListings,
   deleteListing,

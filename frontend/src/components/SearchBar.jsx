@@ -95,6 +95,7 @@ export const SearchBar = ({location}) => {
             slotProps={{
               field: { clearable: true, onClear: () => setCleared(true) },
             }}
+            disablePast
             onChange={(date) => {
               setCheckIn(dayjs(date).format("DD/MM/YYYY"));
             }}
@@ -103,6 +104,7 @@ export const SearchBar = ({location}) => {
         <div>
           <DatePicker
             label="Check-out date"
+            disablePast
             sx={{
               width: 260,
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
