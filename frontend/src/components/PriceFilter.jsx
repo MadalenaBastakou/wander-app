@@ -4,7 +4,7 @@ import Slider from "@mui/material/Slider";
 
 export const PriceFilter = ({ selectedPrice, onChange }) => {
   return (
-    <div className="border-b border-slate-300 pb-5">
+    <div className="border-b border-slate-300 pb-5 px-4">
       <h4 className="text-md font-semibold mb-2">Max Price per night</h4>
       <label className="flex items-center space-x-2">
         <Box sx={{ width: 300 }}>

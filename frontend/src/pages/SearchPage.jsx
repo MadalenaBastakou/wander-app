@@ -10,15 +10,14 @@ import { FacilitiesFilter } from "../components/FacilitiesFilter";
 import { TypesFilter } from "../components/TypesFilter";
 import { PriceFilter } from "../components/PriceFilter";
 
-
 export const SearchPage = () => {
   const search = useContext(SearchContext);
   const [page, setPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState("")
-  const [selectedType, setSelectedType] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedType, setSelectedType] = useState("");
   const [selectedFacilities, setSelectedFacilities] = useState([]);
   const [selectedPrice, setSelectedPrice] = useState(0);
-
+  const [sortOption, setSortOption] = useState("")
 
   const searchParams = {
     destination: search.destination,
@@ -29,7 +28,8 @@ export const SearchPage = () => {
     category: selectedCategory,
     type: selectedType,
     facilities: selectedFacilities,
-    maxPrice: selectedPrice
+    maxPrice: selectedPrice,
+    sortOption
   };
 
   const { data: listingData } = useQuery(
@@ -41,31 +41,36 @@ export const SearchPage = () => {
   );
 
   const handleCategory = (e) => {
-const category = e.target.value
+    const category = e.target.value;
 
-setSelectedCategory(category)
-  }
+    setSelectedCategory(category);
+  };
 
   const handleType = (e) => {
-    const type = e.target.value
-    
-    setSelectedType(type)
-      }
+    const type = e.target.value;
 
-      const handleFacilities = (e) => {
-        const facility = e.target.value
+    setSelectedType(type);
+  };
 
-        setSelectedFacilities((prevFacilities) => e.target.checked ? [...prevFacilities, facility] : [...prevFacilities.filter((prevFacility) => prevFacility !== facility)])
-      }
+  const handleFacilities = (e) => {
+    const facility = e.target.value;
 
-      const handlePriceChange = (newValue) => {
-        if (!isNaN(newValue)) {
-          setSelectedPrice(newValue);
-        }
-      };
-      
+    setSelectedFacilities((prevFacilities) =>
+      e.target.checked
+        ? [...prevFacilities, facility]
+        : [
+            ...prevFacilities.filter(
+              (prevFacility) => prevFacility !== facility
+            ),
+          ]
+    );
+  };
 
-      console.log(selectedPrice);
+  const handlePriceChange = (newValue) => {
+    if (!isNaN(newValue)) {
+      setSelectedPrice(newValue);
+    }
+  };
 
   return (
     <div>
@@ -76,35 +81,50 @@ setSelectedCategory(category)
             <h3 className="text-lg font-semibold border-b border-slate-300 pb-5">
               Filter by:
             </h3>
-            <CategoryFilter onChange={handleCategory}/>
-            <TypesFilter onChange={handleType}/>
-            <FacilitiesFilter selectedFacilities={selectedFacilities} onChange={handleFacilities}/>
-            <PriceFilter selectedPrice={selectedPrice} onChange={handlePriceChange}/>
+            <CategoryFilter onChange={handleCategory} />
+            <TypesFilter onChange={handleType} />
+            <FacilitiesFilter
+              selectedFacilities={selectedFacilities}
+              onChange={handleFacilities}
+            />
+            <PriceFilter
+              selectedPrice={selectedPrice}
+              onChange={handlePriceChange}
+            />
           </div>
         </div>
-        <div className="flex flex-col flex-wrap">
-          <div className="container mx-auto flex justify-between items-center">
-            <span className="text-xl font-bold my-8">
+        <div className="flex flex-col flex-wrap relative pb-20">
+          <div className="container mx-auto flex justify-between items-center ">
+            <span className="text-xl font-bold mt-8 mb-12">
               {listingData?.pagination.total} Listings found{" "}
               {search.destination ? `in ${search.destination}` : ""}
             </span>
-            {/**TODO sort options */}
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="p-2 border rounded-md"
+            >
+              <option value="">Sort By</option>
+              <option value="pricePerNightAsc">Price Per Night (low to high)</option>
+              <option value="pricePerNightDesc">Price Per Night (high to low)</option>
+            </select>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 mx-auto">
             {listingData?.data.map((listing) => {
               return <ListingCard key={listing._id} listing={listing} />;
             })}
-            
           </div>
+          <div className="absolute bottom-0 inset-x-2/4">
+        <Pagination
+          page={listingData?.pagination.page || 1}
+          pages={listingData?.pagination.pages || 1}
+          onPageChange={(page) => setPage(page)}
+        />
+        </div>
         </div>
       </div>
-        <div className="flex justify-center">
-              <Pagination
-                page={listingData?.pagination.page || 1}
-                pages={listingData?.pagination.pages || 1}
-                onPageChange={(page) => setPage(page)}
-              />
-            </div>
+      <div className="flex justify-center">
+      </div>
     </div>
   );
 };

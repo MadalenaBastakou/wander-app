@@ -1,20 +1,22 @@
 import { parse } from "dotenv";
 import Listing from "../models/Listing.js";
+import { query } from "express";
 
 const searchListings = async (req, res) => {
   try {
     const query = constructedSearchQuery(req.query);
-    console.log(query);
+    
     let sortOptions = {};
     switch (req.query.sortOption) {
       case "pricePerNightAsc":
-        sortOptions = { pricePerNight: 1 };
+        sortOptions = { price: 1 };
         break;
-      case "pricePerNightDesc":
-        sortOptions = { pricePerNight: -1 };
-        break;
-    }
-
+        case "pricePerNightDesc":
+          sortOptions = { price: -1 };
+          break;
+        }
+        
+        console.log(sortOptions);
     const pageSize = 6;
     const pageNumber = parseInt(
       req.query.page ? req.query.page.toString() : "1"
