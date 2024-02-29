@@ -11,8 +11,8 @@ export const SearchBar = ({ location }) => {
   const search = useContext(SearchContext);
 
   const [destination, setDestination] = useState(search.destination);
-  const [checkIn, setCheckIn] = useState(dayjs(search.checkIn));
-  const [checkOut, setCheckOut] = useState(dayjs(search.checkOut));
+  const [checkIn, setCheckIn] = useState(dayjs(search.checkIn ? dayjs(search.checkIn) : dayjs()));
+  const [checkOut, setCheckOut] = useState(dayjs(search.checkOut ? dayjs(search.checkOut) : dayjs().add(1, 'day')));
   const [guests, setGuests] = useState(search.guests);
 
   const [cleared, setCleared] = useState(false);

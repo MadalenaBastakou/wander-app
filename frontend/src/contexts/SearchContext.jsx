@@ -6,11 +6,15 @@ export const SearchProvider = ({ children }) => {
   const [destination, setDestination] = useState(
     () => sessionStorage.getItem("destination") || ""
   );
-  const [checkIn, setCheckIn] = useState(
-    () => new Date(sessionStorage.getItem("checkIn")) || new Date().toISOString
-  );
+  const [checkIn, setCheckIn] = useState(() => {
+    const storedCheckIn = sessionStorage.getItem("checkIn")
+    return storedCheckIn ? new Date(storedCheckIn) : new Date()
+  });
   const [checkOut, setCheckOut] = useState(
-    () => new Date(sessionStorage.getItem("checkOut")) || new Date().toISOString
+    () => {
+      const storedCheckOut = sessionStorage.getItem("checkOut");
+      return storedCheckOut ? new Date(storedCheckOut) : new Date();
+  }
   );
   const [guests, setGuests] = useState(
     () => parseInt(sessionStorage.getItem("guests")) || 1)

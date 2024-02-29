@@ -13,7 +13,6 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { MdOutlineModeEdit } from "react-icons/md";
 import DeleteModal from "../components/DeleteModal";
 import { SearchContext } from "../contexts/SearchContext.jsx";
-import { useForm } from "react-hook-form";
 
 export const ListingDetails = () => {
   const [loading, setLoading] = useState(true);
@@ -53,8 +52,8 @@ export const ListingDetails = () => {
   const search = useContext(SearchContext);
   const [dateRange, setDateRange] = useState([
     {
-      startDate: search?.checkIn || new Date(),
-      endDate: search?.checkOut || new Date(),
+      startDate: search?.checkIn ? new Date(search.checkIn) : new Date(),
+      endDate: search?.checkOut ? new Date(search.checkOut) : new Date(),
       key: "selection",
     },
   ]);

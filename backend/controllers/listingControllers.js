@@ -1,21 +1,25 @@
 import { parse } from "dotenv";
 import Listing from "../models/Listing.js";
+import User from "../models/User.js"
 import { query } from "express";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_API_KEY);
 
 const searchListings = async (req, res) => {
   try {
     const query = constructedSearchQuery(req.query);
-    
+
     let sortOptions = {};
     switch (req.query.sortOption) {
       case "pricePerNightAsc":
         sortOptions = { price: 1 };
         break;
-        case "pricePerNightDesc":
-          sortOptions = { price: -1 };
-          break;
-        }
-        
+      case "pricePerNightDesc":
+        sortOptions = { price: -1 };
+        break;
+    }
+
     const pageSize = 6;
     const pageNumber = parseInt(
       req.query.page ? req.query.page.toString() : "1"
@@ -44,6 +48,76 @@ const searchListings = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+const createPayment = async (req, res) => {
+  const { numberOfNights } = req.body;
+  const listingId = req.params.listingId;
+
+  const listing = await Listing.findById(listingId);
+  if (!listing) {
+    return res.status(400).json({ message: "Listing not found" });
+  }
+  const totalCost = listing.price * numberOfNights;
+  
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: totalCost * 100,
+    currency: "eur",
+    metadata: {
+      listingId,
+      userId: req.userId,
+    },
+  });
+
+  if (!paymentIntent.client_secret) {
+    return res.status(500).json({ message: "Error creating payment intent" });
+  }
+
+  const response = {
+    paymentIntentId: paymentIntent.id,
+    clientSecret: paymentIntent.client_secret.toString(),
+    totalCost,
+  };
+
+  res.send(response);
+};
+
+const createBooking = async (req, res) => {
+  try {
+    const paymentIntentId = req.body.paymentIntentId;
+    
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    console.log(paymentIntentId);
+
+    if (!paymentIntent) {
+      return res.status(500).json({ message: "payment intent not found" });
+    }
+
+    if (
+      paymentIntent.metadata.listingId !== req.params.listingId ||
+      paymentIntent.metadata.userId !== req.userId
+    ) {
+      return res.status(500).json({ message: "payment intent mismatch" });
+    }
+
+    if(paymentIntent.status !== "succeeded") {
+      return res.status(400).json({ message: `payment intent not succeeded. Status: ${paymentIntent.status}` });
+    }
+
+    const newBooking = {
+      ...req.body, userId: req.userId
+    }
+
+    const listing = await Listing.findOneAndUpdate({_id: req.params.listingId}, {$push: {bookings: newBooking}})
+    if(!listing) {
+      return res.status(400).json({ message: "listing not found" });
+    }
+    await listing.save()
+    res.status(200).send()
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "something went wrong" });
+  }
+}
 
 const constructedSearchQuery = (queryParams) => {
   let constructedQuery = {};
@@ -104,5 +178,7 @@ const constructedSearchQuery = (queryParams) => {
 
 export default {
   searchListings,
-  // getListing
+  // getListing,
+  createPayment,
+  createBooking
 };

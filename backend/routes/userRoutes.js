@@ -30,7 +30,6 @@ router.post(
   userControllers.signup
 );
 
-router.get("/me", verifyToken, userControllers.getUserDetails)
 
 router.post(
   "/login",
@@ -41,8 +40,9 @@ router.post(
     }),
   ],
   userControllers.login
-);
-
+  );
+  
+  router.get("/me", verifyToken, userControllers.getUserDetails)
 
 router.patch("/favorites/:userId/:listingId", verifyToken, userControllers.handleFavorite)
 router.put("/:userId/",verifyToken, upload.array("profileImagePath") , userControllers.updateUser)

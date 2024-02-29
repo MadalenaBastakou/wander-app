@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     tripList: { type: Array, default: [] },
     wishList: { type: Array, default: [] },
     propertyList: { type: Array, default: [] },
-    reservationList: { type: Array, default: [] },
+    bookings: { type: Array, default: [] },
   },
   { timestamps: true }
 );

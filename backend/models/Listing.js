@@ -20,6 +20,7 @@ const listingSchema = new mongoose.Schema(
     description: { type: String, required: true },
     price: { type: Number, required: true },
     lastUpdated: { type: Date, required: true },
+    bookings: { type: Array, default: [] },
   },
   { timestamps: true }
 );

@@ -1,14 +1,6 @@
 /**------------------------------USER ROUTES---------------------------------------------- */
 
-export const fetchCurrentUser = async () => {
-  const response = await fetch("/api/user/me", {
-    credentials: "include",
-  });
-  if (!response.ok) {
-    throw new Error("Error fetching user");
-  }
-  return response.json()
-};
+
 
 /**USER SIGNUP*/
 export const signup = async (formData) => {
@@ -182,7 +174,6 @@ export const updateListing = async (formData) => {
 
 /**DELETE LISTING*/
 export const deleteListing = async (listingId) => {
-  console.log(listingId);
   const response = await fetch(`/api/my-listings/${listingId}`, {
     method: "DELETE",
     credentials: "include",
@@ -192,8 +183,7 @@ export const deleteListing = async (listingId) => {
     throw new Error("Error during logout");
   }
 
-  const responseBody = await response.json();
-  console.log(responseBody);
+  await response.json();
 };
 
 /**GET USER LISTINGS */
@@ -236,26 +226,25 @@ export const fetchListings = async (selectedCategory) => {
 
 /**------------------------------MY-BOOKINGS REQUESTS---------------------------------------------- */
 
-/**CREATE BOOKING */
-export const createBooking = async (newBooking) => {
-  const response = await fetch("/api/my-bookings/create", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newBooking),
-  });
+// /**CREATE BOOKING */
+// export const createBooking = async (newBooking) => {
+//   const response = await fetch("/api/my-bookings/create", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(newBooking),
+//   });
 
-  if (!response.ok) {
-    throw new Error("Error creating booking");
-  }
+//   if (!response.ok) {
+//     throw new Error("Error creating booking");
+//   }
 
-  const responseBody = await response.json();
-  localStorage.setItem("user", JSON.stringify(responseBody.user));
-};
+//   const responseBody = await response.json();
+//   localStorage.setItem("user", JSON.stringify(responseBody.user));
+// };
 
 export const searchListings = async (searchParams) => {
-  console.log(searchParams);
   const queryParams = new URLSearchParams();
   queryParams.append("destination", searchParams.destination || "");
   queryParams.append("checkIn", searchParams.checkIn || "");
@@ -273,8 +262,6 @@ export const searchListings = async (searchParams) => {
 
   const queryString = queryParams.toString();
 
-  console.log(queryParams.maxPrice);
-
   const response = await fetch(`/api/listings/search?${queryString}`);
 
   if (!response.ok) {
@@ -283,4 +270,49 @@ export const searchListings = async (searchParams) => {
 
   const responseBody = await response.json();
   return responseBody;
+};
+
+export const createPaymentIntent = async (listingId, numberOfNights) => {
+  const response = await fetch(
+    `/api/listings/${listingId}/bookings/payment-intent`,
+    {
+      credentials: "include",
+      method: "POST",
+      body: JSON.stringify({ numberOfNights }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Error fetching payment intent");
+  }
+
+  return response.json()
+};
+
+export const createBooking = async(formData) => {
+  const response = await fetch(`/api/listings/${formData.listingId}/bookings`, {
+    method:"POST",
+    headers: {
+      "Content-Type" : "application/json"
+    },
+    credentials: "include",
+    body: JSON.stringify(formData)
+  })
+  if (!response.ok) {
+    throw new Error("Error booking listing");
+  }
+console.log(response);
+}
+
+export const fetchCurrentUser = async () => {
+  const response = await fetch("/api/user/me", {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Error fetching user");
+  }
+  return response.json();
 };
