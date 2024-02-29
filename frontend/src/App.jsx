@@ -11,7 +11,7 @@ import { Profile } from "./pages/Profile";
 import { MyListings } from "./pages/MyListings";
 import { ListingDetails } from "./pages/ListingDetails";
 import { CategoriesPage } from "./pages/CategoriesPage";
-import { TripList } from "./pages/TripList";
+import { MyBookings } from "./pages/MyBookings";
 import { Wishlist } from "./pages/Wishlist";
 import { EditListing } from "./components/EditListing";
 import { useContext } from "react";
@@ -102,10 +102,10 @@ function App() {
               }
             />
             <Route
-              path="/:userId/trips"
+              path="/:userId/bookings"
               element={
                 <Layout>
-                  <TripList />
+                  <MyBookings />
                 </Layout>
               }
             />

@@ -1,17 +1,11 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/icons/logo.png";
-import { useEffect, useState } from "react";
+import { useContext} from "react";
 import { ProfileMenu } from "./ProfileMenu";
+import { UserContext } from "../contexts/UserContext";
 
 export const Navbar = () => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const res = localStorage.getItem("user");
-    if (res) {
-      setUser(JSON.parse(res));
-    }
-  }, []);
+  const {isLoggedIn} = useContext(UserContext)
 
   return (
     <div className="w-full px-2 lg:px-8 mx-auto flex justify-between items-center text-lg shadow-sm">
@@ -23,7 +17,7 @@ export const Navbar = () => {
         </span>
       </div>
       <div className="flex items-center space-x-5 ">
-        {!user ? (
+        {!isLoggedIn ? (
           <>
             <Link to="/login">Login</Link>
             <Link to="/signup">
@@ -40,7 +34,7 @@ export const Navbar = () => {
             >
               Become a host
             </Link>
-            <ProfileMenu user={user} />
+            <ProfileMenu />
           </>
         )}
       </div>

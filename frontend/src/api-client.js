@@ -1,7 +1,5 @@
 /**------------------------------USER ROUTES---------------------------------------------- */
 
-
-
 /**USER SIGNUP*/
 export const signup = async (formData) => {
   const response = await fetch("/api/user/signup", {
@@ -289,23 +287,33 @@ export const createPaymentIntent = async (listingId, numberOfNights) => {
     throw new Error("Error fetching payment intent");
   }
 
-  return response.json()
+  return response.json();
 };
 
-export const createBooking = async(formData) => {
+export const createBooking = async (formData) => {
   const response = await fetch(`/api/listings/${formData.listingId}/bookings`, {
-    method:"POST",
+    method: "POST",
     headers: {
-      "Content-Type" : "application/json"
+      "Content-Type": "application/json",
     },
     credentials: "include",
-    body: JSON.stringify(formData)
-  })
+    body: JSON.stringify(formData),
+  });
   if (!response.ok) {
     throw new Error("Error booking listing");
   }
-console.log(response);
-}
+  console.log(response);
+};
+
+export const fetchMyBookings = async () => {
+  const response = await fetch("/api/my-bookings");
+
+  if (!response.ok) {
+    throw new Error("Error fetching bookings");
+  }
+
+  return response.json()
+};
 
 export const fetchCurrentUser = async () => {
   const response = await fetch("/api/user/me", {

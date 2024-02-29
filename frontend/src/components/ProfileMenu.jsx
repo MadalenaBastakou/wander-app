@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { BsPersonFill } from "react-icons/bs";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { Link } from "react-router-dom";
@@ -6,18 +6,8 @@ import { UserContext } from "../contexts/UserContext";
 
 export const ProfileMenu = () => {
   const [open, setOpen] = useState(false);
-  const { user, setUser, logout } = useContext(UserContext);
+  const { user, logout} = useContext(UserContext);
 
-  useEffect(() => {
-    // const getUser = async () => {
-    //   const res = await apiClient.fetchUser(user._id);
-    //   console.log(res);
-    // };
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, [setUser]);
 
   return (
     <div className="relative">
@@ -53,11 +43,11 @@ export const ProfileMenu = () => {
           <Link className="hover:text-gray-700" to="/my-listings">
             My Listings
           </Link>
-          <Link className="hover:text-gray-700" to={`/${user._id}/trips`}>
-            Trip List
+          <Link className="hover:text-gray-700" to={`/${user._id}/bookings`}>
+            My bookings
           </Link>
           <Link className="hover:text-gray-700" to={`/${user._id}/wishList`}>
-            Wish List
+            My favourites
           </Link>
           {/* <Link className="hover:text-gray-700" to="">
             Property List

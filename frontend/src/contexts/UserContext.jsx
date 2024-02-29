@@ -2,8 +2,6 @@ import { createContext, useEffect, useState } from "react";
 import {loadStripe} from "@stripe/stripe-js"
 const STRIPE_PUB_KEY = import.meta.env.VITE_STRIPE_PUB_KEY || ""
 
-console.log(STRIPE_PUB_KEY);
-
 const initialUserState = {
   firstName: "",
   lastName: "",

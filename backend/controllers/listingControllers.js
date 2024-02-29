@@ -86,7 +86,6 @@ const createBooking = async (req, res) => {
     const paymentIntentId = req.body.paymentIntentId;
     
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-    console.log(paymentIntentId);
 
     if (!paymentIntent) {
       return res.status(500).json({ message: "payment intent not found" });

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GrPrevious, GrNext } from "react-icons/gr";
 import { RxDotFilled } from "react-icons/rx";
@@ -6,11 +6,19 @@ import * as apiClient from "../api-client";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { UserContext } from "../contexts/UserContext";
 
-export const BookedListingCard = ({listing, startDate, endDate, totalPrice}) => {
+export const BookedListingCard = ({ listing }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { user, setUser } = useContext(UserContext);
+  const [isLiked, setIsLiked] = useState(
+    user?.wishList?.find((item) => item?._id === listing?._id)
+  );
 
-  const isLiked = user?.wishList?.find((item) => item?._id === listing?._id);
+  useEffect(() => {
+    const res = localStorage.getItem("user");
+    if (res) {
+      setUser(JSON.parse(res));
+    }
+  }, [setUser]);
 
   const navigate = useNavigate();
 
@@ -32,20 +40,21 @@ export const BookedListingCard = ({listing, startDate, endDate, totalPrice}) => 
 
   /**ADD TO WISHLIST */
   const patchWishlist = async (userId, listingId) => {
-    if (user?._id !== listing.creator?._id) {
+    if (user?._id !== listing?.creator?._id) {
       const res = await apiClient.patchWishList(userId, listingId);
-      setUser(res.user);
-    } else return;
+      setUser(res.rest);
+      setIsLiked(res.liked);
+    }
   };
 
   return (
     <div
-      className="flex flex-col h-96 w-80 cursor-pointer"
+      className="grid grid-cols-[1fr_3fr] relative cursor-pointer"
       onClick={() => navigate(`/my-listings/${listing._id}`)}
     >
       <div
         key={listing._id}
-        className={`relative translate-x-[${currentIndex * 100}%] group`}
+        className={`relative translate-x-[${currentIndex * 100}%] group w-80`}
       >
         <img
           src={listing.photos[`${currentIndex}`]}
@@ -117,19 +126,46 @@ export const BookedListingCard = ({listing, startDate, endDate, totalPrice}) => 
           </div>
         </div>
       </div>
-
-      <div className="flex justify-between mt-2">
-        <h3 className="text-sm font-medium">
+      <div className="flex flex-col w-96 gap-4 px-4 mt-2">
+        <h3 className="text-lg font-semibold my-3">
           {listing.city}, {listing.province}, {listing.country}
         </h3>
-      </div>
-      <p className="text-sm text-neutral-500 font-light">{listing.category}</p>
-      <p className="text-md text-neutral-500 ">{startDate} - {endDate}</p>
-      <p className="text-md font-bold">
-        <span>€</span>
-        {totalPrice} <span className="font-normal">total</span>
+      {listing.bookings.map((booking) => (
+        <div key={booking._id}>
+          <div>
+            <span className="font-bold mr-2 text-neutral-500">Dates:</span>
+            <span>
+              {new Date(booking.checkIn).toDateString()} -{" "}
+              {new Date(booking.checkOut).toDateString()}
+            </span>
+          </div>
+        </div>
+      ))}
+          <div>
+          <p className="flex absolute bottom-0 gap-3 text-md font-light py-8">
+        <span className="bg-neutral-200 p-2 rounded-full">
+          {listing.guestCount > 1
+            ? `${listing.guestCount} guests`
+            : `${listing.guestCount} guest`}
+        </span>{" "}
+        <span className="bg-neutral-200 p-2 rounded-full">
+          {listing.bedroomCount > 1
+            ? `${listing.bedroomCount} bedrooms`
+            : `${listing.bedroomCount} bedroom`}
+        </span>{" "}
+        <span className="bg-neutral-200 p-2 rounded-full">
+          {listing.bedCount > 1
+            ? `${listing.bedCount} beds`
+            : `${listing.bedCount} bed`}
+        </span>{" "}
+        <span className="bg-neutral-200 p-2 rounded-full">
+          {listing.bathroomCount > 1
+            ? `${listing.bathroomCount} bathrooms`
+            : `${listing.bathroomCount} bathroom`}
+        </span>
       </p>
+          </div>
+      </div>
     </div>
-  )
-}
-
+  );
+};

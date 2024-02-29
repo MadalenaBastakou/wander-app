@@ -13,6 +13,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { MdOutlineModeEdit } from "react-icons/md";
 import DeleteModal from "../components/DeleteModal";
 import { SearchContext } from "../contexts/SearchContext.jsx";
+import { Tooltip } from "react-tooltip";
 
 export const ListingDetails = () => {
   const [loading, setLoading] = useState(true);
@@ -68,28 +69,12 @@ export const ListingDetails = () => {
 
 
   /**SUBMIT BOOKING */
-  // const customerId = user._id;
-
   const navigate = useNavigate();
   const location = useLocation()
 
   const handleSubmit = async () => {
     search.saveSearchValues( "", dateRange[0].startDate, dateRange[0].endDate, "")
     navigate(`/listings/${listing._id}/booking`)
-    // const newBooking = {
-    //   customerId,
-    //   listingId,
-    //   hostId: listing.creator._id,
-    //   startDate: dateRange[0].startDate.toDateString(),
-    //   endDate: dateRange[0].endDate.toDateString(),
-    //   totalPrice: listing.price * dayCount,
-    // };
-    // try {
-    //   await apiClient.createBooking(newBooking);
-    //   navigate(`/${user._id}/trips`);
-    // } catch (error) {
-    //   console.error("Error creating booking:", error);
-    // }
   };
 
   const handleDelete = async (e, listing) => {
@@ -114,6 +99,7 @@ export const ListingDetails = () => {
       <div className="flex justify-between items-center ">
         <h1 className="text-xl md:text-3xl font-bold py-4">{listing.title}</h1>
         <div className="text-xl font-medium">
+        {!isLoggedIn && <Tooltip id="my-tooltip" style={{ fontSize: "16px", zIndex: 10 }} />}
           {listing.creator._id === user._id ? (
             <div className="flex justify-between items-center gap-4 px-4">
               <button
@@ -159,7 +145,15 @@ export const ListingDetails = () => {
               className={`flex items-center gap-3 p-3 text-2xl  ${user?._id === listing.creator?._id || !isLoggedIn ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
               disabled={user?._id === listing?.creator?._id || !isLoggedIn}
             >
-              <MdFavoriteBorder />
+              {!isLoggedIn ? <a
+                data-tooltip-id="my-tooltip"
+                data-tooltip-content={!isLoggedIn ? "Login to favorite" : ""}
+                data-tooltip-place="left"
+                data-tooltip-variant="dark"
+              >
+                <MdFavoriteBorder />
+              </a> :    <MdFavoriteBorder />}
+           
             </button>
           )}
         </div>
@@ -195,14 +189,14 @@ export const ListingDetails = () => {
         </span>{" "}
         <span className="bg-neutral-200 p-2 rounded-full">
           {listing.bathroomCount > 1
-            ? `${listing.bathroomCount} beds`
-            : `${listing.bathroomCount} bed`}
+            ? `${listing.bathroomCount} bathrooms`
+            : `${listing.bathroomCount} b`}
         </span>
       </p>
       <hr />
       <div>
         <div className="flex items-center gap-4">
-          {listing?.creator && listing?.creator.profileImagePath[0] !== "" ? (
+          {listing?.creator.profileImagePath[0] !== "" &&  listing?.creator?.profileImagePath?.length !== 0 ? (
             <img
               className="rounded-full w-12 h-12"
               src={listing.creator.profileImagePath[0]}
