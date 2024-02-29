@@ -78,7 +78,7 @@ const constructedSearchQuery = (queryParams) => {
     constructedQuery.type = new RegExp(queryParams.type, "i");
   }
 
-  if (queryParams.maxPrice) {
+  if (queryParams.maxPrice && parseInt(queryParams.maxPrice) !== 0) {
     constructedQuery.price = {
       $lte: parseInt(queryParams.maxPrice).toString(),
     };
