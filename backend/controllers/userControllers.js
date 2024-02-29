@@ -154,6 +154,20 @@ const getUser = async (req, res) => {
   }
 };
 
+const getUserDetails = async(req, res) => {
+  const userId = req.userId
+  try{
+const user = await User.findById(userId).select("-password")
+if(!user) {
+  return res.status(400).json({message: "User not found"})
+}
+res.json(user)
+  }catch(err) {
+    console.log(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+}
+
 const getTripList = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -280,5 +294,6 @@ export default {
   getTripList,
   handleFavorite,
   updateUser,
-  deleteUser
+  deleteUser,
+  getUserDetails
 };

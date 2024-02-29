@@ -18,6 +18,7 @@ import { useContext } from "react";
 import { UserContext } from "./contexts/UserContext";
 import Error404Page from "./pages/Error404Page";
 import { SearchPage } from "./pages/SearchPage";
+import { Booking } from "./pages/Booking";
 
 function App() {
   const { isLoggedIn } = useContext(UserContext);
@@ -68,6 +69,14 @@ function App() {
         />
         {isLoggedIn && (
           <Route element={<PrivateRoute />}>
+             <Route
+              path="/listings/:listingId/booking"
+              element={
+                <Layout>
+                  <Booking />
+                </Layout>
+              }
+            />
             <Route
               path="/profile"
               element={

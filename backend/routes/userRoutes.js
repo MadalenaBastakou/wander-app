@@ -30,6 +30,8 @@ router.post(
   userControllers.signup
 );
 
+router.get("/me", verifyToken, userControllers.getUserDetails)
+
 router.post(
   "/login",
   [

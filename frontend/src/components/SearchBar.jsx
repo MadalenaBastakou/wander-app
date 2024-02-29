@@ -1,19 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { SearchContext } from "../contexts/SearchContext";
 import { FaLocationDot } from "react-icons/fa6";
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
-// import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/react-datepicker.css";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
-export const SearchBar = ({location}) => {
+export const SearchBar = ({ location }) => {
   const search = useContext(SearchContext);
 
   const [destination, setDestination] = useState(search.destination);
-  const [checkIn, setCheckIn] = useState(search.checkIn);
-  const [checkOut, setCheckOut] = useState(search.checkOut);
+  const [checkIn, setCheckIn] = useState(dayjs(search.checkIn));
+  const [checkOut, setCheckOut] = useState(dayjs(search.checkOut));
   const [guests, setGuests] = useState(search.guests);
 
   const [cleared, setCleared] = useState(false);
@@ -45,15 +44,15 @@ export const SearchBar = ({location}) => {
     setGuests(guests + 1);
   };
 
-//   const minDate = new Date();
-//   const maxDate = new Date();
-//   maxDate.setFullYear(maxDate.getFullYear() + 1);
+  //   const minDate = new Date();
+  //   const maxDate = new Date();
+  //   maxDate.setFullYear(maxDate.getFullYear() + 1);
 
   return (
     <div className="container flex justify-center items-center mx-auto absolute">
       <form
         onSubmit={handleSubmit}
-        className= {`bg-white grid grid-cols-2 md:grid-cols-3  xl:grid-cols-5 items-center gap-4 p-2 md:p-3 rounded-full shadow-xl mx-auto ${location === "search" ? "-mt-64": "-mt-96"}`}
+        className={`bg-white grid grid-cols-2 md:grid-cols-3  xl:grid-cols-5 items-center gap-4 p-2 md:p-3 rounded-full shadow-xl mx-auto ${location === "search" ? "-mt-64" : "-mt-96"}`}
       >
         <div className="flex flex-row items-center flex-1  p-2  ">
           <FaLocationDot size={18} className="mr-2 text-neutral-400" />
@@ -83,8 +82,7 @@ export const SearchBar = ({location}) => {
             />
           </div>
         </div>
-        <div className="flex text-neutral-400">
-          <DatePicker
+        {/* <DatePicker
             label="Check-in date"
             sx={{
               width: 260,
@@ -96,12 +94,27 @@ export const SearchBar = ({location}) => {
               field: { clearable: true, onClear: () => setCleared(true) },
             }}
             disablePast
-            onChange={(date) => {
-              setCheckIn(dayjs(date).format("DD/MM/YYYY"));
+            format="DD - MM - YYYY"
+            onChange={(value) => setCheckIn(dayjs(value))}
+          /> */}
+
+        {/* <div className="flex text-neutral-400"> */}
+        <DemoContainer components={["DatePicker"]}>
+          <DatePicker
+            label="Check-in date"
+            disablePast
+            sx={{
+              width: 260,
+              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                border: "none",
+              },
             }}
+            value={checkIn || null}
+            onChange={(newCheckIn) => setCheckIn(newCheckIn ? newCheckIn.$d : null)}
           />
-        </div>
-        <div>
+
+</DemoContainer>
+<DemoContainer components={["DatePicker"]}>
           <DatePicker
             label="Check-out date"
             disablePast
@@ -111,13 +124,10 @@ export const SearchBar = ({location}) => {
                 border: "none",
               },
             }}
-            slotProps={{
-              field: { clearable: true, onClear: () => setCleared(true) },
-            }}
-            format="DD - MM - YYYY"
-            onChange={(date) => setCheckOut(dayjs(date).format("DD/MM/YYYY"))}
+            value={checkOut || null}
+            onChange={(newCheckOut) => setCheckOut(newCheckOut ? newCheckOut.$d : null)}
           />
-        </div>
+          </DemoContainer>
         {/* <DatePicker
               selected={checkIn}
               onChange={(date) => setCheckIn(date)}

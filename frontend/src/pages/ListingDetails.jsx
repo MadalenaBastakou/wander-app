@@ -59,8 +59,8 @@ export const ListingDetails = () => {
     },
   ]);
 
-  const start = new Date(dateRange[0].startDate);
-  const end = new Date(dateRange[0].endDate);
+  const start = new Date(dateRange[0]?.startDate);
+  const end = new Date(dateRange[0]?.endDate);
   const dayCount = Math.round(end - start) / (1000 * 60 * 60 * 24);
 
   const handleSelect = (ranges) => {
@@ -75,8 +75,8 @@ export const ListingDetails = () => {
   const location = useLocation()
 
   const handleSubmit = async () => {
-    search.setSearchValues( "", dateRange[0].startDate, dateRange[0].endDate, "")
-    navigate(`/listings/${listingId}/booking`)
+    search.saveSearchValues( "", dateRange[0].startDate, dateRange[0].endDate, "")
+    navigate(`/listings/${listing._id}/booking`)
     // const newBooking = {
     //   customerId,
     //   listingId,

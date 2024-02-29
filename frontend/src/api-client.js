@@ -1,5 +1,15 @@
 /**------------------------------USER ROUTES---------------------------------------------- */
 
+export const fetchCurrentUser = async () => {
+  const response = await fetch("/api/user/me", {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Error fetching user");
+  }
+  return response.json()
+};
+
 /**USER SIGNUP*/
 export const signup = async (formData) => {
   const response = await fetch("/api/user/signup", {
@@ -25,8 +35,8 @@ export const login = async (formData) => {
     body: JSON.stringify(formData),
   });
 
-if (!response.ok) {
-    const responseBody = await response.json()
+  if (!response.ok) {
+    const responseBody = await response.json();
     throw new Error(responseBody.message);
   }
   const responseBody = await response.json();
@@ -39,23 +49,23 @@ export const validateToken = async () => {
   const response = await fetch(`/api/user/validate-token`, {
     credentials: "include",
   });
-  
+
   if (!response.ok) {
     throw new Error("Token invalid");
   }
-  
+
   const responseBody = await response.json();
   return responseBody;
 };
 
 /**USER LOGOUT */
 export const logout = async () => {
-  localStorage.remove("user")
+  localStorage.remove("user");
   const response = await fetch("/api/user/logout", {
     method: "POST",
     credentials: "include",
   });
-  
+
   if (!response.ok) {
     throw new Error("Error during logout");
   }
@@ -87,8 +97,8 @@ export const patchWishList = async (userId, listingId) => {
   const response = await fetch(`/api/user/favorites/${userId}/${listingId}`, {
     method: "PATCH",
     headers: {
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   });
   if (!response.ok) {
     throw new Error("Error updating wishlist");
@@ -105,7 +115,7 @@ export const updateUser = async (userId, formData) => {
     // headers: {
     //   "Content-Type": "application/json"
     // },
-    body: formData
+    body: formData,
   });
   if (!response.ok) {
     throw new Error("Error updating user");
@@ -120,7 +130,7 @@ export const deleteUser = async (userId) => {
   const response = await fetch(`/api/user/${userId}`, {
     method: "DELETE",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
   });
   if (!response.ok) {
@@ -128,9 +138,8 @@ export const deleteUser = async (userId) => {
   }
   const responseBody = await response.json();
   localStorage.removeItem("user");
-  return responseBody
+  return responseBody;
 };
-
 
 /**------------------------------MY-LISTINGS ROUTES---------------------------------------------- */
 
@@ -147,25 +156,28 @@ export const addListing = async (formData) => {
 
   const responseBody = await response.json();
 
-  localStorage.setItem("user", JSON.stringify(responseBody.rest))
+  localStorage.setItem("user", JSON.stringify(responseBody.rest));
   return responseBody;
 };
 
 /**UPDATE LISTING*/
 export const updateListing = async (formData) => {
-  const response = await fetch(`/api/my-listings/${formData.get("listingId")}`, {
-    method: "PUT",
-    body:formData,
-    credentials: "include",
-  });
+  const response = await fetch(
+    `/api/my-listings/${formData.get("listingId")}`,
+    {
+      method: "PUT",
+      body: formData,
+      credentials: "include",
+    }
+  );
   console.log(response);
   if (!response.ok) {
     throw new Error("Failed to update listing");
   }
 
-  const responseBody = await response.json()
+  const responseBody = await response.json();
   console.log(responseBody);
-  return responseBody
+  return responseBody;
 };
 
 /**DELETE LISTING*/
@@ -175,12 +187,12 @@ export const deleteListing = async (listingId) => {
     method: "DELETE",
     credentials: "include",
   });
-  
+
   if (!response.ok) {
     throw new Error("Error during logout");
   }
 
-  const responseBody = await response.json()
+  const responseBody = await response.json();
   console.log(responseBody);
 };
 
@@ -224,7 +236,6 @@ export const fetchListings = async (selectedCategory) => {
 
 /**------------------------------MY-BOOKINGS REQUESTS---------------------------------------------- */
 
-
 /**CREATE BOOKING */
 export const createBooking = async (newBooking) => {
   const response = await fetch("/api/my-bookings/create", {
@@ -239,35 +250,37 @@ export const createBooking = async (newBooking) => {
     throw new Error("Error creating booking");
   }
 
-  const responseBody = await response.json()
-  localStorage.setItem("user", JSON.stringify(responseBody.user))
+  const responseBody = await response.json();
+  localStorage.setItem("user", JSON.stringify(responseBody.user));
 };
 
-export const searchListings = async(searchParams) => {
+export const searchListings = async (searchParams) => {
   console.log(searchParams);
-  const queryParams = new URLSearchParams()
-  queryParams.append("destination", searchParams.destination || "" )
-  queryParams.append("checkIn", searchParams.checkIn || "" )
-  queryParams.append("checkOut", searchParams.checkOut || "" )
-  queryParams.append("guests", searchParams.guests || "" )
-  queryParams.append("page", searchParams.page || "" )
-  queryParams.append("maxPrice", searchParams.maxPrice || 0 )
-  queryParams.append("sortOption", searchParams.sortOption || "" )
-  queryParams.append("category", searchParams.category || "" )
-  queryParams.append("type", searchParams.type || "" )
+  const queryParams = new URLSearchParams();
+  queryParams.append("destination", searchParams.destination || "");
+  queryParams.append("checkIn", searchParams.checkIn || "");
+  queryParams.append("checkOut", searchParams.checkOut || "");
+  queryParams.append("guests", searchParams.guests || "");
+  queryParams.append("page", searchParams.page || "");
+  queryParams.append("maxPrice", searchParams.maxPrice || 0);
+  queryParams.append("sortOption", searchParams.sortOption || "");
+  queryParams.append("category", searchParams.category || "");
+  queryParams.append("type", searchParams.type || "");
 
-  searchParams.facilities?.forEach((facility) => queryParams.append("facilities", facility))
+  searchParams.facilities?.forEach((facility) =>
+    queryParams.append("facilities", facility)
+  );
 
   const queryString = queryParams.toString();
 
   console.log(queryParams.maxPrice);
 
-  const response = await fetch(`/api/listings/search?${queryString}`)
+  const response = await fetch(`/api/listings/search?${queryString}`);
 
-  if(!response.ok) {
-    throw new Error("Error fetching listings")
+  if (!response.ok) {
+    throw new Error("Error fetching listings");
   }
 
-  const responseBody = await response.json()
-  return responseBody
-}
+  const responseBody = await response.json();
+  return responseBody;
+};
