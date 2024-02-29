@@ -97,7 +97,11 @@ export const ListingDetails = () => {
   };
 
   return loading ? (
-    <Loader />
+    <div className="w-screen h-screen flex justify-center items-center">
+          <span className="animate-spin-slow text-8xl">
+            <Loader />
+          </span>
+        </div>
   ) : (
     <div
       className={`max-w-screen-lg mx-auto ${user._id === listing.creator._id ? "border-2 border-dashed rounded-xl p-8 mt-6 mb-12" : ""}`}
@@ -130,7 +134,7 @@ export const ListingDetails = () => {
                 e.stopPropagation();
                 patchWishlist(user._id, listingId);
               }}
-              className={`flex items-center gap-3 p-3 text-2xl ${user?._id === listing.creator?._id || !isLoggedIn ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              className={`flex items-center gap-3 p-3 text-2xl text-rose-500 ${user?._id === listing.creator?._id || !isLoggedIn ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
               disabled={user?._id === listing.creator?._id || !isLoggedIn}
             >
               <MdFavorite />

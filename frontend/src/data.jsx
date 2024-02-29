@@ -147,18 +147,18 @@ export const categories = [
 
 export const types = [
   {
-    name: "An entire place",
+    name: "Entire place",
     description: "Guests have the whole place to themselves",
     icon: <FaHouse />,
   },
   {
-    name: "Room(s)",
+    name: "Room",
     description:
       "Guests have their own room in a house, plus access to shared places",
     icon: <FaDoorOpen />,
   },
   {
-    name: "A Shared Room",
+    name: "Shared space",
     description:
       "Guests sleep in a room or common area that maybe shared with you or others",
     icon: <FaPeopleRoof />,

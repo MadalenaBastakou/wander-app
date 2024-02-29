@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import connectToDb from "./config/connectToDb.js";
 import userRoutes from "./routes/userRoutes.js";
+import myListingRoutes from "./routes/myListingRoutes.js";
 import listingRoutes from "./routes/listingRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import cookieParser from "cookie-parser";
@@ -27,6 +28,7 @@ app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(cookieParser());
 
 app.use("/api/user", userRoutes);
+app.use("/api/my-listings", myListingRoutes);
 app.use("/api/listings", listingRoutes);
 app.use("/api/my-bookings", bookingRoutes);
 

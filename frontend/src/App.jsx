@@ -17,6 +17,7 @@ import { EditListing } from "./components/EditListing";
 import { useContext } from "react";
 import { UserContext } from "./contexts/UserContext";
 import Error404Page from "./pages/Error404Page";
+import { SearchPage } from "./pages/SearchPage";
 
 function App() {
   const { isLoggedIn } = useContext(UserContext);
@@ -54,6 +55,14 @@ function App() {
           element={
             <Layout>
               <ListingDetails />
+            </Layout>
+          }
+        />
+         <Route
+          path="/search"
+          element={
+            <Layout>
+              <SearchPage/>
             </Layout>
           }
         />

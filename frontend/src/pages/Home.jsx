@@ -9,7 +9,7 @@ export default function Home() {
  
   return (
     <div>
-      <Hero />
+      <Hero location={"home"}/>
       <div className="flex flex-col md:flex-row items-center justify-between w-screen md:py-4 my-4 h-48">
         <h2 className="md:flex-1 text-center text-xl md:text-3xl font-bold py-2">
           Discover our property selection
