@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import * as apiClient from "../api-client";
 import { facilities } from "../data.jsx";
 import "react-date-range/dist/styles.css";
@@ -14,6 +14,7 @@ import { MdOutlineModeEdit } from "react-icons/md";
 import DeleteModal from "../components/DeleteModal";
 import { SearchContext } from "../contexts/SearchContext.jsx";
 import { Tooltip } from "react-tooltip";
+import Map from "../components/Map.jsx";
 
 export const ListingDetails = () => {
   const [loading, setLoading] = useState(true);
@@ -67,14 +68,18 @@ export const ListingDetails = () => {
     setDateRange([ranges.selection]);
   };
 
-
   /**SUBMIT BOOKING */
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
 
   const handleSubmit = async () => {
-    search.saveSearchValues( "", dateRange[0].startDate, dateRange[0].endDate, "")
-    navigate(`/listings/${listing._id}/booking`)
+    search.saveSearchValues(
+      "",
+      dateRange[0].startDate,
+      dateRange[0].endDate,
+      ""
+    );
+    navigate(`/listings/${listing._id}/booking`);
   };
 
   const handleDelete = async (e, listing) => {
@@ -99,7 +104,9 @@ export const ListingDetails = () => {
       <div className="flex justify-between items-center ">
         <h1 className="text-xl md:text-3xl font-bold py-4">{listing.title}</h1>
         <div className="text-xl font-medium">
-        {!isLoggedIn && <Tooltip id="my-tooltip" style={{ fontSize: "16px", zIndex: 10 }} />}
+          {!isLoggedIn && (
+            <Tooltip id="my-tooltip" style={{ fontSize: "16px", zIndex: 10 }} />
+          )}
           {listing.creator._id === user._id ? (
             <div className="flex justify-between items-center gap-4 px-4">
               <button
@@ -145,15 +152,18 @@ export const ListingDetails = () => {
               className={`flex items-center gap-3 p-3 text-2xl  ${user?._id === listing.creator?._id || !isLoggedIn ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
               disabled={user?._id === listing?.creator?._id || !isLoggedIn}
             >
-              {!isLoggedIn ? <a
-                data-tooltip-id="my-tooltip"
-                data-tooltip-content={!isLoggedIn ? "Login to favorite" : ""}
-                data-tooltip-place="left"
-                data-tooltip-variant="dark"
-              >
+              {!isLoggedIn ? (
+                <a
+                  data-tooltip-id="my-tooltip"
+                  data-tooltip-content={!isLoggedIn ? "Login to favorite" : ""}
+                  data-tooltip-place="left"
+                  data-tooltip-variant="dark"
+                >
+                  <MdFavoriteBorder />
+                </a>
+              ) : (
                 <MdFavoriteBorder />
-              </a> :    <MdFavoriteBorder />}
-           
+              )}
             </button>
           )}
         </div>
@@ -190,15 +200,16 @@ export const ListingDetails = () => {
         <span className="bg-neutral-200 p-2 rounded-full">
           {listing.bathroomCount > 1
             ? `${listing.bathroomCount} bathrooms`
-            : `${listing.bathroomCount} b`}
+            : `${listing.bathroomCount} bathroom`}
         </span>
       </p>
       <hr />
-      <div>
+      <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
-          {listing?.creator.profileImagePath[0] !== "" &&  listing?.creator?.profileImagePath?.length !== 0 ? (
+          {listing?.creator.profileImagePath[0] !== "" &&
+          listing?.creator?.profileImagePath?.length !== 0 ? (
             <img
-              className="rounded-full w-12 h-12"
+              className="rounded-full object-cover w-12 h-12"
               src={listing.creator.profileImagePath[0]}
               alt="profile picture"
             />
@@ -211,6 +222,14 @@ export const ListingDetails = () => {
           <h3 className="text-md md:text-lg font-medium py-8">
             Hosted by {listing.creator.firstName} {listing.creator.lastName}
           </h3>
+        </div>
+        <div>
+          <Link
+            to={`mailto:${listing?.creator?.email}?subject=Regarding ${listing.title}`}
+            className="bg-orange-400 text-white text-xl font-medium px-4 py-3 rounded-md hover:bg-orange-500"
+          >
+            Contact host
+          </Link>
         </div>
       </div>
       <hr />
@@ -243,59 +262,72 @@ export const ListingDetails = () => {
             <h2 className="text-lg md:text-xl font-semibold py-8">
               How long do you want to stay?
             </h2>
-              <div className="flex flex-col justify-center bg-neutral-100 p-4 rounded-xl mb-8">
-                <div className="my-custom-calendar rdrMonth">
-                  <DateRange
-                    minDate={new Date()}
-                    ranges={dateRange}
-                    onChange={handleSelect}
-                  />
-                </div>
-                <div className="ps-4">
-                  {dayCount > 1 ? (
-                    <h2 className="text-lg md:text-lg font-medium ">
-                      €{listing.price} x {dayCount} nights
-                    </h2>
-                  ) : (
-                    <h2 className="text-lg md:text-lg font-medium ">
-                      €{listing.price} x {dayCount} night
-                    </h2>
-                  )}
-                  <h2 className="text-lg md:text-xl font-semibold pt-4 pb-5">
-                    Total price: €{listing.price * dayCount}
+            <div className="flex flex-col justify-center bg-neutral-100 p-4 rounded-xl mb-8">
+              <div className="my-custom-calendar rdrMonth">
+                <DateRange
+                  minDate={new Date()}
+                  ranges={dateRange}
+                  onChange={handleSelect}
+                />
+              </div>
+              <div className="ps-4">
+                {dayCount > 1 ? (
+                  <h2 className="text-lg md:text-lg font-medium ">
+                    €{listing.price} x {dayCount} nights
                   </h2>
-                  <p className="text-md font-light pb-2">
-                    <span className="text-neutral-500">Start Date:</span>{" "}
-                    {dateRange[0].startDate.toDateString()}
-                  </p>
-                  <p className="text-md font-light pb-8">
-                    <span className="text-neutral-500">End Date:</span>{" "}
-                    {dateRange[0].endDate.toDateString()}
-                  </p>
-                  <div className="flex justify-end pe-6">
-                  {isLoggedIn ?(<button
+                ) : (
+                  <h2 className="text-lg md:text-lg font-medium ">
+                    €{listing.price} x {dayCount} night
+                  </h2>
+                )}
+                <h2 className="text-lg md:text-xl font-semibold pt-4 pb-5">
+                  Total price: €{listing.price * dayCount}
+                </h2>
+                <p className="text-md font-light pb-2">
+                  <span className="text-neutral-500">Start Date:</span>{" "}
+                  {dateRange[0].startDate.toDateString()}
+                </p>
+                <p className="text-md font-light pb-8">
+                  <span className="text-neutral-500">End Date:</span>{" "}
+                  {dateRange[0].endDate.toDateString()}
+                </p>
+                <div className="flex justify-end pe-6">
+                  {isLoggedIn ? (
+                    <button
                       className="bg-orange-400 text-white text-xl font-medium px-12 p-3 mb-2 rounded-md hover:bg-orange-500"
                       type="submit"
                       onClick={handleSubmit}
                     >
-                       BOOK
-                    </button>) : (<button
+                      BOOK
+                    </button>
+                  ) : (
+                    <button
                       className="bg-orange-400 text-white text-xl font-medium px-12 p-3 mb-2 rounded-md hover:bg-orange-500"
                       type="submit"
                       onClick={() => {
-                        search.saveSearchValues("", dateRange[0].startDate,dateRange[0].endDate,0)
-                        navigate("/login", {state: {from: location}})
-                    }
-                      }
+                        search.saveSearchValues(
+                          "",
+                          dateRange[0].startDate,
+                          dateRange[0].endDate,
+                          0
+                        );
+                        navigate("/login", { state: { from: location } });
+                      }}
                     >
-                       Sign in to book
-                    </button>)}
-                  </div>
+                      Sign in to book
+                    </button>
+                  )}
                 </div>
               </div>
+            </div>
           </div>
         )}
       </div>
+      <Map
+        street={listing?.address}
+        city={listing?.city}
+        country={listing?.country}
+      />
     </div>
   );
 };

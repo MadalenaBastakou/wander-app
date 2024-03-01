@@ -137,8 +137,6 @@ export const CreateListing = () => {
       setSubmitting(false);
     }
 
-    console.log(res);
-
     toast.success("Listing created successfully!");
     reset();
     setGuests(1);
@@ -148,6 +146,7 @@ export const CreateListing = () => {
     setPhotos([]);
     setTimeout(() => {
       navigate("/my-listings");
+      toast.dismiss();
     }, 2000);
   });
 

@@ -25,7 +25,6 @@ const navigate = useNavigate()
   }, []);
 
   const handleDelete = async (e,listingId) => {
-    console.log(listingId);
    apiClient.deleteListing(listingId);
     fetchListings();
   };

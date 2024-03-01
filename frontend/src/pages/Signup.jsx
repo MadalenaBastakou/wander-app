@@ -5,6 +5,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
 import logo from "../assets/icons/logo.png";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 const Signup = () => {
   const {
@@ -14,11 +16,13 @@ const Signup = () => {
     watch,
     reset,
   } = useForm();
+  const {setIsLoggedIn} = useContext(UserContext)
 
   const navigate = useNavigate();
 
   const mutation = useMutation(apiClient.signup, {
     onSuccess: () => {
+      setIsLoggedIn(true)
       navigate("/");
       console.log("User signed up successfully");
     },

@@ -12,11 +12,13 @@ export const MyBookings = () => {
     return <span>No bookings found</span>;
   }
 
+  console.log(listings);
+
   return (
     <div className="w-full">
       <h1 className="text-3xl font-bold mt-6 ">My bookings</h1>
       <div className="flex justify-center ">
-        <div className="grid grid-cols-3 xl:grid-cols-2 mt-8 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 mt-8 gap-10">
           {listings.map((listing) => (
             <div
               className="border-2 border-dashed rounded-xl p-2 mx-auto hover:border-solid"

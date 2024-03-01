@@ -13,17 +13,17 @@ export const ProfileMenu = () => {
     <div className="relative">
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="text-gray-400 flex justify-around items-center text-xl  rounded-full border px-2 shadow-sm hover:shadow-md"
+        className="text-gray-400 flex justify-around items-center text-xl p-1 rounded-full border px-2 shadow-sm hover:shadow-md"
       >
         {user?.profileImagePath?.length === 0 ? (
-          <div className="text-gray-400 border border-gray-400 rounded-full">
+          <div className="text-gray-400 border border-gray-400 rounded-full w-10 h-10 flex justify-center items-center">
             {" "}
-            <BsPersonFill className="text-2xl" />
+            <BsPersonFill className="text-2xl" size={30}/>
           </div>
         ) : (
           <div className="w-12 h-12 flex justify-around items-center">
             <img
-              className="object-cover rounded-full w-10 h-10"
+              className="object-cover rounded-full w-11 h-11"
               alt="profile-photo"
               src={user?.profileImagePath}
             />

@@ -13,12 +13,14 @@ export const BookedListingCard = ({ listing }) => {
     user?.wishList?.find((item) => item?._id === listing?._id)
   );
 
-  useEffect(() => {
-    const res = localStorage.getItem("user");
-    if (res) {
-      setUser(JSON.parse(res));
-    }
-  }, [setUser]);
+console.log(listing);
+
+  // useEffect(() => {
+  //   const res = localStorage.getItem("user");
+  //   if (res) {
+  //     setUser(JSON.parse(res));
+  //   }
+  // }, [setUser]);
 
   const navigate = useNavigate();
 
@@ -127,11 +129,17 @@ export const BookedListingCard = ({ listing }) => {
         </div>
       </div>
       <div className="flex flex-col w-96 gap-4 px-4 mt-2">
-        <h3 className="text-lg font-semibold my-3">
-          {listing.city}, {listing.province}, {listing.country}
-        </h3>
+         {listing.province ? (
+            <h3 className="text-lg font-semibold my-3">
+              {listing.city}, {listing.province}, {listing.country}
+            </h3>
+          ) : (
+            <h3 className="text-lg font-semibold my-3">
+              {listing.city}, {listing.country}
+            </h3>
+          )}
       {listing.bookings.map((booking) => (
-        <div key={booking._id}>
+        <div key={booking.paymentIntentId}>
           <div>
             <span className="font-bold mr-2 text-neutral-500">Dates:</span>
             <span>
@@ -160,7 +168,7 @@ export const BookedListingCard = ({ listing }) => {
         </span>{" "}
         <span className="bg-neutral-200 p-2 rounded-full">
           {listing.bathroomCount > 1
-            ? `${listing.bathroomCount} bathrooms`
+            ? `${listing.bathroomCount} bs`
             : `${listing.bathroomCount} bathroom`}
         </span>
       </p>

@@ -154,19 +154,19 @@ const getUser = async (req, res) => {
   }
 };
 
-const getUserDetails = async(req, res) => {
-  const userId = req.userId
-  try{
-const user = await User.findById(userId).select("-password")
-if(!user) {
-  return res.status(400).json({message: "User not found"})
-}
-res.json(user)
-  }catch(err) {
+const getUserDetails = async (req, res) => {
+  const userId = req.userId;
+  try {
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    res.json(user);
+  } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Something went wrong" });
   }
-}
+};
 
 const getTripList = async (req, res) => {
   try {
@@ -194,9 +194,9 @@ const handleFavorite = async (req, res) => {
     if (favoriteListing) {
       user.wishList = user.wishList.filter(
         (item) => item._id.toString() !== listingId
-        );
-        await user.save();
-        const { password: pass, ...rest } = user._doc;
+      );
+      await user.save();
+      const { password: pass, ...rest } = user._doc;
       res.status(200).json({
         message: "Listing is removed from wish list",
         rest,
@@ -220,10 +220,9 @@ const handleFavorite = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-
   try {
     const { _id, ...updatedUser } = req.body;
-  
+
     updatedUser.updatedAt = new Date();
 
     if (
@@ -236,21 +235,21 @@ const updateUser = async (req, res) => {
       delete updatedUser.password;
     }
 
-    if (req.files.length !== 0 ) {
+    if (req.files.length !== 0) {
       const files = req.files;
       const updatedPhotos = await uploadImages(files);
       updatedUser.profileImagePath = updatedPhotos;
-    } 
-    
+    }
+
     const user = await User.findOneAndUpdate(
       { _id: req.params.userId },
       updatedUser,
       { new: true }
-      );
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     await user.save();
     const { password: pass, ...rest } = user._doc;
@@ -261,16 +260,23 @@ const updateUser = async (req, res) => {
   }
 };
 
-const deleteUser = async(req,res) => {
-  const {userId} = req.params
+const deleteUser = async (req, res) => {
+  const { userId } = req.params;
   try {
-await User.deleteOne({_id: userId})
-res.status(200).json({ message: "User deleted successfully"});
-  }catch(error) {
+    const listings = await Listing.find({ creator: userId });
+
+    for (const listing of listings) {
+      await Listing.findByIdAndDelete(listing._id);
+    }
+
+    await User.deleteOne({ _id: userId });
+
+    res.status(200).json({ message: "User and user listings deleted successfully" });
+  } catch (error) {
     console.log("Error deleting user:" + error);
     res.status(500).json("Something went wrong");
   }
-}
+};
 
 async function uploadImages(imageFiles) {
   const uploadPromises = imageFiles.map(async (image) => {
@@ -295,5 +301,5 @@ export default {
   handleFavorite,
   updateUser,
   deleteUser,
-  getUserDetails
+  getUserDetails,
 };

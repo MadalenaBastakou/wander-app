@@ -8,7 +8,7 @@ import { BarLoader } from "react-spinners";
 import DeleteModal from "../components/DeleteModal"
 
 export const Profile = () => {
-  const { user, setUser, logout } = useContext(UserContext);
+  const { user, setUser, logout, setIsLoggedIn } = useContext(UserContext);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -75,9 +75,9 @@ export const Profile = () => {
   };
 
   const handleDelete = async () => {
-    const res = await apiClient.deleteUser(user._id);
-    console.log(res);
-    navigate("/login");
+    await apiClient.deleteUser(user._id);
+    setIsLoggedIn(false)
+    navigate("/");
   };
 
   return (

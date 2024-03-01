@@ -11,9 +11,10 @@ export const PhotoUploadSection = ({
 }) => {
   return (
     <>
-      <h3 className="font-medium text-lg py-4 mt-4 mb-2">
+      <h3 className="font-medium text-lg pt-4 mt-4">
         Add some photos of your place
       </h3>
+      <p className="text-sm text-neutral-600 font-thin italic mb-6">(Drag and drop your photos to rearrange them)</p>
       <DragDropContext onDragEnd={handleDragPhoto}>
         <Droppable droppableId="photos">
           {(provided) => (

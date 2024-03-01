@@ -302,7 +302,6 @@ export const createBooking = async (formData) => {
   if (!response.ok) {
     throw new Error("Error booking listing");
   }
-  console.log(response);
 };
 
 export const fetchMyBookings = async () => {
@@ -312,7 +311,9 @@ export const fetchMyBookings = async () => {
     throw new Error("Error fetching bookings");
   }
 
-  return response.json()
+  const responseBody = await response.json();
+  console.log(responseBody);
+  return responseBody;
 };
 
 export const fetchCurrentUser = async () => {
