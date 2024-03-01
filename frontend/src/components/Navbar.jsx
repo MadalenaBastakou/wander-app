@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/icons/logo.png";
-import { useContext} from "react";
+import { useContext } from "react";
 import { ProfileMenu } from "./ProfileMenu";
 import { UserContext } from "../contexts/UserContext";
 
 export const Navbar = () => {
-  const {isLoggedIn} = useContext(UserContext)
+  const { isLoggedIn } = useContext(UserContext);
 
   return (
-    <div className="w-full px-2 lg:px-8 mx-auto flex justify-between items-center text-lg shadow-sm">
+    <div className="w-full max-w-screen-3xl px-2 lg:px-8 mx-auto flex justify-between items-center text-lg shadow-sm">
       <div className="container ">
         <span>
           <Link to="/">
@@ -16,7 +16,7 @@ export const Navbar = () => {
           </Link>
         </span>
       </div>
-      <div className="flex items-center space-x-5 ">
+      <div className="flex items-center space-x-7 ">
         {!isLoggedIn ? (
           <>
             <Link to="/login">Login</Link>
@@ -29,7 +29,13 @@ export const Navbar = () => {
         ) : (
           <>
             <Link
-              className="hidden md:block text-gray-500 whitespace-nowrap"
+              className="hidden md:block text-gray-500 whitespace-nowrap text-md tracking-wide uppercase hover:bg-neutral-100 p-2 rounded-full"
+              to="/search"
+            >
+              Listings
+            </Link>
+            <Link
+              className="hidden md:block text-gray-500 whitespace-nowrap text-md tracking-wide uppercase  hover:bg-neutral-100 p-2 rounded-full"
               to="/create-listing"
             >
               Become a host

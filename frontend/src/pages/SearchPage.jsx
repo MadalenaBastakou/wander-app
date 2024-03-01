@@ -10,6 +10,7 @@ import { FacilitiesFilter } from "../components/FacilitiesFilter";
 import { TypesFilter } from "../components/TypesFilter";
 import { PriceFilter } from "../components/PriceFilter";
 
+
 export const SearchPage = () => {
   const search = useContext(SearchContext);
   const [page, setPage] = useState(1);

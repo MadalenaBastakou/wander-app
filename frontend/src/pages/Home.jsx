@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
-import Categories from "../components/Categories";
 import Hero from "../components/Hero";
 import { LatestListings } from "../components/LatestListings";
-
+import "swiper/css"
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 export default function Home() {
-
+const {isLoggedIn} = useContext(UserContext)
  
   return (
     <div>
@@ -22,8 +23,9 @@ export default function Home() {
           something for every traveler.{" "}
         </div>
       </div>
-      <Categories />
+      <div className="ms-20 mt-16">
       <LatestListings/>
+      </div>
       <div className="w-screen flex items-center justify-center  md:flex-row h-40 md:h-[24rem] mx-auto bg-footer bg-[center_-36rem] bg-no-repeat md:bg-center">
         <div className="absolute z-10 align-center flex flex-col gap-4">
           <p className="text-white text-2xl md:text-5xl text-center font-bold ">
@@ -32,8 +34,8 @@ export default function Home() {
           <p className="text-sm md:text-2xl text-center text-neutral-200 tracking-wider">
             Welcome to a world where possibilities meet properties.
           </p>
-          <Link to="/signup" className="text-center">
-            <button className="bg-orange-400  text-sm md:text-2xl text-white font-medium px-10 py-3 rounded-md hover:bg-orange-500 hover:text-black">
+          <Link to={isLoggedIn? "/search" : "/signup"} className="text-center">
+            <button className="bg-orange-400  text-sm md:text-2xl text-white font-medium px-10 py-3 rounded-md hover:bg-orange-500">
               Get Started
             </button>
           </Link>

@@ -15,6 +15,13 @@ export default {
       },
       animation: {
         'spin-slow': 'spin 3s linear infinite',
+      },
+      fontFamily: {
+        PoppinsExtraLight: ['PoppinsExtraLight'],
+        PoppinsLight: ['PoppinsLight'],
+        PoppinsRegular: ['PoppinsRegular'],
+        PoppinsMedium: ['PoppinsMedium'],
+        PoppinsBold: ['PoppinsBold']
       }
     },
   },

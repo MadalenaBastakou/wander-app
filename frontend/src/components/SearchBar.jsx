@@ -7,6 +7,7 @@ import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
+
 export const SearchBar = ({ location }) => {
   const search = useContext(SearchContext);
 
@@ -44,27 +45,25 @@ export const SearchBar = ({ location }) => {
     setGuests(guests + 1);
   };
 
-  //   const minDate = new Date();
-  //   const maxDate = new Date();
-  //   maxDate.setFullYear(maxDate.getFullYear() + 1);
 
   return (
-    <div className="container flex justify-center items-center mx-auto absolute">
+    <div className="w-full ms-20 flex items-center justify-center">
+    <div className="w-9/12 absolute">
       <form
         onSubmit={handleSubmit}
-        className={`bg-white grid grid-cols-2 md:grid-cols-3  xl:grid-cols-5 items-center gap-4 p-2 md:p-3 rounded-full shadow-xl mx-auto ${location === "search" ? "-mt-64" : "-mt-96"}`}
+        className={`bg-white grid grid-cols-2 md:grid-cols-3  xl:grid-cols-5 divide-x items-center gap-4 p-2 md:p-3 md:py-2 rounded-full shadow-xl ${location === "search" ? "-mt-40" : "-mt-56"}`}
       >
         <div className="flex flex-row items-center flex-1  p-2  ">
           <FaLocationDot size={18} className="mr-2 text-neutral-400" />
           <input
             type="text"
             placeholder="Where are you going?"
-            className="text-md w-full focus:outline-none border-r-2"
+            className="text-md w-full focus:outline-none ps-1 "
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
           />
         </div>
-        <div className="flex p-2 border-r-2 gap-5  items-center text-neutral-400">
+        <div className="hidden md:flex p-2 gap-5 justify-center text-neutral-400 items-center">
           Guests
           <div className="text-xl flex gap-4 items-center">
             <FiMinusCircle
@@ -82,85 +81,67 @@ export const SearchBar = ({ location }) => {
             />
           </div>
         </div>
-        {/* <DatePicker
-            label="Check-in date"
-            sx={{
-              width: 260,
-              "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                border: "none",
-              },
-            }}
-            slotProps={{
-              field: { clearable: true, onClear: () => setCleared(true) },
-            }}
-            disablePast
-            format="DD - MM - YYYY"
-            onChange={(value) => setCheckIn(dayjs(value))}
-          /> */}
-
-        {/* <div className="flex text-neutral-400"> */}
-        <DemoContainer components={["DatePicker"]}>
+        <div className="flex">
+        <DemoContainer  components={["DatePicker"]}>
           <DatePicker
-            label="Check-in date"
             disablePast
             sx={{
-              width: 260,
+              width: 230,
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
                 border: "none",
+                
               },
+              ".MuiOutlinedInput-root" : {
+                fontSize: "16px",
+                overflow: "hidden",
+                paddingX: "2px",
+                marginX: "0",
+                height:"40px",
+                color:"grey",
+              }
             }}
             value={checkIn || null}
+            format="DD/MM/YYYY"
             onChange={(newCheckIn) => setCheckIn(newCheckIn ? newCheckIn.$d : null)}
           />
 
 </DemoContainer>
+  </div>
+ 
 <DemoContainer components={["DatePicker"]}>
           <DatePicker
-            label="Check-out date"
             disablePast
             sx={{
               width: 260,
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
                 border: "none",
+                paddingX: "0",
+                marginX: "0"
               },
+              ".MuiOutlinedInput-root" : {
+                fontSize: "16px",
+                overflow: "hidden",
+                paddingX: "2px",
+                marginX: "0",
+                height:"40px",
+                color:"grey"
+              }
             }}
             value={checkOut || null}
+            format="DD/MM/YYYY"
             onChange={(newCheckOut) => setCheckOut(newCheckOut ? newCheckOut.$d : null)}
           />
           </DemoContainer>
-        {/* <DatePicker
-              selected={checkIn}
-              onChange={(date) => setCheckIn(date)}
-              selectsStart
-              startDate={checkIn}
-              endDate={checkOut}
-              minDate={minDate}
-              maxDate={maxDate}
-              placeholderText="Check-in Date"
-              className="min-w-full bg-white p-2 focus:outline-none"
-              wrapperClassName="min-w-full border-r-1"
-            /> */}
-        {/* <DatePicker
-              selected={checkOut}
-              onChange={(date) => setCheckOut(date)}
-              selectsStart
-              startDate={checkIn}
-              endDate={checkOut}
-              minDate={minDate}
-              maxDate={maxDate}
-              placeholderText="Check-out Date"
-              className=" bg-white p-2 focus:outline-none"
-              wrapperClassName="min-w-full"
-            /> */}
         <div className="flex justify-center gap-1">
-          <button className="bg-orange-400 text-white text-md font-medium px-6 py-3 rounded-md hover:bg-orange-500">
+          <button className="bg-orange-400 text-white text-md font-medium px-6 py-3 rounded-full hover:bg-orange-500">
             Search
           </button>
-          <button className="bg-blue-400 text-white text-md font-medium px-3 py-1 rounded-md hover:bg-orange-500">
-            Clear
+          <button className=" text-rose-500 text-md font-medium px-3 py-1 rounded-md">
+          Clear
           </button>
         </div>
       </form>
+    </div>
     </div>
   );
 };

@@ -11,8 +11,7 @@ export const MyBookings = () => {
   if (!listings || listings.length === 0) {
     return <span>No bookings found</span>;
   }
-
-  console.log(listings);
+  
 
   return (
     <div className="w-full">

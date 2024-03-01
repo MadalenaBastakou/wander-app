@@ -59,9 +59,11 @@ export const ListingCard = ({ listing }) => {
     }
   };
 
+
   return (
     <>
      {!isLoggedIn && <Tooltip id="my-tooltip" style={{ zIndex: 10 }} />}
+     <div className="rounded-lg flex flex-col items-center justify-center">
       <div
         className="flex flex-col h-96 w-80 cursor-pointer"
         onClick={() => navigate(`/my-listings/${listing._id}`)}
@@ -184,6 +186,7 @@ export const ListingCard = ({ listing }) => {
           </button>
         </div>
       )}
+    </div>
     </>
   );
 };
