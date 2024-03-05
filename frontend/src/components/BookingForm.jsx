@@ -111,24 +111,24 @@ export const BookingForm = ({ currentUser, paymentIntent }) => {
         </div>
         <div className="space-y-2">
           <h2 className="text-xl font-semibold">Your price summary</h2>
-          <div className="bg-blue-100 p-4 rounded-md">
+          <div className="bg-blue-50 px-2 py-6 rounded-md">
             <div className="font-semibold text-lg">
               Total Cost: €{paymentIntent.totalCost.toFixed(2)}
             </div>
             <div className="text-xs">Includes taxes and charges</div>
           </div>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 mb-3">
           <h3 className="text-xl font-semibold">Payment Details</h3>
           <CardElement
             id="payment-element"
-            className="border rounded-md p-2 text-sm"
+            className="border rounded-md p-3 text-sm"
           />
         </div>
         <div className="flex justify-end">
           <button
             disabled={isLoading}
-            className="bg-orange-400 text-white text-xl font-bold p-2 mb-2 rounded-md hover:bg-orange-500 disabled:bg-gray-500"
+            className="bg-orange-400 text-white text-xl font-bold px-2 py-3 mb-2 rounded-md hover:bg-orange-500 disabled:bg-gray-500"
             type="submit"
           >
             {isLoading ? "Saving..." : " Confirm Booking"}

@@ -11,7 +11,7 @@ export const BookingDetailsSummary = ({
       <h2 className="text-xl font-bold">Your booking details</h2>
       <div className="border-b py-2">
         Location:
-        <div className="font-bold">
+        <div className="font-semibold">
           {listing.type} in {listing.city}
           {listing.province && `,${listing.province}`}, {listing.country}
         </div>
@@ -19,16 +19,16 @@ export const BookingDetailsSummary = ({
       <div className="flex justify-between">
         <div>
           Check-in
-            <div className="font-bold">{checkIn?.toDateString()}</div>
+            <div className="font-semibold">{checkIn?.toDateString()}</div>
         </div>
         <div>
           Check-out
-            <div className="font-bold">{checkOut?.toDateString()}</div>
+            <div className="font-semibold">{checkOut?.toDateString()}</div>
         </div>
       </div>
       <div className="border-t border-b py-2">
         Total length of stay:
-        <div className="font-bold">{numberOfNights} nights</div>
+        <div className="font-semibold">{numberOfNights} nights</div>
       </div>
     </div>
   );
