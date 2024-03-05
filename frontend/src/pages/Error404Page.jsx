@@ -12,7 +12,7 @@ const Error404Page = () => {
         <li className="mt-4 list-disc">Return to the <Link to="/" className="text-blue-500">homepage</Link></li>
         </div>
         <div className="pl-5">
-        <li className="list-disc">Browse our <Link to="/categories" className="text-blue-500">categories</Link></li>
+        <li className="list-disc">Browse our <Link to="/search" className="text-blue-500">categories</Link></li>
         </div>
       </ul>
       <p>If you still can&apos;t find what you need, feel free to contact our support team at support@example.com.</p>
