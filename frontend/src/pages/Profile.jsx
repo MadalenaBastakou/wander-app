@@ -11,6 +11,7 @@ export const Profile = () => {
   const { user, setUser, logout, setIsLoggedIn } = useContext(UserContext);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isUsernameOrPasswordChanged, setIsUsernameOrPasswordChanged] = useState(false)
 
 
   useEffect(() => {
@@ -31,6 +32,10 @@ export const Profile = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
+    if (name === "username" || name === "password") {
+      setIsUsernameOrPasswordChanged(true);
+    }
 
     if (name === "password" && value === "") {
       setUser({ ...user, [name]: value });
@@ -68,6 +73,14 @@ export const Profile = () => {
         toast.success("User updated successfully");
         setUser({ ...updatedUser, password: "" });
         setLoading(false);
+        if (isUsernameOrPasswordChanged) {
+          setTimeout(() => {
+            logout();
+            navigate("/login");
+            toast.dismiss()
+          },1500)
+         
+        }
       }
     } catch (error) {
       console.error("Error updating user:", error);

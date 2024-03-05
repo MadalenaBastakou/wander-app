@@ -1,15 +1,13 @@
-import { parse } from "dotenv";
 import Listing from "../models/Listing.js";
-import User from "../models/User.js"
-import { query } from "express";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_API_KEY);
 
+/*SEARCH LISTINGS*/
 const searchListings = async (req, res) => {
   try {
     const query = constructedSearchQuery(req.query);
-
+    
     let sortOptions = {};
     switch (req.query.sortOption) {
       case "pricePerNightAsc":
@@ -49,6 +47,7 @@ const searchListings = async (req, res) => {
   }
 };
 
+/*CREATE PAYMENT*/
 const createPayment = async (req, res) => {
   const { numberOfNights } = req.body;
   const listingId = req.params.listingId;
@@ -58,7 +57,7 @@ const createPayment = async (req, res) => {
     return res.status(400).json({ message: "Listing not found" });
   }
   const totalCost = listing.price * numberOfNights;
-  
+
   const paymentIntent = await stripe.paymentIntents.create({
     amount: totalCost * 100,
     currency: "eur",
@@ -81,10 +80,11 @@ const createPayment = async (req, res) => {
   res.send(response);
 };
 
+/*CREATE BOOKING*/
 const createBooking = async (req, res) => {
   try {
     const paymentIntentId = req.body.paymentIntentId;
-    
+
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
     if (!paymentIntent) {
@@ -98,26 +98,36 @@ const createBooking = async (req, res) => {
       return res.status(500).json({ message: "payment intent mismatch" });
     }
 
-    if(paymentIntent.status !== "succeeded") {
-      return res.status(400).json({ message: `payment intent not succeeded. Status: ${paymentIntent.status}` });
+    if (paymentIntent.status !== "succeeded") {
+      return res
+        .status(400)
+        .json({
+          message: `payment intent not succeeded. Status: ${paymentIntent.status}`,
+        });
     }
 
     const newBooking = {
-      ...req.body, userId: req.userId
-    }
+      ...req.body,
+      userId: req.userId,
+    };
 
-    const listing = await Listing.findOneAndUpdate({_id: req.params.listingId}, {$push: {bookings: newBooking}})
-    if(!listing) {
+    const listing = await Listing.findOneAndUpdate(
+      { _id: req.params.listingId },
+      { $push: { bookings: newBooking } }
+    );
+    if (!listing) {
       return res.status(400).json({ message: "listing not found" });
     }
-    await listing.save()
-    res.status(200).send()
+    await listing.save();
+    res.status(200).send();
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "something went wrong" });
   }
-}
+};
 
+
+/*---CONSTRUCT QUERY---*/
 const constructedSearchQuery = (queryParams) => {
   let constructedQuery = {};
 
@@ -144,12 +154,13 @@ const constructedSearchQuery = (queryParams) => {
     };
   }
 
-  if (queryParams.category && queryParams.category !== "All") {
-    constructedQuery.category = new RegExp(queryParams.category, "i");
+  if (queryParams.categories && queryParams.categories.length > 0) {
+    constructedQuery.category = { $in: queryParams.categories };
   }
 
-  if (queryParams.type) {
-    constructedQuery.type = new RegExp(queryParams.type, "i");
+
+  if (queryParams.types && queryParams.types.length > 0) {
+    constructedQuery.type = {$in: queryParams.types}
   }
 
   if (queryParams.maxPrice && parseInt(queryParams.maxPrice) !== 0) {
@@ -161,23 +172,8 @@ const constructedSearchQuery = (queryParams) => {
   return constructedQuery;
 };
 
-// /*LISTING DETAILS*/
-// const getListing = async (req, res) => {
-//   try {
-//     const { listingId } = req.params;
-//     const listing = await Listing.findById({ _id: listingId }).populate(
-//       "creator"
-//     );
-//     res.status(202).json(listing);
-//   } catch (error) {
-//     console.log("Error fetching listing:" + error);
-//     res.status(500).json("Something went wrong");
-//   }
-// };
-
 export default {
   searchListings,
-  // getListing,
   createPayment,
-  createBooking
+  createBooking,
 };

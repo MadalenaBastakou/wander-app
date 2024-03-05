@@ -62,7 +62,7 @@ export const ListingCard = ({ listing }) => {
 
   return (
     <>
-     {!isLoggedIn && <Tooltip id="my-tooltip" style={{ zIndex: 10 }} />}
+     {!isLoggedIn && <Tooltip id="my-tooltip" />}
      <div className="rounded-lg flex flex-col items-center justify-center">
       <div
         className="flex flex-col h-96 w-80 cursor-pointer"
@@ -83,6 +83,7 @@ export const ListingCard = ({ listing }) => {
               disabled
             >
               <a
+              className="z-10"
                 data-tooltip-id="my-tooltip"
                 data-tooltip-content={!isLoggedIn ? "Login to favorite" : ""}
                 data-tooltip-place="top"
@@ -180,8 +181,8 @@ export const ListingCard = ({ listing }) => {
       </div>
       {error && (
         <div>
-          <p>{error}</p>
-          <button onClick={() => patchWishlist(user._id, listing._id)}>
+          <p className="text-red-400 mb-2">{error}</p>
+          <button className="underline" onClick={() => patchWishlist(user._id, listing._id)}>
             Retry
           </button>
         </div>

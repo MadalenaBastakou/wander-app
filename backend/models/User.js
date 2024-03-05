@@ -8,10 +8,8 @@ const userSchema = new mongoose.Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     profileImagePath: { type: Array, default: [] },
-    // tripList: { type: Array, default: [] },
     wishList: { type: Array, default: [] },
     propertyList: { type: Array, default: [] },
-    // bookings: { type: Array, default: [] },
   },
   { timestamps: true }
 );

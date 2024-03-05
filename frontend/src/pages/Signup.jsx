@@ -24,7 +24,6 @@ const Signup = () => {
     onSuccess: () => {
       setIsLoggedIn(true)
       navigate("/");
-      console.log("User signed up successfully");
     },
     onError: (error) => {
       toast.error(error.message);

@@ -20,6 +20,7 @@ export const SearchProvider = ({ children }) => {
     () => parseInt(sessionStorage.getItem("guests")) || 1)
   const [listingId, setListingId] =
     useState(() => sessionStorage.getItem("listingId")) || "";
+    const [datesSelected, setDatesSelected] = useState(false)
 
   const saveSearchValues = (
     destination,
@@ -35,6 +36,7 @@ export const SearchProvider = ({ children }) => {
     if (listingId) {
       setListingId(listingId);
     }
+    setDatesSelected(true)
     sessionStorage.setItem("destination", destination);
     sessionStorage.setItem("checkIn", checkIn.toISOString());
     sessionStorage.setItem("checkOut", checkOut.toISOString());
@@ -53,6 +55,7 @@ export const SearchProvider = ({ children }) => {
         checkOut,
         guests,
         listingId,
+        datesSelected,
         saveSearchValues,
       }}
     >

@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Signup from "./pages/Signup";
 import "./index.css";
-import 'react-tooltip/dist/react-tooltip.css'
+import "react-tooltip/dist/react-tooltip.css";
 import Login from "./pages/Login";
 import Layout from "./layouts/Layout";
 import Home from "./pages/Home";
@@ -30,9 +30,9 @@ function App() {
         <Route
           path="/"
           element={
-          <Layout>
+            <Layout>
               <Home />
-              </Layout>
+            </Layout>
           }
         />
         <Route
@@ -59,17 +59,17 @@ function App() {
             </Layout>
           }
         />
-         <Route
+        <Route
           path="/search"
           element={
             <Layout>
-              <SearchPage/>
+              <SearchPage />
             </Layout>
           }
         />
         {isLoggedIn && (
           <Route element={<PrivateRoute />}>
-             <Route
+            <Route
               path="/listings/:listingId/booking"
               element={
                 <Layout>
@@ -128,7 +128,14 @@ function App() {
           </Route>
         )}
 
-        <Route path="*" element={<Layout><Error404Page/></Layout>} />
+        <Route
+          path="*"
+          element={
+            <Layout>
+              <Error404Page />
+            </Layout>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

@@ -6,6 +6,8 @@ import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import cloudinary from "cloudinary";
 
+
+/*SIGNUP*/
 const signup = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -39,6 +41,8 @@ const signup = async (req, res) => {
   }
 };
 
+
+/*LOGIN*/
 const login = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -72,6 +76,7 @@ const login = async (req, res, next) => {
   }
 };
 
+/*GOOGLE AUTHORIZATION*/
 const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
@@ -127,10 +132,14 @@ const google = async (req, res, next) => {
   }
 };
 
+
+/*TOKEN VALIDATION*/
 const validateToken = (req, res) => {
   res.status(200).json({ userId: req.userId });
 };
 
+
+/*LOGOUT*/
 const logout = (req, res) => {
   res.cookie("auth_token", "", {
     expires: new Date(0),
@@ -141,6 +150,8 @@ const logout = (req, res) => {
   res.send();
 };
 
+
+/*GET USER*/
 const getUser = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -154,6 +165,8 @@ const getUser = async (req, res) => {
   }
 };
 
+
+/*GET USER DETAILS*/
 const getUserDetails = async (req, res) => {
   const userId = req.userId;
   try {
@@ -168,18 +181,18 @@ const getUserDetails = async (req, res) => {
   }
 };
 
-const getTripList = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const trips = await Booking.find({ customerId: userId }).populate(
-      "customerId hostId listingId"
-    );
-    res.status(200).json(trips);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Cannot find trips" });
-  }
-};
+// const getTripList = async (req, res) => {
+//   try {
+//     const { userId } = req.params;
+//     const trips = await Booking.find({ customerId: userId }).populate(
+//       "customerId hostId listingId"
+//     );
+//     res.status(200).json(trips);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Cannot find trips" });
+//   }
+// };
 
 const handleFavorite = async (req, res) => {
   try {
@@ -219,6 +232,7 @@ const handleFavorite = async (req, res) => {
   }
 };
 
+/*UPDATE USER INFO*/
 const updateUser = async (req, res) => {
   try {
     const { _id, ...updatedUser } = req.body;
@@ -260,6 +274,7 @@ const updateUser = async (req, res) => {
   }
 };
 
+/*DELETE USER*/
 const deleteUser = async (req, res) => {
   const { userId } = req.params;
   try {
@@ -277,6 +292,7 @@ const deleteUser = async (req, res) => {
     res.status(500).json("Something went wrong");
   }
 };
+
 
 async function uploadImages(imageFiles) {
   const uploadPromises = imageFiles.map(async (image) => {
@@ -297,7 +313,7 @@ export default {
   google,
   logout,
   getUser,
-  getTripList,
+  // getTripList,
   handleFavorite,
   updateUser,
   deleteUser,

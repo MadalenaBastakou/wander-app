@@ -14,16 +14,16 @@ export default {
         footer: "url('./assets/img/footer.jpg')",
       },
       animation: {
-        'spin-slow': 'spin 3s linear infinite',
+        "spin-slow": "spin 3s linear infinite",
       },
       fontFamily: {
-        PoppinsExtraLight: ['PoppinsExtraLight'],
-        PoppinsLight: ['PoppinsLight'],
-        PoppinsRegular: ['PoppinsRegular'],
-        PoppinsMedium: ['PoppinsMedium'],
-        PoppinsBold: ['PoppinsBold']
-      }
+        PoppinsExtraLight: ["PoppinsExtraLight"],
+        PoppinsLight: ["PoppinsLight"],
+        PoppinsRegular: ["PoppinsRegular"],
+        PoppinsMedium: ["PoppinsMedium"],
+        PoppinsBold: ["PoppinsBold"],
+      },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animated")],
 };

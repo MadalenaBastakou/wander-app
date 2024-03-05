@@ -72,7 +72,7 @@ const updateListing = async (req, res) => {
   }
 };
 
-/*USERS PERSONAL LISTINGS*/
+/*GET USERS PERSONAL LISTINGS*/
 const getUserListings = async (req, res) => {
   try {
     const listings = await Listing.find({
@@ -85,7 +85,7 @@ const getUserListings = async (req, res) => {
   }
 };
 
-/*LISTING DETAILS*/
+/*GET LISTING DETAILS*/
 const getListing = async (req, res) => {
   try {
     const { listingId } = req.params;
@@ -118,6 +118,8 @@ const getListings = async (req, res) => {
   }
 };
 
+
+/*---UPLOAD IMAGES HELPER FUNCTION---*/
 async function uploadImages(imageFiles) {
   const uploadPromises = imageFiles.map(async (image) => {
     const b64 = Buffer.from(image.buffer).toString("base64");
@@ -130,38 +132,9 @@ async function uploadImages(imageFiles) {
   return imageUrls;
 }
 
-// const searchListings = async (req, res) => {
-//   try {
-//     const pageSize = 5;
-//     const pageNumber = parseInt(
-//       req.query.page ? req.query.page.toString() : "1"
-//     );
-//     const skip = (pageNumber - 1) * pageSize;
-
-//     const listings = await Listing.find().skip(skip).limit(pageSize);
-
-//     const total = await Listing.countDocuments();
-
-//     const response = {
-//       data: listings,
-//       pagination: {
-//         total,
-//         page: pageNumber,
-//         pages: Math.ceil(total / pageSize),
-//       },
-//     };
-
-//     res.status(200).json(response)
-//   } catch (error) {
-//     console.log("error", error);
-//     res.status(500).json({ message: "Something went wrong" });
-//   }
-// };
-
 export default {
   addListing,
   getUserListings,
-  // searchListings,
   getListing,
   getListings,
   deleteListing,

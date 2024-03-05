@@ -3,7 +3,6 @@ import listingControllers from "../controllers/listingControllers.js"
 import Stripe from "stripe"
 import verifyToken from "../middleware/verifyToken.js"
 
-
 const stripe = new Stripe(process.env.STRIPE_API_KEY)
 const router = express.Router()
 

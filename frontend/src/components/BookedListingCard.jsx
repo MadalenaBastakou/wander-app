@@ -1,10 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GrPrevious, GrNext } from "react-icons/gr";
 import { RxDotFilled } from "react-icons/rx";
 import * as apiClient from "../api-client";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { UserContext } from "../contexts/UserContext";
+import { RiDeleteBinLine } from "react-icons/ri";
+import DeleteModal from "../components/DeleteModal";
 
 export const BookedListingCard = ({ listing }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -12,15 +14,7 @@ export const BookedListingCard = ({ listing }) => {
   const [isLiked, setIsLiked] = useState(
     user?.wishList?.find((item) => item?._id === listing?._id)
   );
-
-console.log(listing);
-
-  // useEffect(() => {
-  //   const res = localStorage.getItem("user");
-  //   if (res) {
-  //     setUser(JSON.parse(res));
-  //   }
-  // }, [setUser]);
+  const [deletingPaymentId, setDeletingPaymentId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -49,11 +43,13 @@ console.log(listing);
     }
   };
 
+  const handleDelete = async () => {
+    apiClient.deleteBooking(deletingPaymentId);
+    navigate(`/${user._id}/bookings`);
+  };
+
   return (
-    <div
-      className="grid grid-cols-[1fr_3fr] relative cursor-pointer"
-      onClick={() => navigate(`/my-listings/${listing._id}`)}
-    >
+    <div className="grid grid-cols-[1fr_3fr] relative">
       <div
         key={listing._id}
         className={`relative translate-x-[${currentIndex * 100}%] group w-80`}
@@ -61,7 +57,8 @@ console.log(listing);
         <img
           src={listing.photos[`${currentIndex}`]}
           alt="listing-photo"
-          className="w-80 h-64 rounded-xl object-cover "
+          className="w-80 h-64 rounded-xl object-cover cursor-pointer"
+          onClick={() => navigate(`/my-listings/${listing._id}`)}
         />
         {isLiked ? (
           <button
@@ -128,51 +125,79 @@ console.log(listing);
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-96 gap-4 px-4 mt-2">
-         {listing.province ? (
-            <h3 className="text-lg font-semibold my-3">
-              {listing.city}, {listing.province}, {listing.country}
-            </h3>
-          ) : (
-            <h3 className="text-lg font-semibold my-3">
-              {listing.city}, {listing.country}
-            </h3>
-          )}
-      {listing.bookings.map((booking) => (
-        <div key={booking.paymentIntentId}>
-          <div>
-            <span className="font-bold mr-2 text-neutral-500">Dates:</span>
-            <span>
-              {new Date(booking.checkIn).toDateString()} -{" "}
-              {new Date(booking.checkOut).toDateString()}
+      <div className="flex flex-col w-[420px] gap-4 px-4 mt-2">
+        {listing.province ? (
+          <h3
+            onClick={() => navigate(`/my-listings/${listing._id}`)}
+            className="text-lg font-semibold my-3 cursor-pointer"
+          >
+            {listing.city}, {listing.province}, {listing.country}
+          </h3>
+        ) : (
+          <h3 className="text-lg font-semibold my-3">
+            {listing.city}, {listing.country}
+          </h3>
+        )}
+        {listing.bookings.map((booking) => (
+          <div key={booking.paymentIntentId}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                document.getElementById("my_modal_3").showModal();
+                setDeletingPaymentId(booking.paymentIntentId);
+              }}
+              className="absolute top-0 right-0 text-2xl text-neutral-400 cursor-pointer"
+            >
+              <RiDeleteBinLine />
+            </button>
+
+            <dialog
+              id="my_modal_3"
+              className="modal modal-bottom sm:modal-middle p-12 rounded-lg"
+            >
+              <DeleteModal handleDelete={() => handleDelete(deletingPaymentId)}>
+                Are you sure you want to delete this listing?
+              </DeleteModal>
+            </dialog>
+            <div>
+              <span className="font-bold mr-2 text-neutral-500">Dates:</span>
+              <span>
+                {new Date(booking.checkIn).toDateString()} -{" "}
+                {new Date(booking.checkOut).toDateString()}
+              </span>
+            </div>
+            <div>
+              <span className="font-bold mr-2 text-neutral-500">Host:</span>
+              <span>
+                {` ${listing?.creator?.firstName} ${listing?.creator?.lastName}`}
+              </span>
+            </div>
+          </div>
+        ))}
+        <div>
+          <p className="flex absolute bottom-0 gap-2 text-md font-light py-8">
+            <span className="bg-neutral-200 p-2 rounded-full">
+              {listing.guestCount > 1
+                ? `${listing.guestCount} guests`
+                : `${listing.guestCount} guest`}
+            </span>{" "}
+            <span className="bg-neutral-200 p-2 rounded-full">
+              {listing.bedroomCount > 1
+                ? `${listing.bedroomCount} bedrooms`
+                : `${listing.bedroomCount} bedroom`}
+            </span>{" "}
+            <span className="bg-neutral-200 p-2 rounded-full">
+              {listing.bedCount > 1
+                ? `${listing.bedCount} beds`
+                : `${listing.bedCount} bed`}
+            </span>{" "}
+            <span className="bg-neutral-200 p-2 rounded-full">
+              {listing.bathroomCount > 1
+                ? `${listing.bathroomCount} bathrooms`
+                : `${listing.bathroomCount} bathroom`}
             </span>
-          </div>
+          </p>
         </div>
-      ))}
-          <div>
-          <p className="flex absolute bottom-0 gap-3 text-md font-light py-8">
-        <span className="bg-neutral-200 p-2 rounded-full">
-          {listing.guestCount > 1
-            ? `${listing.guestCount} guests`
-            : `${listing.guestCount} guest`}
-        </span>{" "}
-        <span className="bg-neutral-200 p-2 rounded-full">
-          {listing.bedroomCount > 1
-            ? `${listing.bedroomCount} bedrooms`
-            : `${listing.bedroomCount} bedroom`}
-        </span>{" "}
-        <span className="bg-neutral-200 p-2 rounded-full">
-          {listing.bedCount > 1
-            ? `${listing.bedCount} beds`
-            : `${listing.bedCount} bed`}
-        </span>{" "}
-        <span className="bg-neutral-200 p-2 rounded-full">
-          {listing.bathroomCount > 1
-            ? `${listing.bathroomCount} bs`
-            : `${listing.bathroomCount} bathroom`}
-        </span>
-      </p>
-          </div>
       </div>
     </div>
   );

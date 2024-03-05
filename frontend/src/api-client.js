@@ -160,13 +160,11 @@ export const updateListing = async (formData) => {
       credentials: "include",
     }
   );
-  console.log(response);
   if (!response.ok) {
     throw new Error("Failed to update listing");
   }
 
   const responseBody = await response.json();
-  console.log(responseBody);
   return responseBody;
 };
 
@@ -208,11 +206,10 @@ export const fetchListing = async (listingId) => {
 };
 
 /**GET ALL LISTINGS BY CATEGORY*/
-export const fetchListings = async (selectedCategory) => {
+export const fetchListings = async () => {
   const response = await fetch(
-    selectedCategory !== "All"
-      ? `/api/my-listings/properties?category=${selectedCategory}`
-      : "/api/my-listings/properties"
+  
+      "/api/my-listings/properties"
   );
   if (!response.ok) {
     throw new Error("Error fetching listings");
@@ -222,26 +219,9 @@ export const fetchListings = async (selectedCategory) => {
   return responseBody;
 };
 
-/**------------------------------MY-BOOKINGS REQUESTS---------------------------------------------- */
+/**------------------------------LISTINGS REQUESTS---------------------------------------------- */
 
 // /**CREATE BOOKING */
-// export const createBooking = async (newBooking) => {
-//   const response = await fetch("/api/my-bookings/create", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(newBooking),
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Error creating booking");
-//   }
-
-//   const responseBody = await response.json();
-//   localStorage.setItem("user", JSON.stringify(responseBody.user));
-// };
-
 export const searchListings = async (searchParams) => {
   const queryParams = new URLSearchParams();
   queryParams.append("destination", searchParams.destination || "");
@@ -251,15 +231,21 @@ export const searchListings = async (searchParams) => {
   queryParams.append("page", searchParams.page || "");
   queryParams.append("maxPrice", searchParams.maxPrice || 0);
   queryParams.append("sortOption", searchParams.sortOption || "");
-  queryParams.append("category", searchParams.category || "");
-  queryParams.append("type", searchParams.type || "");
+  // queryParams.append("type", searchParams.type || "");
 
   searchParams.facilities?.forEach((facility) =>
     queryParams.append("facilities", facility)
   );
 
-  const queryString = queryParams.toString();
+  searchParams.categories?.forEach((category) =>
+    queryParams.append("categories", category)
+  );
 
+  searchParams.types?.forEach((type) =>
+    queryParams.append("types", type)
+  );
+
+  const queryString = queryParams.toString();
   const response = await fetch(`/api/listings/search?${queryString}`);
 
   if (!response.ok) {
@@ -304,6 +290,8 @@ export const createBooking = async (formData) => {
   }
 };
 
+/**------------------------------LISTINGS REQUESTS---------------------------------------------- */
+
 export const fetchMyBookings = async () => {
   const response = await fetch("/api/my-bookings");
 
@@ -312,9 +300,25 @@ export const fetchMyBookings = async () => {
   }
 
   const responseBody = await response.json();
-  console.log(responseBody);
   return responseBody;
 };
+
+export const deleteBooking = async (paymentIntentId) => {
+  console.log(paymentIntentId);
+    const response = await fetch(`/api/my-bookings/${paymentIntentId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response);
+    if (!response.ok) {
+      throw new Error("Error deleting user");
+    }
+    const responseBody = await response.json();
+  return responseBody;
+    
+  };
 
 export const fetchCurrentUser = async () => {
   const response = await fetch("/api/user/me", {

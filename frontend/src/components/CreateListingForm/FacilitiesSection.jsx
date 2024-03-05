@@ -6,18 +6,6 @@ export const FacilitiesSection = ({selectedAmenities, handleCheckboxChange}) => 
     register,
     formState: { errors },
   } = useFormContext();
-  // const [selectedAmenities, setSelectedAmenities] = useState([]);
-
-  // const handleCheckboxChange = (e) => {
-  //   const amenity = e.target.value;
-  //   if (e.target.checked) {
-  //     setSelectedAmenities([...selectedAmenities, amenity]);
-  //   } else {
-  //     setSelectedAmenities(
-  //       selectedAmenities.filter((item) => item !== amenity)
-  //     );
-  //   }
-  // };
 
   return (
     <>

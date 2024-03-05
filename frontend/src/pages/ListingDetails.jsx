@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import * as apiClient from "../api-client";
 import { facilities } from "../data.jsx";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
-import { DateRange } from "react-date-range";
 import { Loader } from "../components/Loader.jsx";
 import { BsPersonFill } from "react-icons/bs";
 import { UserContext } from "../contexts/UserContext.jsx";
@@ -12,15 +11,17 @@ import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { MdOutlineModeEdit } from "react-icons/md";
 import DeleteModal from "../components/DeleteModal";
-import { SearchContext } from "../contexts/SearchContext.jsx";
 import { Tooltip } from "react-tooltip";
 import Map from "../components/Map.jsx";
+import BookingListingDetailsForm from "../components/BookingListingDetailsForm.jsx";
 
 export const ListingDetails = () => {
   const [loading, setLoading] = useState(true);
   const [listing, setListing] = useState(null);
   const { user, setUser, isLoggedIn } = useContext(UserContext);
   const { listingId } = useParams();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -51,37 +52,8 @@ export const ListingDetails = () => {
   };
 
   /*BOOKING CALENDAR*/
-  const search = useContext(SearchContext);
-  const [dateRange, setDateRange] = useState([
-    {
-      startDate: search?.checkIn ? new Date(search.checkIn) : new Date(),
-      endDate: search?.checkOut ? new Date(search.checkOut) : new Date(),
-      key: "selection",
-    },
-  ]);
-
-  const start = new Date(dateRange[0]?.startDate);
-  const end = new Date(dateRange[0]?.endDate);
-  const dayCount = Math.round(end - start) / (1000 * 60 * 60 * 24);
-
-  const handleSelect = (ranges) => {
-    setDateRange([ranges.selection]);
-  };
-
-  /**SUBMIT BOOKING */
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleSubmit = async () => {
-    search.saveSearchValues(
-      "",
-      dateRange[0].startDate,
-      dateRange[0].endDate,
-      ""
-    );
-    navigate(`/listings/${listing._id}/booking`);
-  };
-
+ 
+ 
   const handleDelete = async (e, listing) => {
     apiClient.deleteListing(listing._id);
     navigate("/my-listings");
@@ -98,10 +70,11 @@ export const ListingDetails = () => {
       </span>
     </div>
   ) : (
+    <div className="w-screen bg-neutral-100 pt-6 pb-2">
     <div
-      className={`max-w-screen-lg mx-auto ${user._id === listing.creator._id ? "border-2 border-dashed rounded-xl p-8 mt-6 mb-12" : ""}`}
+      className={`bg-white p-8 rounded-lg max-w-screen-xl mx-auto ${user._id === listing.creator._id ? "border-2 border-dashed rounded-xl p-8 mt-6 mb-12" : ""}`}
     >
-      <div className="flex justify-between items-center ">
+      <div className="flex justify-between items-center">
         <h1 className="text-xl md:text-3xl font-bold py-4">{listing.title}</h1>
         <div className="text-xl font-medium">
           {!isLoggedIn && (
@@ -110,7 +83,7 @@ export const ListingDetails = () => {
           {listing.creator._id === user._id ? (
             <div className="flex justify-between items-center gap-4 px-4">
               <button
-                onClick={handleEdit}
+                onClick={() => handleEdit(listing._id)}
                 className="text-2xl text-neutral-400 cursor-pointer"
               >
                 <MdOutlineModeEdit />
@@ -169,10 +142,10 @@ export const ListingDetails = () => {
         </div>
       </div>
       <div className="flex justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-10">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-10">
           {listing.photos.map((photo, index) => (
-            <div key={index}>
-              <img className="max-w-72" src={photo} alt="listing-photos" />
+            <div className="relative max-h-96 overflow-hidden" key={index} >
+              <img className="object-contain w-full h-full" src={photo} alt="listing-photos" />
             </div>
           ))}
         </div>
@@ -224,12 +197,12 @@ export const ListingDetails = () => {
           </h3>
         </div>
         <div>
-          <Link
+        {user._id !== listing.creator._id && <Link
             to={`mailto:${listing?.creator?.email}?subject=Regarding ${listing.title}`}
             className="bg-orange-400 text-white text-xl font-medium px-4 py-3 rounded-md hover:bg-orange-500"
           >
             Contact host
-          </Link>
+          </Link>}
         </div>
       </div>
       <hr />
@@ -262,64 +235,7 @@ export const ListingDetails = () => {
             <h2 className="text-lg md:text-xl font-semibold py-8">
               How long do you want to stay?
             </h2>
-            <div className="flex flex-col justify-center bg-neutral-100 p-4 rounded-xl mb-8">
-              <div className="my-custom-calendar rdrMonth">
-                <DateRange
-                  minDate={new Date()}
-                  ranges={dateRange}
-                  onChange={handleSelect}
-                />
-              </div>
-              <div className="ps-4">
-                {dayCount > 1 ? (
-                  <h2 className="text-lg md:text-lg font-medium ">
-                    €{listing.price} x {dayCount} nights
-                  </h2>
-                ) : (
-                  <h2 className="text-lg md:text-lg font-medium ">
-                    €{listing.price} x {dayCount} night
-                  </h2>
-                )}
-                <h2 className="text-lg md:text-xl font-semibold pt-4 pb-5">
-                  Total price: €{listing.price * dayCount}
-                </h2>
-                <p className="text-md font-light pb-2">
-                  <span className="text-neutral-500">Start Date:</span>{" "}
-                  {dateRange[0].startDate.toDateString()}
-                </p>
-                <p className="text-md font-light pb-8">
-                  <span className="text-neutral-500">End Date:</span>{" "}
-                  {dateRange[0].endDate.toDateString()}
-                </p>
-                <div className="flex justify-end pe-6">
-                  {isLoggedIn ? (
-                    <button
-                      className="bg-orange-400 text-white text-xl font-medium px-12 p-3 mb-2 rounded-md hover:bg-orange-500"
-                      type="submit"
-                      onClick={handleSubmit}
-                    >
-                      BOOK
-                    </button>
-                  ) : (
-                    <button
-                      className="bg-orange-400 text-white text-xl font-medium px-12 p-3 mb-2 rounded-md hover:bg-orange-500"
-                      type="submit"
-                      onClick={() => {
-                        search.saveSearchValues(
-                          "",
-                          dateRange[0].startDate,
-                          dateRange[0].endDate,
-                          0
-                        );
-                        navigate("/login", { state: { from: location } });
-                      }}
-                    >
-                      Sign in to book
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
+           <BookingListingDetailsForm listing={listing}/>
           </div>
         )}
       </div>
@@ -328,6 +244,7 @@ export const ListingDetails = () => {
         city={listing?.city}
         country={listing?.country}
       />
+    </div>
     </div>
   );
 };

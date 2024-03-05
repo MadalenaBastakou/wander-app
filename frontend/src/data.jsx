@@ -1,5 +1,4 @@
 import {
-  BiWorld,
   BiSolidWasher,
   BiSolidDryer,
   BiSolidFirstAid,
@@ -54,10 +53,6 @@ import { TbIroning3 } from "react-icons/tb";
 import { AiFillCar } from "react-icons/ai";
 
 export const categories = [
-  {
-    label: "All",
-    icon: <BiWorld />,
-  },
   {
     label: "Beachfront",
     icon: <TbBeach />,

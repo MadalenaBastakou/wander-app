@@ -10,8 +10,68 @@ import { ListingInfoSection } from "../components/CreateListingForm/ListingInfoS
 import * as apiClient from "../api-client";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Stepper from "../components/Stepper";
+import StepperControl from "../components/StepperControl";
+import { StepperContext } from "../contexts/StepperContext";
 
 export const CreateListing = () => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [userData, setUserData] = useState("");
+  const [finalData, setFinalData] = useState([]);
+
+  const steps = [
+    "Tell us about your place",
+    "Upload photos of your place",
+    "Where is your place located",
+    "What is the name of your place?",
+  ];
+
+  const displayStep = (step) => {
+    switch (step) {
+      case 1:
+        return (
+          <>
+            <CategorySection />
+            <hr />
+            <TypeSection />
+            <hr />
+            <FacilitiesSection
+              selectedAmenities={selectedAmenities}
+              handleCheckboxChange={handleCheckboxChange}
+            />
+            <hr />
+            <ListingBasicsSection
+              handleMinusCount={handleMinusCount}
+              handlePlusCount={handlePlusCount}
+              guests={guests}
+              bedrooms={bedrooms}
+              beds={beds}
+              bathrooms={bathrooms}
+            />
+          </>
+        );
+      case 2:
+        return (
+          <PhotoUploadSection
+            photos={photos}
+            handleUploadPhotos={handleUploadPhotos}
+            handleDragPhoto={handleDragPhoto}
+            handleRemovePhoto={handleRemovePhoto}
+          />
+        );
+      case 3:
+        return <LocationSection />;
+      case 4:
+        return <ListingInfoSection />;
+    }
+  };
+
+  const handleClick = (direction) => {
+    let newStep = currentStep;
+
+    direction === "next" ? newStep++ : newStep--;
+    newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
+  };
   const navigate = useNavigate();
 
   /**UPLOAD LISTING PHOTOS */
@@ -150,59 +210,38 @@ export const CreateListing = () => {
     }, 2000);
   });
 
+
   return (
-    <div className="bg-neutral-50 w-screen flex-col gap-5 ">
+    <div className="w-screen h-full bg-neutral-100 p-2">
       <Toaster />
-      <div className="max-w-screen-xl mx-auto">
-        <h1 className="text-xl md:text-3xl font-bold py-8">
-          Publish your property
-        </h1>
-        <div className="bg-white  max-w-screen-xl px-8 py-4 mb-8 rounded-xl self-center mx-auto">
-          <FormProvider {...formMethods}>
-            <form onSubmit={onSubmit}>
-              <h2 className="font-semibold text-xl py-3">
-                Step 1: Tell us about your place
-              </h2>
-              <hr />
-              <CategorySection />
-              <TypeSection />
-              <LocationSection />
-              <ListingBasicsSection
-                handleMinusCount={handleMinusCount}
-                handlePlusCount={handlePlusCount}
-                guests={guests}
-                bedrooms={bedrooms}
-                beds={beds}
-                bathrooms={bathrooms}
-              />
-              <h2 className="font-semibold text-xl py-3">
-                Step 2: Make your place stand out
-              </h2>
-              <hr />
-              <FacilitiesSection
-                selectedAmenities={selectedAmenities}
-                handleCheckboxChange={handleCheckboxChange}
-              />
-              <PhotoUploadSection
-                photos={photos}
-                handleUploadPhotos={handleUploadPhotos}
-                handleDragPhoto={handleDragPhoto}
-                handleRemovePhoto={handleRemovePhoto}
-              />
-              <ListingInfoSection />
-              <span className="flex justify-end">
-                <button
-                  className="bg-orange-400 text-white text-xl font-medium px-3 py-3 mt-4 rounded-md hover:bg-orange-500"
-                  type="submit"
-                  disabled={submitting ? true : false}
+      <FormProvider {...formMethods}>
+        <form >
+          <div className="md:w-10/12 mx-auto p-4 mb-8 shadow-sm rounded-lg pb-2 bg-white">
+            <div className="container horizontal mt-5">
+              <Stepper steps={steps} currentStep={currentStep} />
+              <div className="my-10 p-10">
+                <StepperContext.Provider
+                  value={{
+                    userData,
+                    setUserData,
+                    finalData,
+                    setFinalData,
+                  }}
                 >
-                  {submitting ? "Saving..." : "Create your listing"}
-                </button>
-              </span>
-            </form>
-          </FormProvider>
-        </div>
-      </div>
+                  {displayStep(currentStep)}
+                </StepperContext.Provider>
+              </div>
+            </div>
+            <StepperControl
+              submitting={submitting}
+              handleClick={handleClick}
+              currentStep={currentStep}
+              steps={steps}
+              onSubmit={onSubmit}
+            />
+          </div>
+        </form>
+      </FormProvider>
     </div>
   );
 };

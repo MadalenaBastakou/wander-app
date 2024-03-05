@@ -14,14 +14,16 @@ export const PhotoUploadSection = ({
       <h3 className="font-medium text-lg pt-4 mt-4">
         Add some photos of your place
       </h3>
-      <p className="text-sm text-neutral-600 font-thin italic mb-6">(Drag and drop your photos to rearrange them)</p>
+      <p className="text-sm text-neutral-600 font-thin italic mb-6">
+        (Drag and drop your photos to rearrange them)
+      </p>
       <DragDropContext onDragEnd={handleDragPhoto}>
         <Droppable droppableId="photos">
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
               {photos.length < 1 && (
                 <>
-                  <div className="w-1/2 border border-dashed rounded-md p-4 flex flex-col items-center justify-center">
+                  <div className="w-1/2 border border-dashed rounded-md p-4 flex items-center justify-center">
                     <input
                       id="image"
                       type="file"
@@ -60,7 +62,11 @@ export const PhotoUploadSection = ({
                           >
                             <img
                               className=""
-                              src={typeof photo === 'string' ? photo : URL.createObjectURL(photo) }
+                              src={
+                                typeof photo === "string"
+                                  ? photo
+                                  : URL.createObjectURL(photo)
+                              }
                               alt="place"
                             />
                             <button
@@ -76,7 +82,7 @@ export const PhotoUploadSection = ({
                     );
                   })}
                   {provided.placeholder}
-                  <div className="w-1/2 border border-dashed rounded-md p-4 flex flex-col items-center justify-center my-4">
+                  <div className="w-1/2 border border-dashed rounded-md p-4 flex items-center justify-center my-4">
                     <input
                       id="image"
                       type="file"
