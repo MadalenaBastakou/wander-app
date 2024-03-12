@@ -1,6 +1,6 @@
 const StepperControl = ({ handleClick, currentStep, steps, submitting, onSubmit }) => {
   return (
-    <div className="container flex justify-between px-12 mt-4 mb-8">
+    <div className="container flex justify-between gap-4 md:px-12 mt-4 mb-8">
       <button
         onClick={(e) => {
           e.preventDefault()

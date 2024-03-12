@@ -32,6 +32,7 @@
 }
 
 @media (min-width: 768px) {
+  
   .hero-wave::before {
     background-size: 100% 327px;
     background-position: 50% 0%;

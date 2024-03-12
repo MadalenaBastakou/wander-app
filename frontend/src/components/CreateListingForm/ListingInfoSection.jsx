@@ -47,7 +47,7 @@ export const ListingInfoSection = () => {
         <div className="flex gap-3 items-center">
           <span>€</span>
           <input
-            className="border rounded py-2 px-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-200"
+            className="w-full border rounded py-2 px-2 font-normal focus:outline-none focus:ring-2 focus:ring-orange-200"
             id="price"
             type="number"
             {...register("price", {

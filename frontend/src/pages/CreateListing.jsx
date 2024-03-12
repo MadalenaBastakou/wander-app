@@ -219,7 +219,7 @@ export const CreateListing = () => {
           <div className="md:w-10/12 mx-auto p-4 mb-8 shadow-sm rounded-lg pb-2 bg-white">
             <div className="container horizontal mt-5">
               <Stepper steps={steps} currentStep={currentStep} />
-              <div className="my-10 p-10">
+              <div className="my-10 md:p-10">
                 <StepperContext.Provider
                   value={{
                     userData,

@@ -22,8 +22,8 @@ export const CategorySection = () => {
                 key={index}
                 className={
                   categoryWatch === category.label
-                    ? "bg-neutral-200 container overflow-hidden w-3/4 flex flex-col justify-center items-center gap-2 border-2 rounded whitespace-wrap p-4 cursor-pointer "
-                    : "container overflow-hidden w-3/4 flex flex-col justify-center items-center gap-2 border-2 rounded whitespace-wrap p-4 cursor-pointer hover:border-orange-400"
+                    ? "bg-neutral-200 container overflow-hidden w-full flex flex-col justify-center items-center gap-2 border-2 rounded whitespace-wrap p-4 cursor-pointer "
+                    : "container overflow-hidden w-full flex flex-col justify-center items-center gap-2 border-2 rounded whitespace-wrap p-4 cursor-pointer hover:border-orange-400"
                 }
               >
                 <input

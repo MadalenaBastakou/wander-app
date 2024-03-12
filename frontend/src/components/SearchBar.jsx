@@ -69,17 +69,17 @@ export const SearchBar = ({ location }) => {
   };
 
   return (
-    <div key={location} className="w-8/12 relative">
+    <div key={location} className="w-11/12 md:w-8/12 relative">
       <form
         onSubmit={handleSubmit}
-        className={`bg-white relative grid grid-cols-2 md:grid-cols-3 z-40 xl:grid-cols-4 divide-x items-center gap-4 p-2 md:p-3 md:py-2 rounded-full shadow-xl ${location === "search" ? "-mt-40" : "-mt-56"}`}
+        className={`bg-white relative grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 divide-x items-center gap-4 p-2 md:p-3 md:py-2 rounded-full shadow-xl ${location === "search" ? "-mt-40" : "-mt-56"}`}
       >
-        <div className="flex flex-row items-center flex-1  p-2">
+        <div className="w-full flex flex-row items-center flex-1  p-2">
           <FaLocationDot size={18} className="mr-2 text-neutral-400" />
           <input
             type="text"
             placeholder="Where are you going?"
-            className="text-md w-full focus:outline-none ps-1 "
+            className="text-md md:text-md w-full focus:outline-none ps-1 "
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
           />
@@ -103,7 +103,7 @@ export const SearchBar = ({ location }) => {
           </div>
         </div>
         <div>
-          <div className="flex gap-10 justify-center relative text-neutral-400">
+          <div className="hidden md:flex gap-10 justify-center relative text-neutral-400">
             <button
               className="flex flex-col justify-center items-center"
               onClick={(e) => {
@@ -141,7 +141,7 @@ export const SearchBar = ({ location }) => {
             </div>
           )}
         </div>
-        <div className="flex justify-center gap-1">
+        <div className="flex justify-start md:justify-center gap-1">
           <button className="bg-orange-400 text-white text-md font-medium px-6 py-3 rounded-full hover:bg-orange-500">
             Search
           </button>

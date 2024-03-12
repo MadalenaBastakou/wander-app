@@ -44,7 +44,7 @@ export const MyListings = () => {
         </div>
       ) : (
         <div className="w-screen mx-auto bg-neutral-100 h-screen p-4">
-          <div className="max-w-screen-2xl mx-auto h-full  bg-white rounded-xl shadow-sm">
+          <div className="container max-w-screen-2xl mx-auto h-full  bg-white rounded-xl shadow-sm">
             <h1 className="text-xl md:text-2xl text-gray-500 font-semibold ps-20 pt-8 pb-4 uppercase">
               My Listings
             </h1>
@@ -56,6 +56,7 @@ export const MyListings = () => {
                 <div
                   className="border-2 border-dashed rounded-xl p-2 flex flex-col mx-auto relative hover:border-solid"
                   key={listing._id}
+                  style={{ maxWidth: "calc(100% - 20px)" }}
                 >
                   <ListingCard listing={listing} />
                   <div className="w-full absolute bottom-0 flex justify-between pe-4 py-2 mt-2 mx-auto">

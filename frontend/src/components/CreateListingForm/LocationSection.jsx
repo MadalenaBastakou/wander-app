@@ -30,7 +30,7 @@ export const LocationSection = () => {
               {errors.street.message}
             </span>
           )}
-          <div className="flex gap-10">
+          <div className="flex flex-col md:flex-row md:gap-10">
             <div className="flex flex-col flex-1">
               <label htmlFor="apartment"></label>
               Apartment, Suite, etc.(if applicable)
@@ -58,7 +58,7 @@ export const LocationSection = () => {
               {errors.city.message}
             </span>
           )}
-          <div className="flex gap-10">
+          <div className="flex flex-col md:flex-row md:gap-10">
             <div className="flex flex-col flex-1">
               <label htmlFor="province"> </label>
               Province

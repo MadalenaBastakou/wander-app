@@ -109,8 +109,8 @@ export const SearchPage = () => {
   return (
     <div>
       <Hero location={"search"} />
-      <div className="w-screen grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5">
-        <div className="rounded-lg border border-slate-300 p-5 h-fit sticky top-10">
+      <div className="w-screen grid grid-cols-1 xl:grid-cols-[280px_1fr] xl:gap-5 px-4">
+        <div className="rounded-lg border border-slate-300 p-5 h-fit xl:sticky top-10">
           <div className="space-y-5">
             <h3 className="text-lg font-semibold border-b border-slate-300 pb-5">
               Filter by:
@@ -155,7 +155,7 @@ export const SearchPage = () => {
               </option>
             </select>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-16 mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 md:gap-16 mx-auto">
             {listingData?.data.map((listing) => {
               return <ListingCard key={listing._id} listing={listing} />;
             })}

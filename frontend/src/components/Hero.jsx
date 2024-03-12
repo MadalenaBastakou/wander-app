@@ -17,6 +17,7 @@ export default function Hero({ location }) {
         <div className="flex justify-center">
       <SearchBar location={location} clearSession={clearSession}/>
       </div>
+          <input type="search" name="search" className="relative peer z-40 bg-white md:bg-[center_top_-18rem] w-12 h-12 rounded-full border cursor-pointer outline-none pl-12 pr-4 focus:w-full focus:border-lime-300 focus:cursor-text focus:pl-16 focus:pr-4"></input>
       </div>
     </>
   );
