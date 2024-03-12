@@ -73,7 +73,7 @@ export const SearchBar = ({ location }) => {
     <div key={location} className="relative">
       <form
         onSubmit={handleSubmit}
-        className={`relative bg-white grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 divide-x items-center gap-4 p-2 md:px-3 md:py-4 lg:py-2 rounded-3xl lg:rounded-full shadow-xl z-40 ${location === "search" ? "-mt-40" : "-mt-56"}`}
+        className={`relative bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-x items-center md:gap-4 p-1 md:px-3 md:py-4 lg:py-2 rounded-3xl lg:rounded-full shadow-xl ${location === "search" ? "-mt-40" : "-mt-36"}`}
       >
         <div className="w-full flex flex-row items-center flex-1">
           <FaLocationDot size={18} className="mr-2 text-neutral-400" />
@@ -84,8 +84,11 @@ export const SearchBar = ({ location }) => {
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
           />
+          <button className="md:hidden bg-orange-400 text-white text-md font-medium px-6 py-3 rounded-full hover:bg-orange-500">
+            Search
+          </button>
         </div>
-        <div className="flex p-2 gap-5 justify-center text-neutral-400 items-center">
+        <div className="hidden md:flex p-2 gap-5 justify-center text-neutral-400 items-center">
           Guests
           <div className="text-xl flex gap-4 items-center">
             <FiMinusCircle
@@ -104,7 +107,7 @@ export const SearchBar = ({ location }) => {
           </div>
         </div>
         <div>
-          <div className="flex gap-2 xl:gap-10 justify-center relative text-neutral-400 overflow-clip">
+          <div className="hidden md:flex gap-2 xl:gap-10 justify-center relative text-neutral-400 overflow-clip">
             <button
               className="flex flex-col justify-center items-center relative ps-1"
               onClick={(e) => {
@@ -142,7 +145,7 @@ export const SearchBar = ({ location }) => {
             </div>
           )}
         </div>
-        <div className="flex justify-center gap-1">
+        <div className="hidden md:flex justify-center gap-1">
           <button className="bg-orange-400 text-white text-md font-medium px-6 py-3 rounded-full hover:bg-orange-500">
             Search
           </button>
