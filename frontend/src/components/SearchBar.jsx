@@ -68,13 +68,14 @@ export const SearchBar = ({ location }) => {
     setDatesSelected(false);
   };
 
+
   return (
-    <div key={location} className="w-11/12 md:w-8/12 relative">
+    <div key={location} className="relative">
       <form
         onSubmit={handleSubmit}
-        className={`bg-white relative grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 divide-x items-center gap-4 p-2 md:p-3 md:py-2 rounded-full shadow-xl ${location === "search" ? "-mt-40" : "-mt-56"}`}
+        className={`relative bg-white grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 divide-x items-center gap-4 p-2 md:px-3 md:py-4 lg:py-2 rounded-3xl lg:rounded-full shadow-xl z-40 ${location === "search" ? "-mt-40" : "-mt-56"}`}
       >
-        <div className="w-full flex flex-row items-center flex-1  p-2">
+        <div className="w-full flex flex-row items-center flex-1">
           <FaLocationDot size={18} className="mr-2 text-neutral-400" />
           <input
             type="text"
@@ -84,7 +85,7 @@ export const SearchBar = ({ location }) => {
             onChange={(e) => setDestination(e.target.value)}
           />
         </div>
-        <div className="hidden md:flex p-2 gap-5 justify-center text-neutral-400 items-center">
+        <div className="flex p-2 gap-5 justify-center text-neutral-400 items-center">
           Guests
           <div className="text-xl flex gap-4 items-center">
             <FiMinusCircle
@@ -103,9 +104,9 @@ export const SearchBar = ({ location }) => {
           </div>
         </div>
         <div>
-          <div className="hidden md:flex gap-10 justify-center relative text-neutral-400">
+          <div className="flex gap-2 xl:gap-10 justify-center relative text-neutral-400 overflow-clip">
             <button
-              className="flex flex-col justify-center items-center"
+              className="flex flex-col justify-center items-center relative ps-1"
               onClick={(e) => {
                 e.preventDefault();
                 setOpen(!open);
@@ -130,8 +131,8 @@ export const SearchBar = ({ location }) => {
             </button>
           </div>
           {open && (
-            <div className="bg-white">
-            <div className="my-custom-calendar rdrMonth absolute z-50 top-16 bg-white">
+            <div className="bg-white z-50">
+            <div className="my-custom-calendar rdrMonth absolute top-32 lg:top-16 bg-white">
               <DateRange
                 minDate={new Date()}
                 ranges={dateRange}
@@ -141,7 +142,7 @@ export const SearchBar = ({ location }) => {
             </div>
           )}
         </div>
-        <div className="flex justify-start md:justify-center gap-1">
+        <div className="flex justify-center gap-1">
           <button className="bg-orange-400 text-white text-md font-medium px-6 py-3 rounded-full hover:bg-orange-500">
             Search
           </button>

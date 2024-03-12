@@ -43,7 +43,8 @@ export const MyListings = () => {
           </span>
         </div>
       ) : (
-        <div className="w-screen mx-auto bg-neutral-100 h-screen p-4">
+        <div className="h-screen">
+        <div className="w-screen mx-auto bg-neutral-100 h-full p-4">
           <div className="container max-w-screen-2xl mx-auto h-full  bg-white rounded-xl shadow-sm">
             <h1 className="text-xl md:text-2xl text-gray-500 font-semibold ps-20 pt-8 pb-4 uppercase">
               My Listings
@@ -91,6 +92,7 @@ export const MyListings = () => {
               ))}
             </div>
           </div>
+        </div>
         </div>
       )}
     </>

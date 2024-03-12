@@ -154,7 +154,7 @@ export const ListingDetails = () => {
         {listing.type} in {listing.city}
         {listing.province && `,${listing.province}`}, {listing.country}
       </h2>
-      <p className="flex gap-3 text-md font-light py-8">
+      <p className="flex gap-3 text-sm md:text-md font-light py-8">
         <span className="bg-neutral-200 p-2 rounded-full">
           {listing.guestCount > 1
             ? `${listing.guestCount} guests`
@@ -199,7 +199,7 @@ export const ListingDetails = () => {
         <div>
         {user._id !== listing.creator._id && <Link
             to={`mailto:${listing?.creator?.email}?subject=Regarding ${listing.title}`}
-            className="bg-orange-400 text-white text-xl font-medium px-4 py-3 rounded-md hover:bg-orange-500"
+            className="bg-orange-400 text-white text-sm lg:text-xl font-medium px-4 py-3 rounded-md hover:bg-orange-500"
           >
             Contact host
           </Link>}

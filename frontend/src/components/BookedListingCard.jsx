@@ -49,7 +49,7 @@ export const BookedListingCard = ({ listing }) => {
   };
 
   return (
-    <div className="grid grid-cols-[1fr_3fr] relative">
+    <div className="grid md:grid-cols-[1fr_3fr] relative">
       <div
         key={listing._id}
         className={`relative translate-x-[${currentIndex * 100}%] group w-80`}
@@ -57,7 +57,7 @@ export const BookedListingCard = ({ listing }) => {
         <img
           src={listing.photos[`${currentIndex}`]}
           alt="listing-photo"
-          className="w-80 h-64 rounded-xl object-cover cursor-pointer"
+          className="md:w-80 md:h-64 rounded-xl object-cover cursor-pointer"
           onClick={() => navigate(`/my-listings/${listing._id}`)}
         />
         {isLiked ? (
@@ -175,7 +175,7 @@ export const BookedListingCard = ({ listing }) => {
           </div>
         ))}
         <div>
-          <p className="flex absolute bottom-0 gap-2 text-md font-light py-8">
+          <p className="flex md:absolute bottom-0 gap-2 text-md font-light py-8">
             <span className="bg-neutral-200 p-2 rounded-full">
               {listing.guestCount > 1
                 ? `${listing.guestCount} guests`

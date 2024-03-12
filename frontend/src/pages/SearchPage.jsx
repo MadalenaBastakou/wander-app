@@ -10,6 +10,7 @@ import { FacilitiesFilter } from "../components/FacilitiesFilter";
 import { TypesFilter } from "../components/TypesFilter";
 import { PriceFilter } from "../components/PriceFilter";
 import { Loader } from "../components/Loader";
+import { SearchBar } from "../components/SearchBar";
 
 export const SearchPage = () => {
   const search = useContext(SearchContext);
@@ -109,7 +110,12 @@ export const SearchPage = () => {
   return (
     <div>
       <Hero location={"search"} />
-      <div className="w-screen grid grid-cols-1 xl:grid-cols-[280px_1fr] xl:gap-5 px-4">
+      <div className="w-screen">
+      <div className="w-10/12 md:w-7/12 lg:w-10/12 2xl:w-7/12 mx-auto">
+      <SearchBar location="search"/>
+      </div>
+      </div>
+      <div className="w-screen grid grid-cols-1 xl:grid-cols-[280px_1fr] xl:gap-5 mt-20 px-4">
         <div className="rounded-lg border border-slate-300 p-5 h-fit xl:sticky top-10">
           <div className="space-y-5">
             <h3 className="text-lg font-semibold border-b border-slate-300 pb-5">

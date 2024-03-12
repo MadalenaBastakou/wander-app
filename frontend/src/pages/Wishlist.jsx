@@ -13,7 +13,8 @@ export const Wishlist = () => {
   }, [user]);
 
   return (
-    <div className="w-screen mx-auto bg-neutral-100 h-screen p-4">
+    <div className="h-full">
+    <div className="w-screen mx-auto bg-neutral-100 h-full p-4">
       <div className="max-w-screen-2xl mx-auto h-full  bg-white rounded-xl shadow-sm px-8">
         <h1 className="text-xl md:text-2xl text-gray-500 font-semibold ps-4 pt-8 pb-4 uppercase">
           My Favourites
@@ -27,6 +28,7 @@ export const Wishlist = () => {
           ))}
         </div>
       </div>
+    </div>
     </div>
   );
 };
