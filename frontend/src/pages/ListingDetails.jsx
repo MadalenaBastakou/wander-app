@@ -233,13 +233,13 @@ export const ListingDetails = () => {
           <h2 className="text-lg md:text-xl font-semibold py-8">
             What this place offers?
           </h2>
-          <div className="pb-12 grid md:grid-cols-2 gap-y-6 gap-x-26">
+          <div className="pb-12 grid lg:grid-cols-2 overflow-y-auto gap-y-6 gap-x-26">
             {listing.facilities.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-wrap items-center gap-4 py-2"
+                className="flex flex-wrap items-center md:gap-2 lg:gap-4 py-2"
               >
-                <div className="text-3xl">
+                <div className="md:text-lg lg:text-3xl">
                   {facilities.find((facility) => facility.name === item)?.icon}
                 </div>
                 <p>{item}</p>

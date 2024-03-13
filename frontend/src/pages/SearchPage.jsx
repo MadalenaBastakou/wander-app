@@ -127,7 +127,7 @@ useEffect(() => {
       <div className="w-screen px-3 flex justify-end">
         <button
           onClick={() => setOpen((prevChoice) => !prevChoice)}
-          className="xl:hidden mt-32 md:mt-12 lg:mt-28 flex gap-1 items-center text-xl font-semibold border border-black p-2 mx-2 rounded-md"
+          className="xl:hidden mt-32 md:mt-12 lg:mt-28 flex gap-1 items-center text-lg font-semibold border text-gray-400 border-neutral-400 p-2 mx-2 rounded-md"
         >
           <TbListSearch />
           Filters

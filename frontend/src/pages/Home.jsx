@@ -25,7 +25,7 @@ const {isLoggedIn} = useContext(UserContext)
           Discover our property selection
         </h2>
         <div className="animate-fade-left flex-1">
-        <div className="w-11/12 text-center lg:text-left text-sm md:text-base text-zinc-400 tracking-wider px-10">
+        <div className="sm:w-11/12 text-center lg:text-left text-sm md:text-base text-zinc-400 tracking-wider px-10">
           Browse through a curated collection of stunning properties ranging
           from cozy apartments to luxurious villas, each meticulously selected
           to ensure a memorable stay. Whether you seek a beachfront retreat, a
@@ -35,7 +35,7 @@ const {isLoggedIn} = useContext(UserContext)
         </div>
         </div>
       </section>
-      <div className="w-screen p-4 mt-2 md:mb-12">
+      <div className="w-screen p-4 mt-12 sm:mt-2 md:mb-12">
       <div className="max-w-screen-2xl mx-auto">
       <LatestListings/>
       </div>

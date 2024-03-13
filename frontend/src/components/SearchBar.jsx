@@ -70,7 +70,7 @@ export const SearchBar = ({ location }) => {
 
 
   return (
-    <div key={location} className="relative">
+    <div key={location} className="relative z-50">
       <form
         onSubmit={handleSubmit}
         className={`relative bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-x items-center md:gap-4 ps-2 p-1 md:px-3 md:py-4 lg:py-2 rounded-full md:rounded-3xl lg:rounded-full shadow-xl ${location === "search" ? "-mt-40" : "-mt-36 md:-mt-56"}`}
@@ -80,7 +80,7 @@ export const SearchBar = ({ location }) => {
           <input
             type="text"
             placeholder="Where are you going?"
-            className="text-md md:text-md w-full focus:outline-none ps-1 "
+            className="text-sm md:text-md w-full focus:outline-none ps-1 "
             value={destination}
             onChange={(e) => setDestination(e.target.value)}
           />
