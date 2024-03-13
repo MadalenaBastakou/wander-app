@@ -56,5 +56,6 @@
   }
 }
 .my-custom-calendar .rdrMonth {
-  max-width: 400px;
+  width: 400px;
+  margin-inline: auto;
 }

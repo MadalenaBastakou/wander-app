@@ -73,7 +73,7 @@ export const SearchBar = ({ location }) => {
     <div key={location} className="relative">
       <form
         onSubmit={handleSubmit}
-        className={`relative bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-x items-center md:gap-4 p-1 md:px-3 md:py-4 lg:py-2 rounded-3xl lg:rounded-full shadow-xl ${location === "search" ? "-mt-40" : "-mt-36"}`}
+        className={`relative bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-x items-center md:gap-4 ps-2 p-1 md:px-3 md:py-4 lg:py-2 rounded-full md:rounded-3xl lg:rounded-full shadow-xl ${location === "search" ? "-mt-40" : "-mt-36 md:-mt-56"}`}
       >
         <div className="w-full flex flex-row items-center flex-1">
           <FaLocationDot size={18} className="mr-2 text-neutral-400" />

@@ -19,7 +19,7 @@ const {isLoggedIn} = useContext(UserContext)
       </div>
       </div>
       </section>
-      <section className="w-screen flex justify-center mt-[6rem] md:mt-24 pb-12">
+      <section className="w-screen flex justify-center mt-[6rem] md:mt-18 lg:mt-32 pb-4">
       <div className="flex flex-col lg:flex-row max-w-screen-2xl items-center justify-between gap-8 md:py-4 my-4 h-48 -z-10">
         <h2 className="animate-fade-right md:flex-1 text-center text-xl md:text-3xl font-bold py-2">
           Discover our property selection

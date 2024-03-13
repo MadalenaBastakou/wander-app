@@ -14,12 +14,23 @@ import DeleteModal from "../components/DeleteModal";
 import { Tooltip } from "react-tooltip";
 import Map from "../components/Map.jsx";
 import BookingListingDetailsForm from "../components/BookingListingDetailsForm.jsx";
+import FullSizeImageModal from "../components/FullSizeImageModal.jsx";
 
 export const ListingDetails = () => {
   const [loading, setLoading] = useState(true);
   const [listing, setListing] = useState(null);
   const { user, setUser, isLoggedIn } = useContext(UserContext);
   const { listingId } = useParams();
+  const [fullSizeImage, setFullSizeImage] = useState(null);
+
+  const handleImageClick = (imageSrc) => {
+    setFullSizeImage(imageSrc);
+  };
+
+  const handleCloseModal = () => {
+    setFullSizeImage(null);
+  };
+
 
   const navigate = useNavigate();
 
@@ -142,13 +153,19 @@ export const ListingDetails = () => {
         </div>
       </div>
       <div className="flex justify-center">
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-10">
+        <div className="w-full max-w-5xl pb-10 mx-auto gap-5 columns-1 sm:columns-2 md:columns-3 space-y-5 mt-5">
           {listing.photos.map((photo, index) => (
-            <div className="relative max-h-96 overflow-hidden" key={index} >
-              <img className="object-contain w-full h-full" src={photo} alt="listing-photos" />
+            <div key={index} >
+              <img src={photo} alt="listing-photos" onClick={() => handleImageClick(photo)} />
             </div>
           ))}
         </div>
+        {fullSizeImage && (
+        <FullSizeImageModal
+          imageSrc={fullSizeImage}
+          onClose={handleCloseModal}
+        />
+      )}
       </div>
       <h2 className="text-lg md:text-xl font-semibold pt-12">
         {listing.type} in {listing.city}
