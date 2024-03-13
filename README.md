@@ -19,3 +19,6 @@ Wander is a full-stack web application for home rentals built using the MERN sta
 - **Authentication:** JWT, Firebase Authentication
 - **Payment Processing:** Stripe API
 
+## Demo
+
+You can see a live demo of the web app [here](https://wander-app.onrender.com/)
