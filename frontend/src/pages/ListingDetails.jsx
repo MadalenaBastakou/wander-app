@@ -228,7 +228,7 @@ export const ListingDetails = () => {
       </h3>
       <p className="mb-12">{listing.description}</p>
       <hr />
-      <div className="flex flex-col md:flex-row md: gap-24 justify-between">
+      <div className="w-screen flex flex-col md:flex-row md:gap-24 justify-between">
         <div>
           <h2 className="text-lg md:text-xl font-semibold py-8">
             What this place offers?
@@ -248,19 +248,23 @@ export const ListingDetails = () => {
           </div>
         </div>
         {listing.creator._id !== user._id && (
-          <div className="mx-auto">
+          <div className="w-[350px]">
             <h2 className="text-lg md:text-xl font-semibold py-8">
               How long do you want to stay?
             </h2>
+            <div className="flex flex-col justify-center bg-neutral-100 p-4 rounded-xl mb-8 mx-auto">
             <BookingListingDetailsForm listing={listing}/>
+            </div>
           </div>
         )}
       </div>
+      <div className="w-[350px]">
       <Map
         street={listing?.address}
         city={listing?.city}
         country={listing?.country}
       />
+      </div>
     </div>
     </div>
   );

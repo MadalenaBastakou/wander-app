@@ -37,7 +37,7 @@ const BookingListingDetailsForm = ({ listing }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center bg-neutral-100 p-4 rounded-xl mb-8 mx-auto">
+    <>
       <div className="my-custom-calendar rdrMonth">
         <DateRange
           minDate={new Date()}
@@ -66,7 +66,7 @@ const BookingListingDetailsForm = ({ listing }) => {
           <span className="text-neutral-500">End Date:</span>{" "}
           {dateRange[0].endDate.toDateString()}
         </p>
-        <div className="flex justify-end pe-6">
+        <div className="flex md:justify-end pe-6">
           {isLoggedIn ? (
             <button
               className="bg-orange-400 text-white text-md md:text-xl font-medium px-12 p-3 mb-2 rounded-md hover:bg-orange-500"
@@ -94,7 +94,7 @@ const BookingListingDetailsForm = ({ listing }) => {
           )}
         </div>
       </div>
-    </div>
+      </>
   );
 };
 

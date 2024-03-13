@@ -62,8 +62,7 @@
 
 @media (max-width: 768px) {
   .my-custom-calendar .rdrMonth {
-    width:250px;
-    padding:2px;
+    width:280px;
     margin-inline: auto;
   }
   
