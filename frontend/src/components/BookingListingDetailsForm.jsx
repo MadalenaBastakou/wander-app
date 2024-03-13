@@ -47,29 +47,29 @@ const BookingListingDetailsForm = ({ listing }) => {
       </div>
       <div className="ps-4">
         {dayCount > 1 ? (
-          <h2 className="text-lg md:text-lg font-medium ">
+          <h2 className="text-md md:text-lg font-medium ">
             €{listing.price} x {dayCount} nights
           </h2>
         ) : (
-          <h2 className="text-lg md:text-lg font-medium ">
+          <h2 className="text-md md:text-lg font-medium ">
             €{listing.price} x {dayCount} night
           </h2>
         )}
-        <h2 className="text-lg md:text-xl font-semibold pt-4 pb-5">
+        <h2 className="text-md md:text-xl font-semibold pt-4 pb-5">
           Total price: €{listing.price * dayCount}
         </h2>
-        <p className="text-md font-light pb-2">
+        <p className="text-sm font-light pb-2">
           <span className="text-neutral-500">Start Date:</span>{" "}
           {dateRange[0].startDate.toDateString()}
         </p>
-        <p className="text-md font-light pb-8">
+        <p className="text-sm font-light pb-8">
           <span className="text-neutral-500">End Date:</span>{" "}
           {dateRange[0].endDate.toDateString()}
         </p>
         <div className="flex justify-end pe-6">
           {isLoggedIn ? (
             <button
-              className="bg-orange-400 text-white text-xl font-medium px-12 p-3 mb-2 rounded-md hover:bg-orange-500"
+              className="bg-orange-400 text-white text-md md:text-xl font-medium px-12 p-3 mb-2 rounded-md hover:bg-orange-500"
               type="submit"
               onClick={handleSubmit}
             >
