@@ -56,7 +56,7 @@ export const Booking = () => {
   }
 
   return (
-    <div className="max-w-screen-lg container mx-auto">
+    <div className="max-w-screen-lg container mx-auto p-2">
       <div className="grid md:grid-cols-[1fr_2fr] gap-8 mt-20">
         <BookingDetailsSummary
           checkIn={search.checkIn}

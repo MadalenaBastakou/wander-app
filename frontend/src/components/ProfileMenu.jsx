@@ -40,7 +40,7 @@ export const ProfileMenu = () => {
         <IoMdArrowDropdown />
       </button>
       {open && user && (
-        <div className="animate-fade-down flex flex-col gap-2 w-48 bg-white  rounded absolute top-16 right-0 ps-3 pe-12 py-3 text-base shadow-md z-20 tracking-wide">
+        <div className="animate-fade-down flex flex-col gap-2 w-48 bg-white  rounded absolute top-16 right-0 ps-3 pe-12 py-3 text-base shadow-md z-50 tracking-wide">
           <Link
             className="hover:text-gray-700"
             to="/profile"

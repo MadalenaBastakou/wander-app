@@ -37,7 +37,7 @@ const BookingListingDetailsForm = ({ listing }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center bg-neutral-100 p-4 rounded-xl mb-8">
+    <div className="flex flex-col justify-center bg-neutral-100 p-4 rounded-xl mb-8 mx-auto">
       <div className="my-custom-calendar rdrMonth">
         <DateRange
           minDate={new Date()}

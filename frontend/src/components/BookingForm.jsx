@@ -128,7 +128,7 @@ export const BookingForm = ({ currentUser, paymentIntent }) => {
         <div className="flex justify-end">
           <button
             disabled={isLoading}
-            className="bg-orange-400 text-white text-xl font-bold px-2 py-3 mb-2 rounded-md hover:bg-orange-500 disabled:bg-gray-500"
+            className="bg-orange-400 text-white sm:text-md md:text-xl font-bold px-2 py-2 md:py-3 mb-2 rounded-md hover:bg-orange-500 disabled:bg-gray-500"
             type="submit"
           >
             {isLoading ? "Saving..." : " Confirm Booking"}

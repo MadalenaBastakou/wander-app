@@ -216,7 +216,7 @@ export const ListingDetails = () => {
         <div>
         {user._id !== listing.creator._id && <Link
             to={`mailto:${listing?.creator?.email}?subject=Regarding ${listing.title}`}
-            className="bg-orange-400 text-white text-sm lg:text-xl font-medium px-4 py-1 sm:py-3 rounded-md flex flex-wrap hover:bg-orange-500"
+            className="bg-orange-400 text-white text-sm lg:text-xl font-medium px-4 py-1 sm:py-3 rounded-md flex justify-center items-center flex-wrap hover:bg-orange-500"
           >
             Contact host
           </Link>}
@@ -248,11 +248,11 @@ export const ListingDetails = () => {
           </div>
         </div>
         {listing.creator._id !== user._id && (
-          <div>
+          <div className="mx-auto">
             <h2 className="text-lg md:text-xl font-semibold py-8">
               How long do you want to stay?
             </h2>
-           <BookingListingDetailsForm listing={listing}/>
+            <BookingListingDetailsForm listing={listing}/>
           </div>
         )}
       </div>

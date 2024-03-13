@@ -59,3 +59,12 @@
   width:380px;
   margin-inline: auto;
 }
+
+@media (max-width: 768px) {
+  .my-custom-calendar .rdrMonth {
+    width:250px;
+    padding:2px;
+    margin-inline: auto;
+  }
+  
+}
