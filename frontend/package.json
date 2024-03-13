@@ -17,7 +17,6 @@
     "@mui/x-date-pickers": "^6.19.5",
     "@mui/x-date-pickers-pro": "^6.19.5",
     "@react-hook/media-query": "^1.1.1",
-    "@reduxjs/toolkit": "^2.2.1",
     "@stripe/react-stripe-js": "^2.5.1",
     "@stripe/stripe-js": "^3.0.6",
     "dayjs": "^1.11.10",
