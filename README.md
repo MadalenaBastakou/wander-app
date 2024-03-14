@@ -21,7 +21,7 @@ Wander is a full-stack web application for home rentals built using the MERN sta
 
 ### Screenshot
 
-![](./public/wander-app.onrender.com_.png)
+<img src="https://github.com/MadalenaBastakou/wander-app/blob/main/frontend/public/wander-app.onrender.com_.png"/>
 
 ### Live
 
