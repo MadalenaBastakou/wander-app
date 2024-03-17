@@ -18,7 +18,7 @@ export const MyBookings = () => {
       <h1 className="text-xl md:text-2xl text-gray-500 font-semibold ps-4 pt-4 md:pt-8 pb-4 uppercase">My bookings</h1>
         {!listings || listings.length === 0 && <span className="ps-4">No bookings found</span>}
       <div className="flex justify-center ">
-        <div className="grid grid-cols-1 lg:grid-cols-2 mt-8 gap-10">
+        <div className="grid grid-cols-1 mt-8 gap-10">
           {listings?.map((listing) => (
             <div
               className="border-2 border-dashed rounded-xl p-2 mx-auto hover:border-solid"

@@ -304,16 +304,14 @@ export const fetchMyBookings = async () => {
 };
 
 export const deleteBooking = async (paymentIntentId) => {
-  console.log(paymentIntentId);
     const response = await fetch(`/api/my-bookings/${paymentIntentId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log(response);
     if (!response.ok) {
-      throw new Error("Error deleting user");
+      throw new Error("Error deleting booking");
     }
     const responseBody = await response.json();
   return responseBody;
