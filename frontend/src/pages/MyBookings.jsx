@@ -12,11 +12,13 @@ export const MyBookings = () => {
  
 
   return (
-    <div className="min-h-screen bg-neutral-100">
-    <div className="w-screen mx-auto p-2 md:p-4">
-    <div className="max-w-screen-2xl mx-auto  bg-white rounded-xl shadow-sm px-4 md:px-8 pb-8">
-      <h1 className="text-xl md:text-2xl text-gray-500 font-semibold ps-4 pt-4 md:pt-8 pb-4 uppercase">My bookings</h1>
-        {!listings || listings.length === 0 && <span className="ps-4">No bookings found</span>}
+    <div className="h-screen">
+        <div className="w-screen mx-auto bg-neutral-100 h-full p-4">
+          <div className="container max-w-screen-2xl mx-auto h-full  bg-white rounded-xl shadow-sm">
+          <h1 className="text-xl md:text-2xl text-gray-500 font-semibold ps-10 pt-8 pb-4 uppercase">My bookings</h1>
+          <div className="mt-8 grid md:grid-cols-2 gap-12 lg:grid-cols-3 xl:grid-cols-4 ">
+        {!listings || listings.length === 0 && <span className="text-lg mt-10 ps-20">No bookings found</span>}
+        </div>
       <div className="flex justify-center ">
         <div className="grid grid-cols-1 mt-8 gap-10">
           {listings?.map((listing) => (
